@@ -136,7 +136,25 @@ void display(GLFWwindow* window, double currentTime)
 	glEnableVertexAttribArray(1);
 
 	glActiveTexture(GL_TEXTURE0);
+
+	// Activate the texture
 	glBindTexture(GL_TEXTURE_2D, exampleTexture);
+
+	// Wrapping and tiling
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);	// Use GL_MIRRORED_REPEAT or GL_CLAMP_TO_EDGE
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);	// Use GL_MIRRORED_REPEAT or GL_CLAMP_TO_EDGE
+
+	// Mipmapping
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	// anisotropic filtering
+	if (glewIsSupported("GL_EXT_texture_filter_anisotropic"))
+	{
+		GLfloat anisoSetting = 0.0f;
+		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &anisoSetting);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, anisoSetting);
+	}
 
 	// Adjust OpenGL settings and draw model
 	glEnable(GL_DEPTH_TEST);

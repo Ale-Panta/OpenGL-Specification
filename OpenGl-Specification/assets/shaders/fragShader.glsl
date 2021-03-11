@@ -1,6 +1,6 @@
 #version 430
 
-in vec2 tc;
+noperspective in vec2 tc;
 
 out vec4 color;
 
