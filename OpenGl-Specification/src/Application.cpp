@@ -1,5 +1,6 @@
 #include "Utils.h"
 #include "Math.h"
+#include "Texture.h"
 #include <GLFW/glfw3.h>	// Must be the last one to be included.
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -23,9 +24,13 @@ GLuint vbo[s_NumVBOs];
 GLuint mvLoc;
 GLuint projLoc;
 
+GLuint exampleTexture;
+
 int width;
 int height;
 float aspect;
+
+mat4 pMat;
 
 // When an object is created relative to a parent object, call .push().
 // Apply the new object's desired transforms.
@@ -35,22 +40,6 @@ stack<glm::mat4> mvStack;
 
 void SetupVerticies()
 {
-	// No index buffer, so the vertices are duplicated.
-	float vertexPositions[108] = {
-	   -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 1.0f, -1.0f, -1.0f,
-		1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f, -1.0f,
-		1.0f, -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 1.0f, -1.0f,
-		1.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, -1.0f,
-		1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-	   -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-	   -1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 1.0f, 1.0f,
-	   -1.0f, -1.0f, -1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, 1.0f,
-	   -1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f, -1.0f,
-		1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,
-	   -1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 1.0f,
-		1.0f, 1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f
-	};
-
 	float pyramidPositions[54] =
 	{ 
 		-1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, 0.0f, 1.0f, 0.0f,	// front face
@@ -61,15 +50,22 @@ void SetupVerticies()
 		1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, 1.0f, -1.0f, -1.0f	// base – right back
 	};
 
+	float pyrTexCoords[36] = 
+	{ 
+		0.0f, 0.0f, 1.0f, 0.0f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.5f, 1.0f, // top and right faces
+		0.0f, 0.0f, 1.0f, 0.0f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.5f, 1.0f, // back and left faces
+		0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f  // base triangles
+	};
+
 	glGenVertexArrays(s_NumVAOs, vao);
 	glBindVertexArray(vao[0]);
 	glGenBuffers(s_NumVBOs, vbo);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexPositions), vertexPositions, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(pyramidPositions), pyramidPositions, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(pyramidPositions), pyramidPositions, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(pyrTexCoords), pyrTexCoords, GL_STATIC_DRAW);
 }
 
 void Init(GLFWwindow* window) 
@@ -81,6 +77,21 @@ void Init(GLFWwindow* window)
 	cameraZ = 10.0f;
 
 	SetupVerticies();
+
+	// build perspective matrix.
+	glfwGetFramebufferSize(window, &width, &height);
+	aspect = (float)width / (float)height;
+	pMat = perspective(1.0472f, aspect, 0.1f, 1000.0f); // 1.0472 radians = 60 degree.
+
+	exampleTexture = OpenGL::Texture::LoadTexture("assets/textures/test.JPEG");
+}
+
+void WindowReshapeCallback(GLFWwindow* window, int newWidth, int newHeight)
+{
+	// build perspective matrix.
+	aspect = (float)newWidth / (float)newHeight;
+	glViewport(0, 0, newWidth, newHeight);
+	pMat = perspective(1.0472f, aspect, 0.1f, 1000.0f); // 1.0472 radians = 60 degree.
 }
 
 // Called each frame.
@@ -96,11 +107,6 @@ void display(GLFWwindow* window, double currentTime)
 	//mvLoc = glGetUniformLocation(renderingProgram, "mv_matrix");
 	mvLoc = glGetUniformLocation(renderingProgram, "mv_matrix");
 	projLoc = glGetUniformLocation(renderingProgram, "proj_matrix");
-
-	// build perspective matrix.
-	glfwGetFramebufferSize(window, &width, &height);
-	aspect = (float)width / (float)height;
-	mat4 pMat = perspective(1.0472f, aspect, 0.1f, 1000.0f); // 1.0472 radians = 60 degree.
 
 	// Set up the projection matrix for all geometry.
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(pMat));
@@ -121,9 +127,16 @@ void display(GLFWwindow* window, double currentTime)
 	glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(mvStack.top()));
 
 	// Associate VBO with the corresponding vertex attribute in the vertex shader
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(1);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, exampleTexture);
 
 	// Adjust OpenGL settings and draw model
 	glEnable(GL_DEPTH_TEST);
@@ -131,37 +144,6 @@ void display(GLFWwindow* window, double currentTime)
 	glDrawArrays(GL_TRIANGLES, 0, 18);	// Draw pyramid
 	mvStack.pop();	// Remove pyramid's rotation from the stack.
 
-	// Cube == planet
-	mvStack.push(mvStack.top());
-	mvStack.top() *= translate(glm::mat4(1.0f), glm::vec3(sin((float)currentTime) * 4.0f, 0.0f, cos((float)currentTime) * 4.0f));
-	mvStack.push(mvStack.top());
-	mvStack.top() *= rotate(glm::mat4(1.0f), (float)currentTime, glm::vec3(0.0f, 1.0f, 0.0f));	// Planet rotation
-
-	glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(mvStack.top()));
-
-	// Associate VBO with the corresponding vertex attribute in the vertex shader
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(0);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	mvStack.pop();
-
-	// Smaller Cube == planet
-	mvStack.push(mvStack.top());
-	mvStack.top() *= translate(glm::mat4(1.0f), glm::vec3(0.0f, sin((float)currentTime) * 2.0f, cos((float)currentTime) * 4.0f));
-	mvStack.top() *= rotate(glm::mat4(1.0f), (float)currentTime, glm::vec3(0.0f, 0.0f, 1.0f));	// Planet rotation
-	mvStack.top() *= scale(glm::mat4(1.0f), glm::vec3(0.25f, 0.25f, 0.25f));	// Planet rotation
-
-	glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(mvStack.top()));
-
-	// Associate VBO with the corresponding vertex attribute in the vertex shader
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(0);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	mvStack.pop();
-
-	mvStack.pop();
 	mvStack.pop();
 	mvStack.pop();
 }
@@ -190,6 +172,8 @@ int main(void)
 	}
 
 	glfwSwapInterval(1);
+
+	glfwSetWindowSizeCallback(window, WindowReshapeCallback);
 
 	Init(window);
 
