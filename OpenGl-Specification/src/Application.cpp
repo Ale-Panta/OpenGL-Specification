@@ -1,0 +1,207 @@
+#include "Utils.h"
+#include "Math.h"
+#include <GLFW/glfw3.h>	// Must be the last one to be included.
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <stack>
+
+using namespace std;
+using namespace glm;
+using namespace OpenGl;
+
+static const int s_NumVAOs = 1;
+static const int s_NumVBOs = 2;
+
+float cameraX;
+float cameraY;
+float cameraZ;
+
+GLuint renderingProgram;
+GLuint vao[s_NumVAOs];
+GLuint vbo[s_NumVBOs];
+
+GLuint mvLoc;
+GLuint projLoc;
+
+int width;
+int height;
+float aspect;
+
+// When an object is created relative to a parent object, call .push().
+// Apply the new object's desired transforms.
+// When an object or sub-object has finished begin drawn, call .pop() to remove its model-view matrix
+// from atop the matrix stack.
+stack<glm::mat4> mvStack;
+
+void SetupVerticies()
+{
+	// No index buffer, so the vertices are duplicated.
+	float vertexPositions[108] = {
+	   -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 1.0f, -1.0f,
+		1.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, -1.0f,
+		1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+	   -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+	   -1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 1.0f, 1.0f,
+	   -1.0f, -1.0f, -1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, 1.0f,
+	   -1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 1.0f,
+	   -1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 1.0f,
+		1.0f, 1.0f, 1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f
+	};
+
+	float pyramidPositions[54] =
+	{ 
+		-1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, 0.0f, 1.0f, 0.0f,	// front face
+		1.0f, -1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f,	// right face
+		 1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f, // back face
+		-1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 1.0f, 0.0f, 1.0f, 0.0f,	// left face
+		-1.0f, -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, // base – left front
+		1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, 1.0f, -1.0f, -1.0f	// base – right back
+	};
+
+	glGenVertexArrays(s_NumVAOs, vao);
+	glBindVertexArray(vao[0]);
+	glGenBuffers(s_NumVBOs, vbo);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexPositions), vertexPositions, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(pyramidPositions), pyramidPositions, GL_STATIC_DRAW);
+}
+
+void Init(GLFWwindow* window) 
+{
+	renderingProgram = Utils::CreateShaderProgram("assets/shaders/vertShader.glsl", "assets/shaders/fragShader.glsl");
+	
+	cameraX = 0.0f;
+	cameraY = 0.0f;
+	cameraZ = 10.0f;
+
+	SetupVerticies();
+}
+
+// Called each frame.
+void display(GLFWwindow* window, double currentTime)
+{
+	glClearColor(0.0, 0.0, 0.0, 1.0);
+	glClear(GL_DEPTH_BUFFER_BIT);	// Clear the background to black, each time
+	glClear(GL_COLOR_BUFFER_BIT);	// Clear the color buffer to black, each time
+
+	glUseProgram(renderingProgram);	// Install GLSL program to the GPU. Now we can access to uniforms and attributes.
+
+	// Get the uniforms variables for the MV and projection matrices.
+	//mvLoc = glGetUniformLocation(renderingProgram, "mv_matrix");
+	mvLoc = glGetUniformLocation(renderingProgram, "mv_matrix");
+	projLoc = glGetUniformLocation(renderingProgram, "proj_matrix");
+
+	// build perspective matrix.
+	glfwGetFramebufferSize(window, &width, &height);
+	aspect = (float)width / (float)height;
+	mat4 pMat = perspective(1.0472f, aspect, 0.1f, 1000.0f); // 1.0472 radians = 60 degree.
+
+	// Set up the projection matrix for all geometry.
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(pMat));
+	
+	// build view matrix, model matrix, and model-view matrix
+	mat4 vMat = translate(glm::mat4(1.0f), glm::vec3(-cameraX, -cameraY, -cameraZ));
+
+	// Push view matrix onto the stack
+	mvStack.push(vMat);
+
+	// Pyramid == sun
+	mvStack.push(mvStack.top());
+	mvStack.top() *= translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+	mvStack.push(mvStack.top());
+	mvStack.top() *= rotate(glm::mat4(1.0f), (float)currentTime, glm::vec3(1.0f, 0.0f, 0.0f));
+
+	// Copy perspective and MV matrices to corresponding uniforms variables
+	glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(mvStack.top()));
+
+	// Associate VBO with the corresponding vertex attribute in the vertex shader
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(0);
+
+	// Adjust OpenGL settings and draw model
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
+	glDrawArrays(GL_TRIANGLES, 0, 18);	// Draw pyramid
+	mvStack.pop();	// Remove pyramid's rotation from the stack.
+
+	// Cube == planet
+	mvStack.push(mvStack.top());
+	mvStack.top() *= translate(glm::mat4(1.0f), glm::vec3(sin((float)currentTime) * 4.0f, 0.0f, cos((float)currentTime) * 4.0f));
+	mvStack.push(mvStack.top());
+	mvStack.top() *= rotate(glm::mat4(1.0f), (float)currentTime, glm::vec3(0.0f, 1.0f, 0.0f));	// Planet rotation
+
+	glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(mvStack.top()));
+
+	// Associate VBO with the corresponding vertex attribute in the vertex shader
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(0);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	mvStack.pop();
+
+	// Smaller Cube == planet
+	mvStack.push(mvStack.top());
+	mvStack.top() *= translate(glm::mat4(1.0f), glm::vec3(0.0f, sin((float)currentTime) * 2.0f, cos((float)currentTime) * 4.0f));
+	mvStack.top() *= rotate(glm::mat4(1.0f), (float)currentTime, glm::vec3(0.0f, 0.0f, 1.0f));	// Planet rotation
+	mvStack.top() *= scale(glm::mat4(1.0f), glm::vec3(0.25f, 0.25f, 0.25f));	// Planet rotation
+
+	glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(mvStack.top()));
+
+	// Associate VBO with the corresponding vertex attribute in the vertex shader
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(0);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	mvStack.pop();
+
+	mvStack.pop();
+	mvStack.pop();
+	mvStack.pop();
+}
+
+int main(void)
+{ 
+	if (!glfwInit())
+	{
+		return -1;
+	}
+
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+
+	// Create the window context.
+	// Note: Creating the window doesn't make it current context by default.
+	GLFWwindow* window = glfwCreateWindow(1280, 720, "OpenGl Demo", nullptr, nullptr);
+
+	// Mark the window as current context
+	glfwMakeContextCurrent(window);
+
+	// glewInit must be called after the creation of the context.
+	if (glewInit() != GLEW_OK)
+	{
+		return -1;
+	}
+
+	glfwSwapInterval(1);
+
+	Init(window);
+
+	while (!glfwWindowShouldClose(window))
+	{
+		display(window, glfwGetTime());
+		glfwSwapBuffers(window);	// GLFW are by default double-buffered.
+		glfwPollEvents();	// Handle other window-related events.
+	}
+
+	glfwDestroyWindow(window);
+	glfwTerminate();
+
+	return 0;
+}
