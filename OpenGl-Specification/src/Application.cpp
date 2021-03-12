@@ -1,17 +1,21 @@
 #include "Utils.h"
 #include "Math.h"
 #include "Texture.h"
+#include "Sphere.h"
 #include <GLFW/glfw3.h>	// Must be the last one to be included.
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <stack>
+#include <vector>
+#include <iostream>
 
 using namespace std;
 using namespace glm;
 using namespace OpenGl;
+using namespace OpenGL;
 
 static const int s_NumVAOs = 1;
-static const int s_NumVBOs = 2;
+static const int s_NumVBOs = 3;
 
 float cameraX;
 float cameraY;
@@ -38,34 +42,46 @@ mat4 pMat;
 // from atop the matrix stack.
 stack<glm::mat4> mvStack;
 
+Sphere mySphere(64);
+
 void SetupVerticies()
 {
-	float pyramidPositions[54] =
-	{ 
-		-1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, 0.0f, 1.0f, 0.0f,	// front face
-		1.0f, -1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f,	// right face
-		 1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f, // back face
-		-1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 1.0f, 0.0f, 1.0f, 0.0f,	// left face
-		-1.0f, -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, // base – left front
-		1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, 1.0f, -1.0f, -1.0f	// base – right back
-	};
-
-	float pyrTexCoords[36] = 
-	{ 
-		0.0f, 0.0f, 1.0f, 0.0f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.5f, 1.0f, // top and right faces
-		0.0f, 0.0f, 1.0f, 0.0f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.5f, 1.0f, // back and left faces
-		0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f  // base triangles
-	};
-
-	glGenVertexArrays(s_NumVAOs, vao);
-	glBindVertexArray(vao[0]);
-	glGenBuffers(s_NumVBOs, vbo);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(pyramidPositions), pyramidPositions, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(pyrTexCoords), pyrTexCoords, GL_STATIC_DRAW);
+	std::vector<int> ind = mySphere.GetIndices();   
+	std::vector<glm::vec3> vert = mySphere.GetVertices();  
+	std::vector<glm::vec2> tex = mySphere.GetTexCoords();   
+	std::vector<glm::vec3> norm = mySphere.GetNormals();   
+	std::vector<float> pvalues;  // vertex positions  
+	std::vector<float> tvalues;  // texture coordinates  
+	std::vector<float> nvalues;  // normal vectors
+	int numIndices = mySphere.GetIndicesCount();   
+	
+	for (int i = 0; i < numIndices; i++) 
+	{
+		pvalues.push_back((vert[ind[i]]).x); 
+		pvalues.push_back((vert[ind[i]]).y); 
+		pvalues.push_back((vert[ind[i]]).z); 
+		tvalues.push_back((tex[ind[i]]).s); 
+		tvalues.push_back((tex[ind[i]]).t); 
+		nvalues.push_back((norm[ind[i]]).x); 
+		nvalues.push_back((norm[ind[i]]).y); 
+		nvalues.push_back((norm[ind[i]]).z); 
+	} 
+	
+	glGenVertexArrays(1, vao);   
+	glBindVertexArray(vao[0]);   
+	glGenBuffers(3, vbo);
+	
+	// put the vertices into buffer #0   
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);   
+	glBufferData(GL_ARRAY_BUFFER, pvalues.size()*4, &pvalues[0], GL_STATIC_DRAW);
+	
+	// put the texture coordinates into buffer #1   
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);   
+	glBufferData(GL_ARRAY_BUFFER, tvalues.size()*4, &tvalues[0], GL_STATIC_DRAW);
+	
+	// put the normals into buffer #2   
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);   
+	glBufferData(GL_ARRAY_BUFFER, nvalues.size()*4, &nvalues[0], GL_STATIC_DRAW);
 }
 
 void Init(GLFWwindow* window) 
@@ -74,7 +90,7 @@ void Init(GLFWwindow* window)
 	
 	cameraX = 0.0f;
 	cameraY = 0.0f;
-	cameraZ = 10.0f;
+	cameraZ = 5.0f;
 
 	SetupVerticies();
 
@@ -82,8 +98,6 @@ void Init(GLFWwindow* window)
 	glfwGetFramebufferSize(window, &width, &height);
 	aspect = (float)width / (float)height;
 	pMat = perspective(1.0472f, aspect, 0.1f, 1000.0f); // 1.0472 radians = 60 degree.
-
-	exampleTexture = OpenGL::Texture::LoadTexture("assets/textures/test.JPEG");
 }
 
 void WindowReshapeCallback(GLFWwindow* window, int newWidth, int newHeight)
@@ -108,25 +122,21 @@ void display(GLFWwindow* window, double currentTime)
 	mvLoc = glGetUniformLocation(renderingProgram, "mv_matrix");
 	projLoc = glGetUniformLocation(renderingProgram, "proj_matrix");
 
-	// Set up the projection matrix for all geometry.
-	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(pMat));
-	
 	// build view matrix, model matrix, and model-view matrix
 	mat4 vMat = translate(glm::mat4(1.0f), glm::vec3(-cameraX, -cameraY, -cameraZ));
-
-	// Push view matrix onto the stack
 	mvStack.push(vMat);
 
-	// Pyramid == sun
 	mvStack.push(mvStack.top());
-	mvStack.top() *= translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+	mvStack.top() *= translate(glm::mat4(1.0f), glm::vec3(sin((float)currentTime), cos((float)currentTime), 0.0f));
 	mvStack.push(mvStack.top());
-	mvStack.top() *= rotate(glm::mat4(1.0f), (float)currentTime, glm::vec3(1.0f, 0.0f, 0.0f));
+	mvStack.top() *= rotate(glm::mat4(1.0f), (float)currentTime, glm::vec3(0.0f, 1.0f, 0.0f));
+
+	// Set up the projection matrix for all geometry.
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(pMat));
 
 	// Copy perspective and MV matrices to corresponding uniforms variables
 	glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(mvStack.top()));
 
-	// Associate VBO with the corresponding vertex attribute in the vertex shader
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(0);
@@ -135,33 +145,14 @@ void display(GLFWwindow* window, double currentTime)
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(1);
 
-	glActiveTexture(GL_TEXTURE0);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(2);
 
-	// Activate the texture
-	glBindTexture(GL_TEXTURE_2D, exampleTexture);
-
-	// Wrapping and tiling
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);	// Use GL_MIRRORED_REPEAT or GL_CLAMP_TO_EDGE
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);	// Use GL_MIRRORED_REPEAT or GL_CLAMP_TO_EDGE
-
-	// Mipmapping
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-	// anisotropic filtering
-	if (glewIsSupported("GL_EXT_texture_filter_anisotropic"))
-	{
-		GLfloat anisoSetting = 0.0f;
-		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &anisoSetting);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, anisoSetting);
-	}
-
-	// Adjust OpenGL settings and draw model
 	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LEQUAL);
-	glDrawArrays(GL_TRIANGLES, 0, 18);	// Draw pyramid
-	mvStack.pop();	// Remove pyramid's rotation from the stack.
+	glDrawArrays(GL_TRIANGLES, 0, mySphere.GetIndicesCount());
 
+	mvStack.pop();
 	mvStack.pop();
 	mvStack.pop();
 }

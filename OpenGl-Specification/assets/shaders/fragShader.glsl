@@ -1,15 +1,14 @@
 #version 430
 
-noperspective in vec2 tc;
+in vec2 tc;
+in vec3 v_normals;
 
 out vec4 color;
 
 uniform mat4 mv_matrix;
 uniform mat4 proj_matrix;
 
-layout (binding = 0) uniform sampler2D samp;
-
 void main(void)
 { 
-	color = texture(samp, tc); 
+	color = vec4(v_normals * 0.5 + 0.5, 1.0); 
 }
