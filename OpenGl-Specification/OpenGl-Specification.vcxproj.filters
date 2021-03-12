@@ -27,6 +27,12 @@
     <ClCompile Include="src\Sphere.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
+    <ClCompile Include="src\OpenGLApp.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Utils.h">
@@ -39,6 +45,12 @@
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="src\Sphere.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenGLApp.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Shader.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>
