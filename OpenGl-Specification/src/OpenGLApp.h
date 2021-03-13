@@ -8,6 +8,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>	// Must be the last one to be included.
 #include <glm/glm.hpp>
+#include <stack>
 
 namespace OpenGL
 {
@@ -69,9 +70,14 @@ namespace OpenGL
 		float m_AspectRatio = 1.0f;
 
 		// Rendering
-		glm::vec3 m_CameraPosition = glm::vec3(0.0f);
+		glm::vec3 m_CameraPosition = glm::vec3(0.0f, 0.0f, 4.0f);
+		glm::mat4 m_ProjectionMatrix = glm::mat4(1.0f);
+		std::stack<glm::mat4> m_ModelViewStack;
+
+		int *m_Indices;
 
 		std::shared_ptr<Shader> m_Shader = NULL;
 		GLuint vao[1] = {0};
+		GLuint vbo[4] = {0};
 	};
 }

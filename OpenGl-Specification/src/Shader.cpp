@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <glm/gtc/type_ptr.hpp>
 
 using namespace std;
 
@@ -87,8 +88,15 @@ namespace OpenGL
 
 	void Shader::UploadUniform1f(const char* uniformName, float value)
 	{
-		GLuint offsetLoc = glGetUniformLocation(m_ShaderProgram, uniformName);
-		glProgramUniform1f(m_ShaderProgram, offsetLoc, value);
+		GLuint uLocation = glGetUniformLocation(m_ShaderProgram, uniformName);
+		glProgramUniform1f(m_ShaderProgram, uLocation, value);
+	}
+
+	void Shader::UploadUniformMatrix4fv(const char* uniformName, const glm::mat4& matrix, GLboolean transpose)
+	{
+		GLuint uLocation = glGetUniformLocation(m_ShaderProgram, uniformName);
+		//glUniformMatrix4fv(uLocation, 1, GL_FALSE, glm::value_ptr(matrix));
+		glProgramUniformMatrix4fv(m_ShaderProgram, uLocation, 1, transpose, glm::value_ptr(matrix));
 	}
 
 	std::string Shader::ReadShaderSrc(const char* filePath)

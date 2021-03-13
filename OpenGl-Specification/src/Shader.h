@@ -2,6 +2,7 @@
 #include "GL/glew.h"
 
 #include <string>
+#include <glm/glm.hpp>
 
 namespace OpenGL
 {
@@ -19,6 +20,7 @@ namespace OpenGL
 
 	public:
 		void UploadUniform1f(const char* uniformName, float value);
+		void UploadUniformMatrix4fv(const char* uniformName, const glm::mat4& matrix, GLboolean transpose = GL_FALSE);
 
 		operator GLuint() const { return m_ShaderProgram; }
 
