@@ -78,6 +78,10 @@ namespace OpenGL
 			PrintProgramLog(m_ShaderProgram); 
 		}
 #pragma endregion
+
+		// Delete the shaders once they are linked, we no longer need them.
+		glDeleteShader(vertShader);
+		glDeleteShader(fragShader);
 	}
 
 	Shader::~Shader()
@@ -86,16 +90,27 @@ namespace OpenGL
 		std::cout << "Delete shader program: {" << m_ShaderProgram << "}" << std::endl;
 	}
 
-	void Shader::UploadUniform1f(const char* uniformName, float value)
+	void Shader::SetUniformBool(const char* uniformName, bool value)
+	{
+		GLuint uLocation = glGetUniformLocation(m_ShaderProgram, uniformName);
+		glProgramUniform1i(m_ShaderProgram, uLocation, (int)value);
+	}
+
+	void Shader::SetUniformInt(const char* uniformName, int value)
+	{
+		GLuint uLocation = glGetUniformLocation(m_ShaderProgram, uniformName);
+		glProgramUniform1i(m_ShaderProgram, uLocation, value);
+	}
+
+	void Shader::SetUniformFloat(const char* uniformName, float value)
 	{
 		GLuint uLocation = glGetUniformLocation(m_ShaderProgram, uniformName);
 		glProgramUniform1f(m_ShaderProgram, uLocation, value);
 	}
 
-	void Shader::UploadUniformMatrix4fv(const char* uniformName, const glm::mat4& matrix, GLboolean transpose)
+	void Shader::SetUniformMatrix4(const char* uniformName, const glm::mat4& matrix, GLboolean transpose)
 	{
 		GLuint uLocation = glGetUniformLocation(m_ShaderProgram, uniformName);
-		//glUniformMatrix4fv(uLocation, 1, GL_FALSE, glm::value_ptr(matrix));
 		glProgramUniformMatrix4fv(m_ShaderProgram, uLocation, 1, transpose, glm::value_ptr(matrix));
 	}
 

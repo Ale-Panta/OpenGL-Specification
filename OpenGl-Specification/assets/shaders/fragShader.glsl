@@ -6,9 +6,10 @@ in vec3 normals;
 
 out vec4 color;
 
-uniform float u_time;	// current time.
-uniform mat4 u_mvMat;	// Model View matrix.
-uniform mat4 u_pMat;	// Projection matrix.
+uniform float uTime;		// current time.
+uniform mat4 uModel;		// Model View matrix.
+uniform mat4 uView;			// Model View matrix.
+uniform mat4 uProjection;	// Projection matrix.
 
 void main(void)
 { 

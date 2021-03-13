@@ -19,10 +19,12 @@ namespace OpenGL
 		~Shader();
 
 	public:
-		void UploadUniform1f(const char* uniformName, float value);
-		void UploadUniformMatrix4fv(const char* uniformName, const glm::mat4& matrix, GLboolean transpose = GL_FALSE);
+		operator GLuint() const { return m_ShaderProgram; }	// Overload operator.
 
-		operator GLuint() const { return m_ShaderProgram; }
+		void SetUniformBool(const char* uniformName, bool value);
+		void SetUniformInt(const char* uniformName, int value);
+		void SetUniformFloat(const char* uniformName, float value);
+		void SetUniformMatrix4(const char* uniformName, const glm::mat4& matrix, GLboolean transpose = GL_FALSE);
 
 	private:
 		/**

@@ -159,7 +159,6 @@ namespace OpenGL
 		glClear(GL_COLOR_BUFFER_BIT);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
-		glUseProgram(*m_Shader);
 
 		// Build perspective matrix
 		m_ProjectionMatrix = glm::perspective(1.0472f, m_AspectRatio, 0.1f, 100.0f);
@@ -171,28 +170,34 @@ namespace OpenGL
 		m_ModelViewStack.top() *= glm::rotate(glm::mat4(1.0f), (float)currentTime, glm::vec3(currentTime * 0.1f, currentTime * 0.4f, currentTime * 0.23f));
 
 		// Copy perspective and MV matrices to corresponding uniform variables.
-		m_Shader->UploadUniform1f("u_time", (float)currentTime);
-		m_Shader->UploadUniformMatrix4fv("u_pMat", m_ProjectionMatrix);
-		m_Shader->UploadUniformMatrix4fv("u_mvMat", m_ModelViewStack.top());
+		m_Shader->SetUniformFloat("uTime", (float)currentTime);
+		m_Shader->SetUniformMatrix4("uProjection", m_ProjectionMatrix);
+		m_Shader->SetUniformMatrix4("uModel", m_ModelViewStack.top());
+		m_Shader->SetUniformMatrix4("uView", m_ModelViewStack.top() * glm::inverse(m_ModelViewStack.top()));
 
 		// Associate VBO with the corresponding vertex attribute in the vertex shader.
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
 		glEnableVertexAttribArray(0);
 
 		// Associate VBO with the corresponding vertex attribute in the vertex shader.
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
 		glEnableVertexAttribArray(1);
 
 		// Associate VBO with the corresponding vertex attribute in the vertex shader.
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
-		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
 		glEnableVertexAttribArray(2);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[3]);
 
+		// Bind program and vertex array object to use while drawing.
+		glUseProgram(*m_Shader);
+		glBindVertexArray(vao[0]);
+
 		// Adjust OpenGL settings and draw model.
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);	// Enable wireframe mode.
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
 		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);

@@ -7,13 +7,14 @@
  * The "layout (location = 0)" portion of the command is called a "layout qualifier" and is how we will associate the
  * vertex attribute with a paricular buffer.
  */
-layout (location = 0) in vec3 v_position;
-layout (location = 1) in vec2 v_textCoord;
-layout (location = 2) in vec3 v_normals;
+layout (location = 0) in vec3 aPosition;
+layout (location = 1) in vec2 aTexCoord;
+layout (location = 2) in vec3 aNormals;
 
-uniform mat4 u_time;	// current time.
-uniform mat4 u_mvMat;	// Model View matrix.
-uniform mat4 u_pMat;	// Projection matrix.
+uniform mat4 uTime;			// current time.
+uniform mat4 uModel;		// Model matrix.
+uniform mat4 uView;			// View matrix.
+uniform mat4 uProjection;	// Projection matrix.
 
 out vec3 position;
 out vec2 texcoords;
@@ -21,8 +22,9 @@ out vec3 normals;
 
 void main(void)
 {
-	gl_Position = u_pMat * u_mvMat * vec4(v_position, 1.0);
-	position = v_position;
-	normals = v_normals;
-	texcoords = v_textCoord;
+	gl_Position = uProjection * uView * uModel * vec4(aPosition, 1.0);
+
+	position = aPosition;
+	texcoords = aTexCoord;
+	normals = aNormals;
 }
