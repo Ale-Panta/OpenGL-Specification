@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Mesh.h"
 #include "Shader.h"
 
 #include <string>
@@ -57,16 +58,14 @@ namespace OpenGL
 		 */
 		void Display(GLFWwindow* window, double currentTime);
 
-		void WindowReshapeCallback(GLFWwindow* window, int newWidth, int newHeight);	// Called when window is resized
-
 	private:
 		bool m_IsInitializedProperly = false;
 
 		// Context
 		GLFWwindow* m_Context = nullptr;
 		std::string m_Name = "OpenGL Default Demo Window";
-		int m_Width = 600;
-		int m_Height = 600;
+		int m_Width = 1280;
+		int m_Height = 720;
 		float m_AspectRatio = 1.0f;
 
 		// Rendering
@@ -74,10 +73,11 @@ namespace OpenGL
 		glm::mat4 m_ProjectionMatrix = glm::mat4(1.0f);
 		std::stack<glm::mat4> m_ModelViewStack;
 
-		int *m_Indices;
-
+		std::shared_ptr<Mesh> m_Sphere = NULL;
+		std::shared_ptr<Mesh> m_SphereSecond = NULL;
+		std::shared_ptr<Mesh> m_Torus = NULL;
+		std::shared_ptr<Mesh> m_LightSrc = NULL;
 		std::shared_ptr<Shader> m_Shader = NULL;
-		GLuint vao[1] = {0};
-		GLuint vbo[4] = {0};
+		std::shared_ptr<Shader> m_LightSrcShader = NULL;
 	};
 }

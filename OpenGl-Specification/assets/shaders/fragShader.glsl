@@ -13,5 +13,5 @@ uniform mat4 uProjection;	// Projection matrix.
 
 void main(void)
 { 
-	color = vec4(texcoords, 0.0, 1.0); 
+	color = vec4(1.0); 
 }

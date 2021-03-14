@@ -2,14 +2,16 @@
 
 namespace OpenGL
 {
-	Mesh::Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture> textures)
-		: Vertices(vertices), Indices(indices), Textures(textures)
+	Mesh::Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices)
+		: Vertices(vertices), Indices(indices)
 	{
 		SetupMesh();
 	}
 
 	void Mesh::Draw(Shader& shader)
 	{
+		glUseProgram(shader);
+
 		// Draw Mesh
 		glBindVertexArray(VAO);	// Bind
 		glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
@@ -24,7 +26,6 @@ namespace OpenGL
 
 		glBindVertexArray(VAO);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
 		glBufferData(GL_ARRAY_BUFFER, Vertices.size() * sizeof(Vertex), &Vertices[0], GL_STATIC_DRAW);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -36,11 +37,11 @@ namespace OpenGL
 
 		// Vertex normals.
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Vertex::Normal));
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Vertex::TexCoords));
 
 		// Vertex texture coords.
 		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Vertex::TexCoords));
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Vertex::Normal));
 
 		glBindVertexArray(0);
 	}

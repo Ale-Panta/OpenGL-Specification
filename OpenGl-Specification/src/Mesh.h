@@ -9,11 +9,17 @@
 
 namespace OpenGL
 {
+	/**
+	 * Vertex contains useful values such as:
+	 * position, texture coordinates, normal, tangent, color.
+	 */
 	struct Vertex
 	{
 		glm::vec3 Position;
 		glm::vec2 TexCoords;
 		glm::vec3 Normal;
+		glm::vec3 STangent;
+		glm::vec3 TTangent;
 	};
 
 	struct Texture
@@ -25,12 +31,13 @@ namespace OpenGL
 	class Mesh
 	{
 	public:
-		Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture> textures);
+		Mesh() = default;
+		Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices);
 
 	public:
 		void Draw(Shader& shader);
 
-	private:
+	protected:
 		void SetupMesh();
 
 	public:
@@ -41,8 +48,8 @@ namespace OpenGL
 
 	private:
 		// Render data
-		GLuint VAO;
-		GLuint VBO;
-		GLuint EBO;
+		GLuint VAO = 0;
+		GLuint VBO = 0;
+		GLuint EBO = 0;
 	};
 }
