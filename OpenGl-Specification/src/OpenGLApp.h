@@ -77,8 +77,8 @@ namespace OpenGL
 		std::shared_ptr<Mesh> m_SphereSecond = NULL;
 		std::shared_ptr<Mesh> m_Torus = NULL;
 		std::shared_ptr<Mesh> m_LightSrc = NULL;
-		std::shared_ptr<Shader> m_Shader = NULL;
-		std::shared_ptr<Shader> m_LightSrcShader = NULL;
-		std::shared_ptr<Shader> m_PhongShader = NULL;
+
+		std::shared_ptr<Shader> m_LitShader = NULL;
+		std::shared_ptr<Shader> m_UnlitShader = NULL;
 	};
 }
