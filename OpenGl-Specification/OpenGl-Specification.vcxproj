@@ -169,8 +169,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\fragLitShader.glsl" />
+    <None Include="assets\shaders\fragPhongShader.glsl" />
     <None Include="assets\shaders\fragShader.glsl" />
     <None Include="assets\shaders\vertLitShader.glsl" />
+    <None Include="assets\shaders\vertPhongShader.glsl" />
     <None Include="assets\shaders\vertShader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

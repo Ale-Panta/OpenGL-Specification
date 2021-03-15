@@ -101,8 +101,10 @@ namespace OpenGL
 		m_SphereSecond = std::make_shared<Sphere>();
 		m_Torus = std::make_shared<Torus>();
 		m_LightSrc = std::make_shared<Sphere>();
+
 		m_Shader = std::make_shared<Shader>("assets/shaders/vertLitShader.glsl", "assets/shaders/fragLitShader.glsl");
 		m_LightSrcShader = std::make_shared<Shader>("assets/shaders/vertShader.glsl", "assets/shaders/fragShader.glsl");
+		m_PhongShader = std::make_shared<Shader>("assets/shaders/vertPhongShader.glsl", "assets/shaders/fragPhongShader.glsl");
 	}
 
 	void OpenGLApp::Display(GLFWwindow* context, double currentTime)
@@ -116,29 +118,41 @@ namespace OpenGL
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
 
-		// Bind program to use while drawing.
+		// Set global uniforms
+		m_Shader->SetUniformVec3("uGlobalAmbient", glm::vec3(0.5f, 0.1f, 0.25f));
+		m_PhongShader->SetUniformVec3("uGlobalAmbient", glm::vec3(0.5f, 0.1f, 0.25f));
 
 		// Set lighting uniform
 		m_Shader->SetUniformVec3("uLight.position", glm::vec3(sin(currentTime) * 15.0f, 0.0f, cos(currentTime) * 15.0f));
 		m_Shader->SetUniformVec3("uLight.ambient", glm::vec3(0.6f, 0.5f, 0.5f));
 		m_Shader->SetUniformVec3("uLight.diffuse", glm::vec3(0.7f, 0.7f, 0.7f));
 		m_Shader->SetUniformVec3("uLight.specular", glm::vec3(0.7f, 0.5f, 0.2f));
+		m_PhongShader->SetUniformVec3("uLight.position", glm::vec3(sin(currentTime) * 15.0f, 0.0f, cos(currentTime) * 15.0f));
+		m_PhongShader->SetUniformVec3("uLight.ambient", glm::vec3(0.6f, 0.5f, 0.5f));
+		m_PhongShader->SetUniformVec3("uLight.diffuse", glm::vec3(0.7f, 0.7f, 0.7f));
+		m_PhongShader->SetUniformVec3("uLight.specular", glm::vec3(0.7f, 0.5f, 0.2f));
 
 		// Set material uniform
-		m_Shader->SetUniformVec3("uMaterial.ambient", glm::vec3(0.5f, 0.65f, 0.0f));
+		m_Shader->SetUniformVec3("uMaterial.ambient", glm::vec3(0.5f));
 		m_Shader->SetUniformVec3("uMaterial.diffuse", glm::vec3(0.5f));
 		m_Shader->SetUniformVec3("uMaterial.specular", glm::vec3(0.2f));
 		m_Shader->SetUniformFloat("uMaterial.shininess", 0.7f);
+		m_PhongShader->SetUniformVec3("uMaterial.ambient", glm::vec3(0.5f));
+		m_PhongShader->SetUniformVec3("uMaterial.diffuse", glm::vec3(0.5f));
+		m_PhongShader->SetUniformVec3("uMaterial.specular", glm::vec3(0.2f));
+		m_PhongShader->SetUniformFloat("uMaterial.shininess", 0.7f);
 
 		m_Shader->SetUniformFloat("uTime", (float)currentTime);
-		m_Shader->SetUniformVec3("uViewPos", m_CameraPosition);
 		m_Shader->SetUniformMatrix4("uProjection", m_ProjectionMatrix);
+		m_PhongShader->SetUniformFloat("uTime", (float)currentTime);
+		m_PhongShader->SetUniformMatrix4("uProjection", m_ProjectionMatrix);
 		m_LightSrcShader->SetUniformMatrix4("uProjection", m_ProjectionMatrix);
 
 		// Build view matrix
 		m_ModelViewStack.push(glm::translate(glm::mat4(1.0f), -m_CameraPosition));
 		m_Shader->SetUniformMatrix4("uView", m_ModelViewStack.top());
 		m_LightSrcShader->SetUniformMatrix4("uView", m_ModelViewStack.top());
+		m_PhongShader->SetUniformMatrix4("uView", m_ModelViewStack.top());
 
 		// Define source light
 		m_ModelViewStack.push(m_ModelViewStack.top());
@@ -149,18 +163,17 @@ namespace OpenGL
 		m_ModelViewStack.pop();
 
 		// Define Sphere model
+		m_PhongShader->SetUniformMatrix4("uModel", m_ModelViewStack.top());
 		m_Shader->SetUniformMatrix4("uModel", m_ModelViewStack.top());
-		m_Sphere->Draw(*m_Shader);
+		m_Sphere->Draw(*m_PhongShader);
 
 		// Define Torus model
-		m_Shader->SetUniformVec3("uMaterial.ambient", glm::vec3(0.5f));
 		m_ModelViewStack.push(m_ModelViewStack.top());
 		m_ModelViewStack.top() *= glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, 2.5f, 0.0f));
 		m_Shader->SetUniformMatrix4("uModel", m_ModelViewStack.top());
 		m_Torus->Draw(*m_Shader);
 
 		// Define Torus model
-		m_Shader->SetUniformVec3("uMaterial.ambient", glm::vec3(0.5f, 0.5f, 0.7f));
 		m_ModelViewStack.top() *= glm::translate(glm::mat4(1.0f), glm::vec3(-5.0f, 0.0f, 1.0f));
 		m_Shader->SetUniformMatrix4("uModel", m_ModelViewStack.top());
 		m_SphereSecond->Draw(*m_Shader);

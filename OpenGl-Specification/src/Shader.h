@@ -25,6 +25,7 @@ namespace OpenGL
 		void SetUniformInt(const char* uniformName, int value);
 		void SetUniformFloat(const char* uniformName, float value);
 		void SetUniformVec3(const char* uniformName, const glm::vec3& value);
+		void SetUniformVec4(const char* uniformName, const glm::vec4& value);
 		void SetUniformMatrix4(const char* uniformName, const glm::mat4& matrix, GLboolean transpose = GL_FALSE);
 
 	private:

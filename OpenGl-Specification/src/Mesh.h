@@ -25,7 +25,7 @@ namespace OpenGL
 	struct Texture
 	{
 		unsigned int ID;
-		std::string type;
+		std::string Type;
 	};
 
 	class Mesh
@@ -45,6 +45,7 @@ namespace OpenGL
 		std::vector<Vertex> Vertices;
 		std::vector<GLuint> Indices;
 		std::vector<Texture> Textures;
+		Texture TextureOne;
 
 	private:
 		// Render data
