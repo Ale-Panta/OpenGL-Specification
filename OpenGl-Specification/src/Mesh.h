@@ -35,22 +35,44 @@ namespace OpenGL
 		Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices);
 
 	public:
+		/**
+		 * Activate the proper VAO and textures slot.
+		 * Call glDrawElements().
+		 */
 		void Draw(Shader& shader);
 
 	protected:
+		/**
+		 * Setup vertex and indices buffers, attributes, textures.
+		 */
 		void SetupMesh();
 
 	public:
 		// Mesh data
 		std::vector<Vertex> Vertices;
-		std::vector<GLuint> Indices;
 		std::vector<Texture> Textures;
+		std::vector<GLuint> VertexIndices;
+		std::vector<GLuint> TexCoordIndices;
+		std::vector<GLuint> NormalsIndices;
 		Texture TextureOne;
 
 	private:
-		// Render data
+		/**
+		 * Vertex array object
+		 * #TODO: Explain what is it
+		 */
 		GLuint VAO = 0;
+
+		/**
+		 * Vertex buffer object
+		 * #TODO: Explain what is it
+		 */
 		GLuint VBO = 0;
+
+		/**
+		 * Element buffer object
+		 * #TODO: Explain what is it.
+		 */
 		GLuint EBO = 0;
 	};
 }

@@ -20,7 +20,7 @@ namespace OpenGL
 
 		for (int i = 0; i < precision * precision * 6; i++) 
 		{ 
-			Indices.push_back(0); 
+			VertexIndices.push_back(0); 
 		}
 
 		// Calculate triangle vertices
@@ -43,12 +43,12 @@ namespace OpenGL
 		{
 			for (int j = 0; j < precision; j++)
 			{
-				Indices[6 * (i * precision + j) + 0] = i * (precision + 1) + j;
-				Indices[6 * (i * precision + j) + 1] = i * (precision + 1) + j + 1;
-				Indices[6 * (i * precision + j) + 2] = (i + 1) * (precision + 1) + j;
-				Indices[6 * (i * precision + j) + 3] = i * (precision + 1) + j + 1;
-				Indices[6 * (i * precision + j) + 4] = (i + 1) * (precision + 1) + j + 1;
-				Indices[6 * (i * precision + j) + 5] = (i + 1) * (precision + 1) + j;
+				VertexIndices[6 * (i * precision + j) + 0] = i * (precision + 1) + j;
+				VertexIndices[6 * (i * precision + j) + 1] = i * (precision + 1) + j + 1;
+				VertexIndices[6 * (i * precision + j) + 2] = (i + 1) * (precision + 1) + j;
+				VertexIndices[6 * (i * precision + j) + 3] = i * (precision + 1) + j + 1;
+				VertexIndices[6 * (i * precision + j) + 4] = (i + 1) * (precision + 1) + j + 1;
+				VertexIndices[6 * (i * precision + j) + 5] = (i + 1) * (precision + 1) + j;
 			}
 		}
 

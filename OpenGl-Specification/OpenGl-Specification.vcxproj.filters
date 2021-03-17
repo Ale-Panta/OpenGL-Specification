@@ -33,11 +33,11 @@
     <ClCompile Include="assets\meshes\Torus.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
+    <ClCompile Include="src\Camera.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Math.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
     <ClInclude Include="assets\meshes\Sphere.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
@@ -53,6 +53,9 @@
     <ClInclude Include="assets\meshes\Torus.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+    <ClInclude Include="src\Camera.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\vertShader.glsl" />
@@ -61,5 +64,9 @@
     <None Include="assets\shaders\fragLitShader.glsl" />
     <None Include="assets\shaders\vertPhongShader.glsl" />
     <None Include="assets\shaders\fragPhongShader.glsl" />
+    <None Include="assets\shaders\vertBlinnPhongShader.glsl" />
+    <None Include="assets\shaders\vertGouraudShader.glsl" />
+    <None Include="assets\shaders\fragBlinnPhongShader.glsl" />
+    <None Include="assets\shaders\fragGouraudShader.glsl" />
   </ItemGroup>
 </Project>

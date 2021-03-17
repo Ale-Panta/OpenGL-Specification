@@ -4,7 +4,7 @@
 namespace OpenGL
 {
 	Mesh::Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices)
-		: Vertices(vertices), Indices(indices)
+		: Vertices(vertices), VertexIndices(indices)
 	{
 		SetupMesh();
 	}
@@ -21,7 +21,7 @@ namespace OpenGL
 		//glActiveTexture(GL_TEXTURE1);
 		//glBindTexture(GL_TEXTURE_2D, Textures[1].ID);
 		glBindVertexArray(VAO);	// Bind
-		glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, VertexIndices.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);	// Unbind
 	}
 
@@ -45,7 +45,7 @@ namespace OpenGL
 		glBufferData(GL_ARRAY_BUFFER, Vertices.size() * sizeof(Vertex), &Vertices[0], GL_STATIC_DRAW);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, Indices.size() * sizeof(GLuint), &Indices[0], GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, VertexIndices.size() * sizeof(GLuint), &VertexIndices[0], GL_STATIC_DRAW);
 
 		// Vertex position.
 		glEnableVertexAttribArray(0);

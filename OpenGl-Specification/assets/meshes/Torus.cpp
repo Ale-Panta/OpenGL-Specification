@@ -20,7 +20,7 @@ namespace OpenGL
 
 		for (int i = 0; i < precision * precision * 6; i++) 
 		{ 
-			Indices.push_back(0); 
+			VertexIndices.push_back(0); 
 		}
 
 		// calculate first ring   
@@ -76,12 +76,12 @@ namespace OpenGL
 		{
 			for (int vert = 0; vert < precision; vert++) 
 			{
-				Indices[((ring* precision + vert) * 2) * 3 + 0] = ring*(precision + 1) + vert;
-				Indices[((ring* precision + vert) * 2) * 3 + 1] = (ring + 1)*(precision + 1) + vert;
-				Indices[((ring* precision + vert) * 2) * 3 + 2] = ring*(precision + 1) + vert + 1;
-				Indices[((ring* precision + vert) * 2 + 1) * 3 + 0] = ring*(precision + 1) + vert + 1;
-				Indices[((ring* precision + vert) * 2 + 1) * 3 + 1] = (ring + 1)*(precision + 1) + vert;
-				Indices[((ring* precision + vert) * 2 + 1) * 3 + 2] = (ring + 1)*(precision + 1) + vert + 1;
+				VertexIndices[((ring* precision + vert) * 2) * 3 + 0] = ring*(precision + 1) + vert;
+				VertexIndices[((ring* precision + vert) * 2) * 3 + 1] = (ring + 1)*(precision + 1) + vert;
+				VertexIndices[((ring* precision + vert) * 2) * 3 + 2] = ring*(precision + 1) + vert + 1;
+				VertexIndices[((ring* precision + vert) * 2 + 1) * 3 + 0] = ring*(precision + 1) + vert + 1;
+				VertexIndices[((ring* precision + vert) * 2 + 1) * 3 + 1] = (ring + 1)*(precision + 1) + vert;
+				VertexIndices[((ring* precision + vert) * 2 + 1) * 3 + 2] = (ring + 1)*(precision + 1) + vert + 1;
 			}    
 		}
 

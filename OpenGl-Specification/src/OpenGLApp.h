@@ -2,6 +2,7 @@
 
 #include "Mesh.h"
 #include "Shader.h"
+#include "Camera.h"
 
 #include <string>
 #include <memory>
@@ -69,8 +70,7 @@ namespace OpenGL
 		float m_AspectRatio = 1.0f;
 
 		// Rendering
-		glm::vec3 m_CameraPosition = glm::vec3(0.0f, 0.0f, 4.0f);
-		glm::mat4 m_ProjectionMatrix = glm::mat4(1.0f);
+		std::shared_ptr<Camera> m_Camera = NULL;
 		std::stack<glm::mat4> m_ModelViewStack;
 
 		std::shared_ptr<Mesh> m_Sphere = NULL;
