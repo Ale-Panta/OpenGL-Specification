@@ -1,5 +1,13 @@
 #version 430
 
+/**
+ * The French computer scientist Henri Gouraud publish this algorithm in 1971. It is particurarly well suited to modern
+ * graphics card, because it taked advantage of the automatic interpolated rendering that is available in 3D graphics
+ * pipelines such as OpneGL. The process is the follow:
+ * .Determine the color of each vertex, incorporating the lighting computations.
+ * .Allow those colors to be interpolated across intervening pixels through the normal rasterization process.
+ */
+
 /** 
  * The keyword "in" means "inout" and indicates that this vertex attribute will be receiving values form a buffer.
  * "vec3" means that each invocation of the shader will grab three float values. 

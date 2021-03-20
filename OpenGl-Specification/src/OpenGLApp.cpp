@@ -103,7 +103,7 @@ namespace OpenGL
 		m_Light = std::make_shared<Light>();
 
 		// Create materials
-		m_Material = std::make_shared<Material>(vec3(0.9f, 0.5f, 0.2f), vec3(1.0f, 0.5f, 0.2f), vec3(0.0f, 0.0f, 0.0f));
+		m_Material = std::make_shared<SilverMaterial>();
 
 		// Create shaders
 		m_LitShader	= std::make_shared<Shader>("assets/shaders/BlinnPhong/vertBlinnPhongShader.glsl", "assets/shaders/BlinnPhong/fragBlinnPhongShader.glsl");

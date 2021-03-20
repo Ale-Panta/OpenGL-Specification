@@ -1,5 +1,13 @@
 #version 430
 
+/**
+ * The structure of the algorithm is similar to the algorithm for Gouraud shading, except that the lighting computations
+ * are done per pixel rather than per vertex. Since the lighting computations require a normal vector N ans a light vector
+ * L, which are only available in the model on a per vertex basis, Phong shading is often impemented using a clever trick, 
+ * whereby N and L are computed in the vertex shader and interpolated during rasterization.
+ *
+ */
+
 /** 
  * The keyword "in" means "inout" and indicates that this vertex attribute will be receiving values form a buffer.
  * "vec3" means that each invocation of the shader will grab three float values. 
