@@ -10,8 +10,10 @@
 layout (location = 0) in vec3 aPosition;
 layout (location = 1) in vec2 aTexCoord;
 layout (location = 2) in vec3 aNormal;
+layout (location = 3) in vec3 aColor;
 
 struct Material {
+	vec3 globalAmbient;
 	vec3 ambient;
 	vec3 diffuse;
 	vec3 specular;
@@ -25,7 +27,6 @@ struct Light {
 	vec3 specular;
 };
 
-uniform vec3 uGlobalAmbient;
 uniform Material uMaterial;
 uniform Light uLight;
 
@@ -37,8 +38,7 @@ uniform mat4 uProjection;	// Projection matrix.
 out vec3 Position;
 out vec2 TexCoord;
 out vec3 Normal;
-out vec4 VaryingColor;
-
+out vec3 VertexColor;
 out vec3 LightDir;
 out vec3 HalfVector;
 
@@ -54,4 +54,6 @@ void main(void)
 	Normal = (normMat * vec4(aNormal, 1.0)).xyz;
 
 	gl_Position = uProjection * uView * uModel * vec4(aPosition, 1.0);
+
+	VertexColor = aColor; 
 }

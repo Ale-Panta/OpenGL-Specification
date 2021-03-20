@@ -8,6 +8,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+using namespace glm;
+
 namespace OpenGL
 {
 	OpenGLApp::OpenGLApp(const char* name)
@@ -94,13 +96,17 @@ namespace OpenGL
 	{
 		m_Camera = std::make_shared<Camera>(glm::vec3(0.0f, 0.0f, 4.0f), 0.05f, false);
 
-		m_Sphere = std::make_shared<Sphere>();
-		m_SphereSecond = std::make_shared<Sphere>();
-		m_Torus = std::make_shared<Torus>();
-		m_LightSrc = std::make_shared<Sphere>();
+		// Create geometries
+		m_Torus	= std::make_shared<Torus>();
 
-		m_LitShader = std::make_shared<Shader>("assets/shaders/vertBlinnPhongShader.glsl", "assets/shaders/fragBlinnPhongShader.glsl");
-		m_UnlitShader = std::make_shared<Shader>("assets/shaders/vertShader.glsl", "assets/shaders/fragShader.glsl");
+		// Create light source
+		m_Light = std::make_shared<Light>();
+
+		// Create materials
+		m_Material = std::make_shared<Material>(vec3(0.9f, 0.5f, 0.2f), vec3(1.0f, 0.5f, 0.2f), vec3(0.0f, 0.0f, 0.0f));
+
+		// Create shaders
+		m_LitShader	= std::make_shared<Shader>("assets/shaders/BlinnPhong/vertBlinnPhongShader.glsl", "assets/shaders/BlinnPhong/fragBlinnPhongShader.glsl");
 	}
 
 	void OpenGLApp::Display(GLFWwindow* context, double currentTime)
@@ -114,57 +120,18 @@ namespace OpenGL
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
 
-		// Set global uniforms
-		m_LitShader->SetUniformVec3("uGlobalAmbient", glm::vec3(0.5f, 0.1f, 0.25f));
-
 		// Set lighting uniform
-		m_LitShader->SetUniformVec3("uLight.position", glm::vec3(sin(currentTime) * 15.0f, 0.0f, cos(currentTime) * 15.0f));
-		m_LitShader->SetUniformVec3("uLight.ambient", glm::vec3(0.6f, 0.5f, 0.5f));
-		m_LitShader->SetUniformVec3("uLight.diffuse", glm::vec3(0.7f, 0.7f, 0.7f));
-		m_LitShader->SetUniformVec3("uLight.specular", glm::vec3(0.7f, 0.5f, 0.2f));
+		m_Light->CommitToShader(*m_LitShader);
 
 		// Set material uniform
-		m_LitShader->SetUniformVec3("uMaterial.ambient", glm::vec3(0.5f));
-		m_LitShader->SetUniformVec3("uMaterial.diffuse", glm::vec3(0.5f));
-		m_LitShader->SetUniformVec3("uMaterial.specular", glm::vec3(0.2f));
-		m_LitShader->SetUniformFloat("uMaterial.shininess", 0.7f);
+		m_Material->CommitToProgram(*m_LitShader);
 
 		m_LitShader->SetUniformFloat("uTime", (float)currentTime);
+		m_LitShader->SetUniformMatrix4("uModel", glm::rotate(glm::mat4(1.0f), 90.0f, glm::vec3(1.0f, 0.0f, 0.0f)));
+		m_LitShader->SetUniformMatrix4("uView", m_Camera->GetViewMatrix());
 		m_LitShader->SetUniformMatrix4("uProjection", m_Camera->GetProjMatrix());
-		m_UnlitShader->SetUniformMatrix4("uProjection", m_Camera->GetProjMatrix());
-
-		// Build view matrix
-		m_ModelViewStack.push(m_Camera->GetViewMatrix());
-		m_LitShader->SetUniformMatrix4("uView", m_ModelViewStack.top());
-		m_UnlitShader->SetUniformMatrix4("uView", m_ModelViewStack.top());
-
-		// Define source light
-		m_ModelViewStack.push(m_ModelViewStack.top());
-		m_ModelViewStack.top() *= glm::translate(glm::mat4(1.0f), glm::vec3(sin(currentTime) * 15.0f, 0.0f, cos(currentTime) * 15.0f));
-		m_UnlitShader->SetUniformMatrix4("uModel", m_ModelViewStack.top());
-		m_LightSrc->Draw(*m_UnlitShader);
-
-		m_ModelViewStack.pop();
-
-		// Define Sphere model
-		m_LitShader->SetUniformMatrix4("uModel", m_ModelViewStack.top());
-		m_Sphere->Draw(*m_LitShader);
 
 		// Define Torus model
-		m_ModelViewStack.push(m_ModelViewStack.top());
-		m_ModelViewStack.top() *= glm::translate(glm::mat4(1.0f), glm::vec3(sin(currentTime) * 2.0f, cos(currentTime) * 2.5f, 0.0f));
-		m_ModelViewStack.top() *= glm::rotate(glm::mat4(1.0f), (float)currentTime, glm::vec3(1.0f, 0.2f, 0.0f));
-		m_LitShader->SetUniformMatrix4("uModel", m_ModelViewStack.top());
-		m_LitShader->SetUniformVec3("uMaterial.ambient", glm::vec3(0.2f));
 		m_Torus->Draw(*m_LitShader);
-
-		m_ModelViewStack.pop();
-		// Define Torus model
-		m_ModelViewStack.top() *= glm::translate(glm::mat4(1.0f), glm::vec3(cos(currentTime) * -5.0f, -sin(currentTime) * 4.0f, sin(currentTime) * 3.0f));
-		m_LitShader->SetUniformMatrix4("uModel", m_ModelViewStack.top());
-		m_LitShader->SetUniformVec3("uMaterial.ambient", glm::vec3(0.2f, 0.5f, 0.78f));
-		m_SphereSecond->Draw(*m_LitShader);
-
-		m_ModelViewStack.pop();
 	}
 }

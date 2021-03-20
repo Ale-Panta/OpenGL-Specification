@@ -1,8 +1,10 @@
 #pragma once
 
 #include "Mesh.h"
+#include "Light.h"
 #include "Shader.h"
 #include "Camera.h"
+#include "Material.h"
 
 #include <string>
 #include <memory>
@@ -70,15 +72,10 @@ namespace OpenGL
 		float m_AspectRatio = 1.0f;
 
 		// Rendering
-		std::shared_ptr<Camera> m_Camera = NULL;
-		std::stack<glm::mat4> m_ModelViewStack;
-
-		std::shared_ptr<Mesh> m_Sphere = NULL;
-		std::shared_ptr<Mesh> m_SphereSecond = NULL;
-		std::shared_ptr<Mesh> m_Torus = NULL;
-		std::shared_ptr<Mesh> m_LightSrc = NULL;
-
-		std::shared_ptr<Shader> m_LitShader = NULL;
-		std::shared_ptr<Shader> m_UnlitShader = NULL;
+		std::shared_ptr<Camera> m_Camera		= NULL;
+		std::shared_ptr<Mesh> m_Torus			= NULL;
+		std::shared_ptr<Material> m_Material	= NULL;
+		std::shared_ptr<Light> m_Light			= NULL;
+		std::shared_ptr<Shader> m_LitShader		= NULL;
 	};
 }

@@ -1,6 +1,7 @@
 #version 430
 
 struct Material {
+	vec3 globalAmbient;
 	vec3 ambient;
 	vec3 diffuse;
 	vec3 specular;
@@ -26,8 +27,7 @@ uniform mat4 uProjection;	// Projection matrix.
 in vec3 Position;
 in vec2 TexCoord;
 in vec3 Normal;
-in vec4 VaryingColor;
-
+in vec3 VertexColor;
 in vec3 LightDir;
 in vec3 HalfVector;
 
@@ -48,7 +48,7 @@ void main(void)
 	float cosPhi = dot(h, n);
 	
 	// Compute ADS contributions (per pixel), and combine to build output color
-	vec3 ambient = ((uGlobalAmbient * uMaterial.ambient) + (uLight.ambient * uMaterial.ambient)).xyz;
+	vec3 ambient = ((uMaterial.globalAmbient * uMaterial.ambient) + (uLight.ambient * uMaterial.ambient)).xyz;
 	vec3 diffuse = uLight.diffuse.xyz * uMaterial.diffuse.xyz * max(cosTheta, 0.0);
 	vec3 specular = uLight.specular.xyz * uMaterial.specular.xyz * pow(max(cosPhi, 0.0), uMaterial.shininess * 3.0);
 

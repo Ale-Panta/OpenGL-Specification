@@ -14,12 +14,12 @@ namespace OpenGL
 		glUseProgram(shader);
 
 		// Draw Mesh
-		//shader.SetUniformInt("uMaterial.diffuse", 0);
-		//glActiveTexture(GL_TEXTURE0);
-		//glBindTexture(GL_TEXTURE_2D, Textures[0].ID);
-		//shader.SetUniformInt("uMaterial.specular", 1);
-		//glActiveTexture(GL_TEXTURE1);
-		//glBindTexture(GL_TEXTURE_2D, Textures[1].ID);
+		// shader.SetUniformInt("uMaterial.diffuse", 0);
+		// glActiveTexture(GL_TEXTURE0);
+		// glBindTexture(GL_TEXTURE_2D, Textures[0].ID);
+		// shader.SetUniformInt("uMaterial.specular", 1);
+		// glActiveTexture(GL_TEXTURE1);
+		// glBindTexture(GL_TEXTURE_2D, Textures[1].ID);
 		glBindVertexArray(VAO);	// Bind
 		glDrawElements(GL_TRIANGLES, VertexIndices.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);	// Unbind
@@ -27,14 +27,8 @@ namespace OpenGL
 
 	void Mesh::SetupMesh()
 	{
-		//Texture diffuse;
-		//Texture specular;
-
-		//diffuse.ID = SOIL_load_OGL_texture("assets/textures/container2.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
-		//specular.ID = SOIL_load_OGL_texture("assets/textures/container2_specular.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
-
-		//Textures.push_back(diffuse);
-		//Textures.push_back(specular);
+		// Textures.push_back(diffuse);
+		// Textures.push_back(specular);
 
 		glGenVertexArrays(1, &VAO);
 		glGenBuffers(1, &VBO);
@@ -58,6 +52,10 @@ namespace OpenGL
 		// Vertex texture coords.
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Vertex::Normal));
+
+		// Vertex color
+		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Vertex::Color));
 
 		glBindVertexArray(0);
 	}

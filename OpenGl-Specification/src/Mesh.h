@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Shader.h"
+#include "Texture.h"
 
 #include <string>
 #include <vector>
@@ -18,14 +19,9 @@ namespace OpenGL
 		glm::vec3 Position;
 		glm::vec2 TexCoords;
 		glm::vec3 Normal;
+		glm::vec3 Color;
 		glm::vec3 STangent;
 		glm::vec3 TTangent;
-	};
-
-	struct Texture
-	{
-		unsigned int ID;
-		std::string Type;
 	};
 
 	class Mesh
@@ -50,11 +46,10 @@ namespace OpenGL
 	public:
 		// Mesh data
 		std::vector<Vertex> Vertices;
-		std::vector<Texture> Textures;
+		std::vector<Texture*> Textures;
 		std::vector<GLuint> VertexIndices;
 		std::vector<GLuint> TexCoordIndices;
 		std::vector<GLuint> NormalsIndices;
-		Texture TextureOne;
 
 	private:
 		/**
