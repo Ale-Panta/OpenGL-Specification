@@ -86,5 +86,9 @@
     <None Include="assets\shaders\Gouraud\vertGouraudShader.glsl" />
     <None Include="assets\shaders\BlinnPhong\fragBlinnPhongShader.glsl" />
     <None Include="assets\shaders\Gouraud\fragGouraudShader.glsl" />
+    <None Include="assets\shaders\Shadow\fragDepthShader.glsl" />
+    <None Include="assets\shaders\Shadow\fragShadowShader.glsl" />
+    <None Include="assets\shaders\Shadow\vertDepthShader.glsl" />
+    <None Include="assets\shaders\Shadow\vertShadowShader.glsl" />
   </ItemGroup>
 </Project>

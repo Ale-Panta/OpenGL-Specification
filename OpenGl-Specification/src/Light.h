@@ -3,6 +3,8 @@
 #include "Shader.h"
 
 #include <glm/glm.hpp>
+#include <glm/ext/matrix_transform.hpp>
+#include <glm/ext/matrix_clip_space.hpp>
 
 namespace OpenGL
 {
@@ -21,12 +23,16 @@ namespace OpenGL
 
 	public:
 		void CommitToShader(Shader& shader);
+		const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
+		const glm::mat4& GetProjMatrix() const { return m_ProjMatrix; }
 
 	private:
-		glm::vec3 m_Position = glm::vec3(10.0f, 0.0f, -4.0f);
+		glm::vec3 m_Position = glm::vec3(-4.5f, 0.0f, 0.0f);
 		glm::vec3 m_Ambient	= glm::vec3(.0f, .0f, .0f);
 		glm::vec3 m_Diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
 		glm::vec3 m_Specular = glm::vec3(1.0f, 1.0f, 1.0f);
+		glm::mat4 m_ViewMatrix = glm::lookAt(m_Position, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glm::mat4 m_ProjMatrix = glm::perspective(1.0472f, 1280.0f / 720.0f, 0.1f, 1000.0f);
 	};
 
 	/**

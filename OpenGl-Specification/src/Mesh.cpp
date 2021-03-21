@@ -13,6 +13,11 @@ namespace OpenGL
 	{
 		glUseProgram(shader);
 
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_CCW);
+		glDepthFunc(GL_LEQUAL);
+
 		// Draw Mesh
 		// shader.SetUniformInt("uMaterial.diffuse", 0);
 		// glActiveTexture(GL_TEXTURE0);
@@ -20,6 +25,7 @@ namespace OpenGL
 		// shader.SetUniformInt("uMaterial.specular", 1);
 		// glActiveTexture(GL_TEXTURE1);
 		// glBindTexture(GL_TEXTURE_2D, Textures[1].ID);
+
 		glBindVertexArray(VAO);	// Bind
 		glDrawElements(GL_TRIANGLES, VertexIndices.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);	// Unbind

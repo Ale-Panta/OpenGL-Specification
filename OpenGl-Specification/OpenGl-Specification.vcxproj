@@ -182,6 +182,10 @@
     <None Include="assets\shaders\fragShader.glsl" />
     <None Include="assets\shaders\BlinnPhong\vertBlinnPhongShader.glsl" />
     <None Include="assets\shaders\Gouraud\vertGouraudShader.glsl" />
+    <None Include="assets\shaders\Shadow\fragDepthShader.glsl" />
+    <None Include="assets\shaders\Shadow\fragShadowShader.glsl" />
+    <None Include="assets\shaders\Shadow\vertDepthShader.glsl" />
+    <None Include="assets\shaders\Shadow\vertShadowShader.glsl" />
     <None Include="assets\shaders\vertLitShader.glsl" />
     <None Include="assets\shaders\Phong\vertPhongShader.glsl" />
     <None Include="assets\shaders\vertShader.glsl" />

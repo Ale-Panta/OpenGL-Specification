@@ -7,6 +7,7 @@
 #include <vector>
 #include <GL/glew.h>
 #include <GLM/ext/matrix_float4x2_precision.hpp>
+#include <glm/ext/matrix_transform.hpp>
 
 namespace OpenGL
 {
@@ -36,6 +37,8 @@ namespace OpenGL
 		 * Call glDrawElements().
 		 */
 		void Draw(Shader& shader);
+		void SetPosition(const glm::vec3& RefPosition) { m_Position = RefPosition; }
+		const glm::mat4& GetModelMatrix() const { return glm::translate(glm::mat4(1.0f), m_Position); }
 
 	protected:
 		/**
@@ -44,6 +47,8 @@ namespace OpenGL
 		void SetupMesh();
 
 	public:
+		glm::vec3 m_Position = glm::vec3(0.0f);
+
 		// Mesh data
 		std::vector<Vertex> Vertices;
 		std::vector<Texture*> Textures;
