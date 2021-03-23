@@ -58,7 +58,6 @@ void main(void)
 	Normal = (normMat * vec4(aNormal, 1.0)).xyz;
 
 	ShadowCoord = uShadowMVP * vec4(aPosition, 1.0);
-	ShadowCoord.z -= 0.055;
 
 	gl_Position = uProjection * uView * uModel * vec4(aPosition, 1.0);
 

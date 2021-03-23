@@ -154,13 +154,17 @@ namespace OpenGL
 
 		// Disable drawing colors but enable the depth computation
 		glDrawBuffer(GL_NONE);
+		glReadBuffer(GL_NONE);
 		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_POLYGON_OFFSET_FILL);
+		glPolygonOffset(2.0f, 16.0f);
 
 		// #Begin pass one...
 
+		glClear(GL_DEPTH_BUFFER_BIT);
+
 		mat4 torusModel = translate(glm::mat4(1.0f), vec3(0.0f)) *glm::rotate(glm::mat4(1.0f), 90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 		m_DepthTestShader->SetUniformMatrix4("uShadowMVP", m_Light->GetProjMatrix() * m_Light->GetViewMatrix() * torusModel);
-		glClear(GL_DEPTH_BUFFER_BIT);
 		m_Torus->Draw(*m_DepthTestShader);
 
 		mat4 sphereModel = translate(glm::mat4(1.0f), glm::vec3(sin((float)currentTime) * 3.0f, 0.0f, cos((float)currentTime) * 2.0f)) * glm::rotate(glm::mat4(1.0f), 90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
@@ -168,6 +172,9 @@ namespace OpenGL
 		m_Sphere->Draw(*m_DepthTestShader);
 
 		// #End pass one
+
+		glPolygonOffset(0.0f, 0.0f);
+		glDisable(GL_POLYGON_OFFSET_FILL);
 
 		// Restore default display buffer, and re-enable drawing.
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);

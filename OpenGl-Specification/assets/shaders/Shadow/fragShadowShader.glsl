@@ -48,13 +48,32 @@ in vec4 ShadowCoord;
 
 out vec4 Color;
 
+float lookup(float ox, float oy)
+{
+	float t = textureProj(aShadowTex, ShadowCoord + vec4(ox * 0.001 * ShadowCoord.w, oy * 0.001 * ShadowCoord.w, -0.01, 0.0));
+	return t;
+}
+
 void main(void)
 { 
+	float shadowFactor = 0.0;
+
 	// Normalize the light, normal and view vectors
 	vec3 l = normalize(LightDir.xyz);
 	vec3 n = normalize(Normal.xyz);
 	vec3 p = normalize(-Position.xyz);
 	vec3 h = normalize(HalfVector);
+
+	// --- This section produces a 4-samples dithered soft shadow
+	float swidth = 2.5;	// Tunable amount of shadow spread.
+	
+	// Produces one of 4 samples pattern depending on glFragCoord mod 2
+	vec2 offset = mod(floor(gl_FragCoord.xy), 2.0) * swidth;
+	shadowFactor += lookup(-1.5 * swidth + offset.x,  1.5 * swidth - offset.y);
+	shadowFactor += lookup(-1.5 * swidth + offset.x, -0.5 * swidth - offset.y);
+	shadowFactor += lookup( 0.5 * swidth + offset.x,  1.5 * swidth - offset.y);
+	shadowFactor += lookup( 0.5 * swidth + offset.x, -0.5 * swidth - offset.y);
+	shadowFactor = shadowFactor / 4.0;	// Shadow factor is an average of the four sampled points.
 
 	// Get the angle between the light and surface normal
 	float cosTheta = dot(l, n);
@@ -64,15 +83,12 @@ void main(void)
 	
 	float notInShadow = textureProj(aShadowTex, ShadowCoord);
 
-	Color = vec4(uMaterial.globalAmbient * uMaterial.ambient + uLight.ambient * uMaterial.ambient, 1.0);
+	vec3 shadowColor = uMaterial.globalAmbient * uMaterial.ambient + uLight.ambient * uMaterial.ambient;
 	
-	if (notInShadow == 1.0)
-	{
-		// Compute ADS contributions (per pixel), and combine to build output color
-		vec3 ambient = ((uMaterial.globalAmbient * uMaterial.ambient) + (uLight.ambient * uMaterial.ambient)).xyz;
-		vec3 diffuse = uLight.diffuse.xyz * uMaterial.diffuse.xyz * max(cosTheta, 0.0);
-		vec3 specular = uLight.specular.xyz * uMaterial.specular.xyz * pow(max(cosPhi, 0.0), uMaterial.shininess * 3.0);
+	// Compute ADS contributions (per pixel), and combine to build output color
+	vec3 diffuse = uLight.diffuse.xyz * uMaterial.diffuse.xyz * max(cosTheta, 0.0);
+	vec3 specular = uLight.specular.xyz * uMaterial.specular.xyz * pow(max(cosPhi, 0.0), uMaterial.shininess * 3.0);
 
-		Color += vec4((ambient + diffuse + specular), 1.0);
-	}
+	vec3 lightedColor = diffuse + specular;
+	Color = vec4((shadowColor + shadowFactor * (lightedColor)), 1.0);
 }
