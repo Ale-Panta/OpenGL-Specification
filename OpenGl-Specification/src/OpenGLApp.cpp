@@ -33,12 +33,18 @@ namespace OpenGL
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
+		// Declare multi-sample
+		glfwWindowHint(GLFW_SAMPLES, 4);
+
 		// Create the window context.
 		// Note: Creating the window doesn't make it current context by default.
 		m_Context = glfwCreateWindow(m_Width, m_Height, m_Name.c_str(), nullptr, nullptr);
 
 		// Mark the window as current context
 		glfwMakeContextCurrent(m_Context);
+
+		// Enable multi-samples.
+		glEnable(GL_MULTISAMPLE);
 
 		m_IsInitializedProperly = true;
 		return m_IsInitializedProperly;
@@ -133,7 +139,7 @@ namespace OpenGL
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
-		m_TextureTransormation = {
+		m_ShadowTexBias = {
 			0.5f, 0.0f, 0.0f, 0.0f,
 			0.0f, 0.5f, 0.0f, 0.0f,
 			0.0f, 0.0f, 0.5f, 0.0f,
@@ -156,6 +162,8 @@ namespace OpenGL
 		glDrawBuffer(GL_NONE);
 		glReadBuffer(GL_NONE);
 		glEnable(GL_DEPTH_TEST);
+
+		// Resolving shadow acne artifact
 		glEnable(GL_POLYGON_OFFSET_FILL);
 		glPolygonOffset(2.0f, 16.0f);
 
@@ -195,12 +203,12 @@ namespace OpenGL
 
 		m_SilverMaterial->CommitToProgram(*m_ShadowShader);
 		m_ShadowShader->SetUniformMatrix4("uModel", torusModel);
-		m_ShadowShader->SetUniformMatrix4("uShadowMVP", m_TextureTransormation * m_Light->GetProjMatrix() * m_Light->GetViewMatrix() * torusModel);
+		m_ShadowShader->SetUniformMatrix4("uShadowMVP", m_ShadowTexBias * m_Light->GetProjMatrix() * m_Light->GetViewMatrix() * torusModel);
 		m_Torus->Draw(*m_ShadowShader);
 
 		m_GoldMaterial->CommitToProgram(*m_ShadowShader);
 		m_ShadowShader->SetUniformMatrix4("uModel", sphereModel);
-		m_ShadowShader->SetUniformMatrix4("uShadowMVP", m_TextureTransormation * m_Light->GetProjMatrix() * m_Light->GetViewMatrix() * sphereModel);
+		m_ShadowShader->SetUniformMatrix4("uShadowMVP", m_ShadowTexBias * m_Light->GetProjMatrix() * m_Light->GetViewMatrix() * sphereModel);
 		m_Sphere->Draw(*m_ShadowShader);
 
 		// #End pass two

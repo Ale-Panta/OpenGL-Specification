@@ -73,7 +73,9 @@ void main(void)
 	shadowFactor += lookup(-1.5 * swidth + offset.x, -0.5 * swidth - offset.y);
 	shadowFactor += lookup( 0.5 * swidth + offset.x,  1.5 * swidth - offset.y);
 	shadowFactor += lookup( 0.5 * swidth + offset.x, -0.5 * swidth - offset.y);
-	shadowFactor = shadowFactor / 4.0;	// Shadow factor is an average of the four sampled points.
+	
+	// Shadow factor is an average of the four sampled points.
+	shadowFactor = shadowFactor / 4.0;
 
 	// Get the angle between the light and surface normal
 	float cosTheta = dot(l, n);

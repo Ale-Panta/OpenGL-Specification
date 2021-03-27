@@ -73,21 +73,26 @@ namespace OpenGL
 
 		// Rendering
 		std::shared_ptr<Camera> m_Camera			= NULL;
+
 		// Geometry
 		std::shared_ptr<Mesh> m_Torus				= NULL;
 		std::shared_ptr<Mesh> m_Sphere				= NULL;
+
 		// Lights
 		std::shared_ptr<Light> m_Light				= NULL;
+
 		// Shaders
 		std::shared_ptr<Shader> m_LitShader			= NULL;
 		std::shared_ptr<Shader> m_DepthTestShader	= NULL;
 		std::shared_ptr<Shader> m_ShadowShader		= NULL;
+
 		// FrameBuffers and Textures
 		GLuint m_DepthFBO = 0;
 		GLuint m_DepthTex = 0;
 		int m_ScreenSizeX = 0;
 		int m_ScreenSizeY = 0;
-		glm::mat4 m_TextureTransormation = glm::mat4(1.0f);
+		glm::mat4 m_ShadowTexBias = glm::mat4(1.0f);
+
 		// Materials
 		std::shared_ptr<Material> m_SilverMaterial	= NULL;
 		std::shared_ptr<Material> m_GoldMaterial	= NULL;

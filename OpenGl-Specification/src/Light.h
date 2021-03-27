@@ -27,7 +27,7 @@ namespace OpenGL
 		const glm::mat4& GetProjMatrix() const { return m_ProjMatrix; }
 
 	private:
-		glm::vec3 m_Position = glm::vec3(-4.5f, 0.0f, 0.0f);
+		glm::vec3 m_Position = glm::vec3(-7.0f, 0.0f, 0.0f);
 		glm::vec3 m_Ambient	= glm::vec3(.0f, .0f, .0f);
 		glm::vec3 m_Diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
 		glm::vec3 m_Specular = glm::vec3(1.0f, 1.0f, 1.0f);
