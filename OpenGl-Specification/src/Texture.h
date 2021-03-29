@@ -24,5 +24,8 @@ namespace OpenGL
 	public:
 		Texture2D() = default;
 		Texture2D(const char* filePath);
+
+	public:
+		operator GLuint() { return m_ID; }
 	};
 }

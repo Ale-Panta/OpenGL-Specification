@@ -2,7 +2,7 @@
 
 namespace OpenGL
 {
-	void Light::CommitToShader(Shader& shader)
+	void Light::CommitToProgram(Shader& shader)
 	{
 		shader.SetUniformVec3("uLight.position", m_Position);
 		shader.SetUniformVec3("uLight.ambient", m_Ambient);

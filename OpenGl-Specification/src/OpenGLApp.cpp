@@ -1,6 +1,7 @@
 #include "OpenGLApp.h"
 #include "../assets/meshes/Sphere.h"
 #include "../assets/meshes/Torus.h"
+#include "../assets/meshes/Cube.h"
 
 #include <iostream>
 
@@ -105,6 +106,7 @@ namespace OpenGL
 		// Create geometries
 		m_Torus		= std::make_shared<Torus>();
 		m_Sphere	= std::make_shared<Sphere>();
+		m_CubeMap	= std::make_shared<Cube>();
 
 		// Create light source
 		m_Light	= std::make_shared<Light>();
@@ -117,6 +119,7 @@ namespace OpenGL
 		m_LitShader			= std::make_shared<Shader>("assets/shaders/BlinnPhong/vertBlinnPhongShader.glsl", "assets/shaders/BlinnPhong/fragBlinnPhongShader.glsl");
 		m_DepthTestShader	= std::make_shared<Shader>("assets/shaders/Shadow/vertDepthShader.glsl", "assets/shaders/Shadow/fragDepthShader.glsl");
 		m_ShadowShader		= std::make_shared<Shader>("assets/shaders/Shadow/vertShadowShader.glsl", "assets/shaders/Shadow/fragShadowShader.glsl");
+		m_CubeMapShader		= std::make_shared<Shader>("assets/shaders/CubeMap/vertCubeMapShader.glsl", "assets/shaders/CubeMap/fragCubeMapShader.glsl");
 
 		glfwGetFramebufferSize(window, &m_Width, &m_Height);
 		m_ScreenSizeX = m_Width;
@@ -165,7 +168,7 @@ namespace OpenGL
 
 		// Resolving shadow acne artifact
 		glEnable(GL_POLYGON_OFFSET_FILL);
-		glPolygonOffset(2.0f, 16.0f);
+		glPolygonOffset(2.0f, 4.0f);
 
 		// #Begin pass one...
 
@@ -175,9 +178,13 @@ namespace OpenGL
 		m_DepthTestShader->SetUniformMatrix4("uShadowMVP", m_Light->GetProjMatrix() * m_Light->GetViewMatrix() * torusModel);
 		m_Torus->Draw(*m_DepthTestShader);
 
+		glCullFace(GL_FRONT);
+
 		mat4 sphereModel = translate(glm::mat4(1.0f), glm::vec3(sin((float)currentTime) * 3.0f, 0.0f, cos((float)currentTime) * 2.0f)) * glm::rotate(glm::mat4(1.0f), 90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 		m_DepthTestShader->SetUniformMatrix4("uShadowMVP", m_Light->GetProjMatrix() * m_Light->GetViewMatrix() * sphereModel);
 		m_Sphere->Draw(*m_DepthTestShader);
+
+		glCullFace(GL_BACK);
 
 		// #End pass one
 
@@ -190,11 +197,22 @@ namespace OpenGL
 		glBindTexture(GL_TEXTURE_2D, m_DepthTex);
 		glDrawBuffer(GL_FRONT);
 
+		// #Begin skybox ...
+
+		m_CubeMapShader->SetUniformMatrix4("uView", m_Camera->GetViewMatrix());
+		m_CubeMapShader->SetUniformMatrix4("uProjection", m_Camera->GetProjMatrix());
+
+		// Render the cube map first of all
+		m_CubeMapShader->SetUniformMatrix4("uModel", m_Camera->GetModelMatrix());
+		m_CubeMap->Draw(*m_CubeMapShader);
+
+		// #End skybox...
+
 		// #Begin pass two...
 
 		glClear(GL_DEPTH_BUFFER_BIT);
 
-		m_Light->CommitToShader(*m_ShadowShader);
+		m_Light->CommitToProgram(*m_ShadowShader);
 
 		m_ShadowShader->SetUniformFloat("uTime", (float)currentTime);
 

@@ -45,6 +45,9 @@
     <ClCompile Include="src\Light.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
+    <ClCompile Include="assets\meshes\Cube.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="assets\meshes\Sphere.h">
@@ -74,6 +77,9 @@
     <ClInclude Include="src\Light.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+    <ClInclude Include="assets\meshes\Cube.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\vertShader.glsl" />
@@ -90,5 +96,7 @@
     <None Include="assets\shaders\Shadow\fragShadowShader.glsl" />
     <None Include="assets\shaders\Shadow\vertDepthShader.glsl" />
     <None Include="assets\shaders\Shadow\vertShadowShader.glsl" />
+    <None Include="assets\shaders\CubeMap\vertCubeMapShader.glsl" />
+    <None Include="assets\shaders\CubeMap\fragCubeMapShader.glsl" />
   </ItemGroup>
 </Project>

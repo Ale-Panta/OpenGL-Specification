@@ -36,7 +36,7 @@ namespace OpenGL
 		 * Activate the proper VAO and textures slot.
 		 * Call glDrawElements().
 		 */
-		void Draw(Shader& shader);
+		virtual void Draw(Shader& shader);
 		void SetPosition(const glm::vec3& RefPosition) { m_Position = RefPosition; }
 		const glm::mat4& GetModelMatrix() const { return glm::translate(glm::mat4(1.0f), m_Position); }
 
@@ -44,19 +44,19 @@ namespace OpenGL
 		/**
 		 * Setup vertex and indices buffers, attributes, textures.
 		 */
-		void SetupMesh();
+		virtual void SetupMesh();
 
 	public:
 		glm::vec3 m_Position = glm::vec3(0.0f);
 
 		// Mesh data
 		std::vector<Vertex> Vertices;
-		std::vector<Texture*> Textures;
+		std::vector<Texture2D*> Textures;
 		std::vector<GLuint> VertexIndices;
 		std::vector<GLuint> TexCoordIndices;
 		std::vector<GLuint> NormalsIndices;
 
-	private:
+	protected:
 		/**
 		 * Vertex array object
 		 * #TODO: Explain what is it

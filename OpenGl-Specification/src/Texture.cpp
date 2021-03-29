@@ -26,11 +26,12 @@ namespace OpenGL
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
 			glGenerateMipmap(GL_TEXTURE_2D);
+
+			// Free up the memory.
+			glActiveTexture(0);
+			glBindTexture(GL_TEXTURE_2D, 0);
+			SOIL_free_image_data(data);
 		}
 
-		// Free up the memory.
-		glActiveTexture(0);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		SOIL_free_image_data(data);
 	}
 }

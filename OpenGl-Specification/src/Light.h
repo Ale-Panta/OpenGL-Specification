@@ -22,7 +22,7 @@ namespace OpenGL
 		Light() = default;
 
 	public:
-		void CommitToShader(Shader& shader);
+		void CommitToProgram(Shader& shader);
 		const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
 		const glm::mat4& GetProjMatrix() const { return m_ProjMatrix; }
 

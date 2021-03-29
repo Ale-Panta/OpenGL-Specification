@@ -77,6 +77,7 @@ namespace OpenGL
 		// Geometry
 		std::shared_ptr<Mesh> m_Torus				= NULL;
 		std::shared_ptr<Mesh> m_Sphere				= NULL;
+		std::shared_ptr<Mesh> m_CubeMap				= NULL;
 
 		// Lights
 		std::shared_ptr<Light> m_Light				= NULL;
@@ -85,6 +86,7 @@ namespace OpenGL
 		std::shared_ptr<Shader> m_LitShader			= NULL;
 		std::shared_ptr<Shader> m_DepthTestShader	= NULL;
 		std::shared_ptr<Shader> m_ShadowShader		= NULL;
+		std::shared_ptr<Shader> m_CubeMapShader		= NULL;
 
 		// FrameBuffers and Textures
 		GLuint m_DepthFBO = 0;

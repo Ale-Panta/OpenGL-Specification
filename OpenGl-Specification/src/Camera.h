@@ -2,6 +2,7 @@
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
 #include <glm/ext/matrix_clip_space.hpp>
+#include <glm/ext/matrix_transform.hpp>
 
 namespace OpenGL
 {
@@ -15,6 +16,7 @@ namespace OpenGL
 		void ProcessRotation(float xOffset, float yOffset, GLboolean constraintPitch = true);
 		void ProcessZoom(float yOffset);
 		const glm::mat4& GetViewMatrix() const { return m_View; }
+		const glm::mat4& GetModelMatrix() const { return glm::translate(glm::mat4(1.0f), m_Position); }
 		const glm::mat4& GetProjMatrix() const { return m_Projection; }
 
 	private:
