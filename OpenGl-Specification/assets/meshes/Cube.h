@@ -20,7 +20,7 @@ namespace OpenGL
 		virtual void SetupMesh() override;
 
 	private:
-		Texture2D* m_CubeMap = nullptr;
+		TextureCubeMap* m_CubeMap = nullptr;
 		GLuint TextureID;
 
 		float VertexPositions[108] = {

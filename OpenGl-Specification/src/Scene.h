@@ -62,9 +62,11 @@ namespace OpenGL
 
 		// FrameBuffers and Textures
 		GLuint m_DepthFBO = 0;
-		std::shared_ptr<DepthTexture> m_DepthTexture;
+		std::shared_ptr<TextureShadow> m_DepthTexture;
 		int m_ScreenSizeX = 0;
 		int m_ScreenSizeY = 0;
+
+		/** Matrix transformation allow us to transform the coordinates from (-1, 1) to (0, 1) */
 		glm::mat4 m_ShadowTexBias = glm::mat4(1.0f);
 
 		// Materials

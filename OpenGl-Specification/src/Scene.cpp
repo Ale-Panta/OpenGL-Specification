@@ -23,6 +23,7 @@ namespace OpenGL
 		m_SilverMaterial	= make_shared<SilverMaterial>();
 		m_GoldMaterial		= make_shared<GoldMaterial>();
 
+		// Create Bias matrix (division and addition).
 		m_ShadowTexBias = {
 			0.5f, 0.0f, 0.0f, 0.0f,
 			0.0f, 0.5f, 0.0f, 0.0f,
@@ -44,6 +45,7 @@ namespace OpenGL
 		glClear(GL_COLOR_BUFFER_BIT);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
+		// Below are rendered the elements in order. This order is a must and it should be never broken.
 		RenderSkyBox(context, currentTime);
 		RenderShadow(context, currentTime);
 		RenderGeometry(context, currentTime);
@@ -63,11 +65,11 @@ namespace OpenGL
 
 		glfwGetFramebufferSize(context, &m_ScreenSizeX, &m_ScreenSizeY);
 
-		// Create custom frame buffer
+		// Create custom frame buffer for the shadow.
 		glGenFramebuffers(1, &m_DepthFBO);
 
 		// Create the shadow texture and configure it to hold depth information.
-		m_DepthTexture = make_shared<DepthTexture>(m_DepthFBO, m_ScreenSizeX, m_ScreenSizeY);
+		m_DepthTexture = make_shared<TextureShadow>(m_DepthFBO, m_ScreenSizeX, m_ScreenSizeY);
 	}
 
 	void ShadowScene::RenderSkyBox(GLFWwindow* context, double currentTime)
@@ -101,13 +103,13 @@ namespace OpenGL
 		m_DepthTestShader->SetUniformMatrix4("uShadowMVP", m_Light->GetProjMatrix() * m_Light->GetViewMatrix() * torusModel);
 		m_Torus->Draw(*m_DepthTestShader);
 
-		glCullFace(GL_FRONT);
+		glCullFace(GL_FRONT);	// Avoid wrong shadow rendering on sphere
 
 		mat4 sphereModel = translate(glm::mat4(1.0f), glm::vec3(sin((float)currentTime) * 3.0f, 0.0f, cos((float)currentTime) * 2.0f)) * glm::rotate(glm::mat4(1.0f), 90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 		m_DepthTestShader->SetUniformMatrix4("uShadowMVP", m_Light->GetProjMatrix() * m_Light->GetViewMatrix() * sphereModel);
 		m_Sphere->Draw(*m_DepthTestShader);
 
-		glCullFace(GL_BACK);
+		glCullFace(GL_BACK);	// Reset cull face.
 
 		// #End pass one
 	}

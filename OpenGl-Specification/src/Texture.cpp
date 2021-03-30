@@ -35,7 +35,7 @@ namespace OpenGL
 
 	}
 
-	DepthTexture::DepthTexture(GLuint& frameBufferObject, int width, int height)
+	TextureShadow::TextureShadow(GLuint& frameBufferObject, int width, int height)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferObject);
 		glGenTextures(1, &m_ID);
@@ -49,5 +49,16 @@ namespace OpenGL
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	TextureCubeMap::TextureCubeMap(const char* right, const char* left, const char* top, const char* bottom, const char* front, const char* back)
+	{
+		m_ID = SOIL_load_OGL_cubemap(right, left, top, bottom, front, back, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS);
+
+		glBindTexture(GL_TEXTURE_CUBE_MAP, m_ID);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	}
 }

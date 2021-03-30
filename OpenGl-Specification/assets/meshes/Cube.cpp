@@ -15,7 +15,7 @@ namespace OpenGL
 		glUseProgram(shader);
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, TextureID);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, *m_CubeMap);
 
 		glEnable(GL_CULL_FACE);
 		glFrontFace(GL_CCW);
@@ -29,20 +29,14 @@ namespace OpenGL
 
 	void Cube::SetupMesh()
 	{
-		const char* top = "assets/textures/skybox/top.jpg";
-		const char* bottom = "assets/textures/skybox/bottom.jpg";
-		const char* left = "assets/textures/skybox/left.jpg";
-		const char* right = "assets/textures/skybox/right.jpg";
-		const char* front = "assets/textures/skybox/front.jpg";
-		const char* back = "assets/textures/skybox/back.jpg";
-		TextureID = SOIL_load_OGL_cubemap(right, left, top, bottom, front, back, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS);
-
-		glBindTexture(GL_TEXTURE_CUBE_MAP, TextureID);
-		// reduce seams
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+		m_CubeMap = new TextureCubeMap(
+			"assets/textures/skybox/right.jpg",
+			"assets/textures/skybox/left.jpg",
+			"assets/textures/skybox/top.jpg",
+			"assets/textures/skybox/bottom.jpg",
+			"assets/textures/skybox/front.jpg",
+			"assets/textures/skybox/back.jpg"
+		);
 
 		glGenVertexArrays(1, &VAO);
 		glGenBuffers(1, &VBO);
