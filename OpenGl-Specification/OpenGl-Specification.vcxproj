@@ -160,6 +160,7 @@
     <ClCompile Include="src\Material.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\OpenGLApp.cpp" />
+    <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="assets\meshes\Sphere.cpp" />
     <ClCompile Include="src\Texture.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="src\Material.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\OpenGLApp.h" />
+    <ClInclude Include="src\Scene.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="assets\meshes\Sphere.h" />
     <ClInclude Include="src\Texture.h" />

@@ -24,8 +24,11 @@ namespace OpenGL
 	public:
 		Texture2D() = default;
 		Texture2D(const char* filePath);
+	};
 
+	class DepthTexture : public Texture
+	{
 	public:
-		operator GLuint() { return m_ID; }
+		DepthTexture(GLuint& frameBufferObject, int width, int height);
 	};
 }

@@ -17,7 +17,7 @@ namespace OpenGL
 		float deltaTime = 0.0f;	// Time between current frame and last frame
 		float lastFrame = 0.0f; // Time of last frame
 
-		float currentFrame = glfwGetTime();
+		float currentFrame = (float)glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
