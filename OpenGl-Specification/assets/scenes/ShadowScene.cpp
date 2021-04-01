@@ -1,7 +1,8 @@
-#include "Scene.h"
-#include "../assets/meshes/Cube.h"
-#include "../assets/meshes/Torus.h"
-#include "../assets/meshes/Sphere.h"
+#include "ShadowScene.h"
+
+#include "../../assets/meshes/Cube.h"
+#include "../../assets/meshes/Torus.h"
+#include "../../assets/meshes/Sphere.h"
 
 #include <glm/ext/matrix_float4x4.hpp>
 
@@ -19,9 +20,9 @@ namespace OpenGL
 		m_Light = make_shared<Light>();
 
 		// Create materials
-		m_BronzeMaterial	= make_shared<BronzeMaterial>();
-		m_SilverMaterial	= make_shared<SilverMaterial>();
-		m_GoldMaterial		= make_shared<GoldMaterial>();
+		m_BronzeMaterial = make_shared<BronzeMaterial>();
+		m_SilverMaterial = make_shared<SilverMaterial>();
+		m_GoldMaterial = make_shared<GoldMaterial>();
 
 		// Create Bias matrix (division and addition).
 		m_ShadowTexBias = {
@@ -54,14 +55,14 @@ namespace OpenGL
 	void ShadowScene::BeginScene(GLFWwindow* context)
 	{
 		// Create shaders
-		m_DepthTestShader	= make_shared<Shader>("assets/shaders/Shadow/vertDepthShader.glsl", "assets/shaders/Shadow/fragDepthShader.glsl");
-		m_ShadowShader		= make_shared<Shader>("assets/shaders/Shadow/vertShadowShader.glsl", "assets/shaders/Shadow/fragShadowShader.glsl");
-		m_CubeMapShader		= make_shared<Shader>("assets/shaders/CubeMap/vertCubeMapShader.glsl", "assets/shaders/CubeMap/fragCubeMapShader.glsl");
+		m_DepthTestShader = make_shared<Shader>("assets/shaders/Shadow/vertDepthShader.glsl", "assets/shaders/Shadow/fragDepthShader.glsl");
+		m_ShadowShader = make_shared<Shader>("assets/shaders/Shadow/vertShadowShader.glsl", "assets/shaders/Shadow/fragShadowShader.glsl");
+		m_CubeMapShader = make_shared<Shader>("assets/shaders/CubeMap/vertCubeMapShader.glsl", "assets/shaders/CubeMap/fragCubeMapShader.glsl");
 
 		// Create geometries
-		m_Torus		= make_shared<Torus>();
-		m_Sphere	= make_shared<Sphere>();
-		m_CubeMap	= make_shared<Cube>();
+		m_Torus = make_shared<Torus>();
+		m_Sphere = make_shared<Sphere>();
+		m_CubeMap = make_shared<Cube>();
 
 		glfwGetFramebufferSize(context, &m_ScreenSizeX, &m_ScreenSizeY);
 
@@ -93,7 +94,7 @@ namespace OpenGL
 
 		// Resolving shadow acne artifact
 		glEnable(GL_POLYGON_OFFSET_FILL);
-		glPolygonOffset(2.0f, 4.0f);
+		glPolygonOffset(3.0f, 4.0f);
 
 		// #Begin pass one...
 

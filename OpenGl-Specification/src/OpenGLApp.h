@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Scene.h"
+#include "../assets/scenes/ShadowScene.h"
 
 #include <string>
 #include <memory>
@@ -20,9 +20,7 @@ namespace OpenGL
 		OpenGLApp(const char* name, int width, int height);
 
 	public:
-		/**
-		 * Initialize the context window.
-		 */
+		/** Initialize the context window */
 		bool InitWindow();
 
 		/**
@@ -38,9 +36,7 @@ namespace OpenGL
 		void Run();
 
 	private:
-		/**
-		 * Exit the OpenGL context properly.
-		 */
+		/** Exit the OpenGL context properly */
 		void Terminate();
 
 	private:

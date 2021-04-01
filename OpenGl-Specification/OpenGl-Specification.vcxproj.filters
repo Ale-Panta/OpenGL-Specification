@@ -48,7 +48,7 @@
     <ClCompile Include="assets\meshes\Cube.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scene.cpp">
+    <ClCompile Include="assets\scenes\ShadowScene.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
   </ItemGroup>
@@ -84,6 +84,9 @@
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="src\Scene.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="assets\scenes\ShadowScene.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>

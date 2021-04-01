@@ -11,6 +11,12 @@
 
 namespace OpenGL
 {
+	/**
+	 * The scene asset works as container of all geometries. It's job is to declare how those geometries will be rendered.
+	 * You can't instantiate this class directly, you need to create a child of this one.
+	 * The child class will have reference to light, frame buffer, geometries and all things you need to have in order
+	 * to renderer the scene you want.
+	 */
 	class Scene
 	{
 	public:
@@ -28,50 +34,5 @@ namespace OpenGL
 
 		/** Restore frame buffer, commit uniforms and draw geometry to the screen */
 		virtual void RenderGeometry(GLFWwindow* context, double currentTime) = 0;
-	};
-
-	class ShadowScene : Scene
-	{
-	public:
-		ShadowScene();
-		~ShadowScene();
-
-	public:
-		void BeginScene(GLFWwindow* context) override;
-		void RenderScene(GLFWwindow* context, double currentTime) override;
-		void RenderSkyBox(GLFWwindow* context, double currentTime) override;
-		void RenderShadow(GLFWwindow* context, double currentTime) override;
-		void RenderGeometry(GLFWwindow* context, double currentTime) override;
-
-	public:
-		// Rendering
-		std::shared_ptr<Camera> m_Camera = NULL;
-
-		// Lights
-		std::shared_ptr<Light> m_Light = NULL;
-
-		// Shaders
-		std::shared_ptr<Shader> m_DepthTestShader	= NULL;
-		std::shared_ptr<Shader> m_ShadowShader		= NULL;
-		std::shared_ptr<Shader> m_CubeMapShader		= NULL;
-
-		// Geometry
-		std::shared_ptr<Mesh> m_Torus	= NULL;
-		std::shared_ptr<Mesh> m_Sphere	= NULL;
-		std::shared_ptr<Mesh> m_CubeMap = NULL;
-
-		// FrameBuffers and Textures
-		GLuint m_DepthFBO = 0;
-		std::shared_ptr<TextureShadow> m_DepthTexture;
-		int m_ScreenSizeX = 0;
-		int m_ScreenSizeY = 0;
-
-		/** Matrix transformation allow us to transform the coordinates from (-1, 1) to (0, 1) */
-		glm::mat4 m_ShadowTexBias = glm::mat4(1.0f);
-
-		// Materials
-		std::shared_ptr<Material> m_BronzeMaterial	= NULL;
-		std::shared_ptr<Material> m_SilverMaterial	= NULL;
-		std::shared_ptr<Material> m_GoldMaterial	= NULL;
 	};
 }

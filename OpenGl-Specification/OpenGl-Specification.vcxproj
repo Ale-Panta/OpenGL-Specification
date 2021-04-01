@@ -154,13 +154,13 @@
   <ItemGroup>
     <ClCompile Include="assets\meshes\Cube.cpp" />
     <ClCompile Include="assets\meshes\Torus.cpp" />
+    <ClCompile Include="assets\scenes\ShadowScene.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Light.cpp" />
     <ClCompile Include="src\Material.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\OpenGLApp.cpp" />
-    <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="assets\meshes\Sphere.cpp" />
     <ClCompile Include="src\Texture.cpp" />
@@ -168,6 +168,7 @@
   <ItemGroup>
     <ClInclude Include="assets\meshes\Cube.h" />
     <ClInclude Include="assets\meshes\Torus.h" />
+    <ClInclude Include="assets\scenes\ShadowScene.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Light.h" />
     <ClInclude Include="src\Material.h" />
