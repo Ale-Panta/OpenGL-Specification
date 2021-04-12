@@ -14,9 +14,9 @@ namespace OpenGL
 		glUseProgram(shader);
 
 		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LEQUAL);
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_CCW);
-		glDepthFunc(GL_LEQUAL);
 
 		// Draw Mesh
 		// shader.SetUniformInt("uMaterial.diffuse", 0);
@@ -33,9 +33,6 @@ namespace OpenGL
 
 	void Mesh::SetupMesh()
 	{
-		// Textures.push_back(diffuse);
-		// Textures.push_back(specular);
-
 		glGenVertexArrays(1, &VAO);
 		glGenBuffers(1, &VBO);
 		glGenBuffers(1, &EBO);
@@ -51,17 +48,17 @@ namespace OpenGL
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
 
-		// Vertex normals.
+		// Vertex texture coords.
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Vertex::TexCoords));
 
-		// Vertex texture coords.
+		// Vertex normals.
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Vertex::Normal));
 
-		// Vertex color
+		// Vertex tangent.
 		glEnableVertexAttribArray(3);
-		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Vertex::Color));
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Vertex::Tangent));
 
 		glBindVertexArray(0);
 	}

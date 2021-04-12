@@ -35,6 +35,11 @@ namespace OpenGL
 				Vertices[i * (precision + 1) + j].Position = glm::vec3(x, y, z);
 				Vertices[i * (precision + 1) + j].TexCoords = glm::vec2(((float)j / precision), ((float)i / precision));
 				Vertices[i * (precision + 1) + j].Normal = glm::vec3(x, y, z);
+				
+				if ((x == 0) && (y == 1) && (z == 0) || (x == 0) && (y == -1) && (z == 0))
+					Vertices[i * (precision + 1) + j].Tangent = glm::vec3(0.0f, 0.0f, -1.0f);
+				else
+					Vertices[i * (precision + 1) + j].Tangent = glm::cross(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(x, y, z));
 			}
 		}
 

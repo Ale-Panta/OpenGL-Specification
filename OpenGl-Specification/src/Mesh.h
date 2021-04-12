@@ -20,9 +20,8 @@ namespace OpenGL
 		glm::vec3 Position;
 		glm::vec2 TexCoords;
 		glm::vec3 Normal;
+		glm::vec3 Tangent;
 		glm::vec3 Color;
-		glm::vec3 STangent;
-		glm::vec3 TTangent;
 	};
 
 	class Mesh
@@ -51,7 +50,7 @@ namespace OpenGL
 
 		// Mesh data
 		std::vector<Vertex> Vertices;
-		std::vector<Texture2D*> Textures;
+		std::vector<Texture*> Textures;
 		std::vector<GLuint> VertexIndices;
 		std::vector<GLuint> TexCoordIndices;
 		std::vector<GLuint> NormalsIndices;

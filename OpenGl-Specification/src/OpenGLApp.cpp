@@ -1,4 +1,9 @@
 #include "OpenGLApp.h"
+#include "../assets/scenes/ShadowScene.h"
+#include "../assets/scenes/NormalMappingScene.h"
+#include "../assets/scenes/EnvironmentMappingScene.h"
+#include "../assets/scenes/HeightMapScene.h"
+#include "../assets/scenes/PBRScene.h"
 
 #include <iostream>
 
@@ -13,13 +18,13 @@ namespace OpenGL
 	OpenGLApp::OpenGLApp(const char* name)
 		: m_Name(name)
 	{
-		m_ShadowDemoScene = new ShadowScene();
+		m_ActiveScene = new PBRScene();
 	}
 
 	OpenGLApp::OpenGLApp(const char* name, int width, int height)
 		: m_Name(name), m_Width(width), m_Height(height)
 	{
-		m_ShadowDemoScene = new ShadowScene();
+		m_ActiveScene = new PBRScene();
 	}
 
 	bool OpenGLApp::InitWindow()
@@ -79,11 +84,11 @@ namespace OpenGL
 			return;
 		}
 
-		m_ShadowDemoScene->BeginScene(m_Context);
+		m_ActiveScene->BeginScene(m_Context);
 
 		while (!glfwWindowShouldClose(m_Context))
 		{
-			m_ShadowDemoScene->RenderScene(m_Context, glfwGetTime());
+			m_ActiveScene->RenderScene(m_Context, glfwGetTime());
 			glfwSwapBuffers(m_Context);			// GLFW are by default double-buffered.
 			glfwPollEvents();					// Handle other window-related events.
 		}

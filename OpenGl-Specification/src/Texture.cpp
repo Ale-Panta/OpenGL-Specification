@@ -11,6 +11,8 @@ namespace OpenGL
 
 	Texture2D::Texture2D(const char* filePath)
 	{
+		m_TexType = TextureType::Diffuse;
+
 		unsigned char* data = SOIL_load_image(filePath, &m_Width, &m_Height, nullptr, SOIL_LOAD_RGBA);
 
 		glGenTextures(1, &m_ID);
@@ -32,11 +34,12 @@ namespace OpenGL
 			glBindTexture(GL_TEXTURE_2D, 0);
 			SOIL_free_image_data(data);
 		}
-
 	}
 
 	TextureShadow::TextureShadow(GLuint& frameBufferObject, int width, int height)
 	{
+		m_TexType = TextureType::Diffuse;
+
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferObject);
 		glGenTextures(1, &m_ID);
 		glBindTexture(GL_TEXTURE_2D, m_ID);
@@ -53,6 +56,8 @@ namespace OpenGL
 
 	TextureCubeMap::TextureCubeMap(const char* right, const char* left, const char* top, const char* bottom, const char* front, const char* back)
 	{
+		m_TexType = TextureType::CubeMap;
+
 		m_ID = SOIL_load_OGL_cubemap(right, left, top, bottom, front, back, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS);
 
 		glBindTexture(GL_TEXTURE_CUBE_MAP, m_ID);

@@ -4,6 +4,12 @@
 
 namespace OpenGL
 {
+	enum class TextureType
+	{
+		Diffuse = GL_TEXTURE_2D, 
+		CubeMap = GL_TEXTURE_CUBE_MAP, 
+	};
+
 	/**
 	 * Parent class of all type of texture. Here are stored the most common properties shared among most
 	 * of the texture assets.
@@ -15,12 +21,14 @@ namespace OpenGL
 		~Texture();
 
 	public:
+		const TextureType GetTextureType() const { return m_TexType; }
 		operator GLuint() { return m_ID; }
 
 	protected:
 		GLuint m_ID		= 0;
 		int m_Width		= 0;
 		int m_Height	= 0;
+		TextureType m_TexType = TextureType::Diffuse;
 	};
 
 	/**

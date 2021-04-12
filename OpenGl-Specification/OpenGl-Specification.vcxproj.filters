@@ -51,6 +51,18 @@
     <ClCompile Include="assets\scenes\ShadowScene.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
+    <ClCompile Include="assets\scenes\EnvironmentMappingScene.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="assets\scenes\NormalMappingScene.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="assets\scenes\HeightMapScene.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="assets\scenes\PBRScene.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="assets\meshes\Sphere.h">
@@ -89,6 +101,18 @@
     <ClInclude Include="assets\scenes\ShadowScene.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+    <ClInclude Include="assets\scenes\EnvironmentMappingScene.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="assets\scenes\NormalMappingScene.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="assets\scenes\HeightMapScene.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="assets\scenes\PBRScene.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\vertShader.glsl" />
@@ -107,5 +131,13 @@
     <None Include="assets\shaders\Shadow\vertShadowShader.glsl" />
     <None Include="assets\shaders\CubeMap\vertCubeMapShader.glsl" />
     <None Include="assets\shaders\CubeMap\fragCubeMapShader.glsl" />
+    <None Include="assets\shaders\EnvironmentMapping\vertEnvMapping.glsl" />
+    <None Include="assets\shaders\EnvironmentMapping\fragEnvMapping.glsl" />
+    <None Include="assets\shaders\NormalMapping\vertNormalMappingShader.glsl" />
+    <None Include="assets\shaders\NormalMapping\fragNormalMappingShader.glsl" />
+    <None Include="assets\shaders\HeightMapping\fragHeightMapShader.glsl" />
+    <None Include="assets\shaders\HeightMapping\vertHeightMapShader.glsl" />
+    <None Include="assets\shaders\PBRCookTorrance\fragCookTorranceShader.glsl" />
+    <None Include="assets\shaders\PBRCookTorrance\vertCookTorranceShader.glsl" />
   </ItemGroup>
 </Project>

@@ -38,9 +38,10 @@ namespace OpenGL
 			
 			// compute tangents and normals -- first tangent is Y-axis rotated around Z
 			rMat = glm::rotate(glm::mat4(1.0f), amt, glm::vec3(0.0f, 0.0f, 1.0f));
-			Vertices[i].TTangent = glm::vec3(rMat * glm::vec4(0.0f, -1.0f, 0.0f, 1.0f));
-			Vertices[i].STangent = glm::vec3(glm::vec3(0.0f, 0.0f, -1.0f)); // second tangent is -Z.
-			Vertices[i].Normal = glm::cross(Vertices[i].TTangent, Vertices[i].STangent); // their X-product is the normal.     
+
+			//Vertices[i].TTangent = glm::vec3(rMat * glm::vec4(0.0f, -1.0f, 0.0f, 1.0f));
+			//Vertices[i].STangent = glm::vec3(glm::vec3(0.0f, 0.0f, -1.0f)); // second tangent is -Z.
+			//Vertices[i].Normal = glm::cross(Vertices[i].TTangent, Vertices[i].STangent); // their X-product is the normal.     
 		}
 
 		// rotate the first ring about Y to get the other rings   
@@ -60,11 +61,11 @@ namespace OpenGL
 					Vertices[ring*(precision +1) + vert].TexCoords.s -= 1.0f;
 				
 				// rotate the tangent and bitangent vectors around the Y axis
-				rMat = glm::rotate(glm::mat4(1.0f), amt, glm::vec3(0.0f, 1.0f, 0.0f));
-				Vertices[ring*(precision + 1) + vert].STangent = glm::vec3(rMat * glm::vec4(Vertices[vert].STangent, 1.0f));
-				rMat = glm::rotate(glm::mat4(1.0f), amt, glm::vec3(0.0f, 1.0f, 0.0f));
-				Vertices[ring*(precision + 1) + vert].TTangent = glm::vec3(rMat * glm::vec4(Vertices[vert].TTangent, 1.0f));
-				
+				//rMat = glm::rotate(glm::mat4(1.0f), amt, glm::vec3(0.0f, 1.0f, 0.0f));
+				//Vertices[ring * (precision + 1) + vert].STangent = glm::vec3(rMat * glm::vec4(Vertices[vert].STangent, 1.0f));
+				//rMat = glm::rotate(glm::mat4(1.0f), amt, glm::vec3(0.0f, 1.0f, 0.0f));
+				//Vertices[ring * (precision + 1) + vert].TTangent = glm::vec3(rMat * glm::vec4(Vertices[vert].TTangent, 1.0f));
+
 				// rotate the normal vector around the Y axis
 				rMat = glm::rotate(glm::mat4(1.0f), amt, glm::vec3(0.0f, 1.0f, 0.0f));
 				Vertices[ring*(precision + 1) + vert].Normal = glm::vec3(rMat * glm::vec4(Vertices[vert].Normal, 1.0f));

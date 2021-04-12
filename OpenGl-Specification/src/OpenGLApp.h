@@ -1,6 +1,5 @@
 #pragma once
-
-#include "../assets/scenes/ShadowScene.h"
+#include "Scene.h"
 
 #include <string>
 #include <memory>
@@ -49,6 +48,6 @@ namespace OpenGL
 		int m_Height = 720;
 		float m_AspectRatio = 1.0f;
 
-		ShadowScene* m_ShadowDemoScene = NULL;
+		Scene* m_ActiveScene = NULL;
 	};
 }

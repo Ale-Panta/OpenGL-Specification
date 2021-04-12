@@ -19,6 +19,7 @@ namespace OpenGL
 		const glm::mat4& GetViewMatrix() const { return m_View; }
 		const glm::mat4& GetModelMatrix() const { return glm::translate(glm::mat4(1.0f), m_Position); }
 		const glm::mat4& GetProjMatrix() const { return m_Projection; }
+		const glm::vec3& GetPosition() const { return m_Position; }
 
 	private:
 		void UpdateCameraVectors();
