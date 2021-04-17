@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Shader.h"
+#include "Material.h"
 #include "Texture.h"
 
 #include <string>
@@ -35,7 +35,7 @@ namespace OpenGL
 		 * Activate the proper VAO and textures slot.
 		 * Call glDrawElements().
 		 */
-		virtual void Draw(Shader& shader);
+		virtual void Draw(Material& material);
 		void SetPosition(const glm::vec3& RefPosition) { m_Position = RefPosition; }
 		const glm::mat4& GetModelMatrix() const { return glm::translate(glm::mat4(1.0f), m_Position); }
 

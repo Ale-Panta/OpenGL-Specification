@@ -19,8 +19,8 @@ void main(void)
 {
 	// Output vertex position, light direction, and normal to the rasterizer for interpolation.
 
-	Position = (uView * uModel * vec4(aPosition, 1.0)).xyz;
-	mat4 normMat = transpose(inverse(uView * uModel));
+	Position = (uModel * vec4(aPosition, 1.0)).xyz;
+	mat4 normMat = transpose(inverse(uModel));
 	Normal = (normMat * vec4(aNormal, 1.0)).xyz;
 
 	gl_Position = uProjection * uView * uModel * vec4(aPosition, 1.0);

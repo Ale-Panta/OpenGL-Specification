@@ -15,6 +15,11 @@ out vec4 Color;
 
 void main(void)
 {
-	vec3 r = -reflect(normalize(-Position), normalize(Normal));
+	// Retrieve the camera position from the view matrix.
+	vec3 cameraPos = inverse(uView)[3].xyz;
+
+	// Calculate direction from the camera to vertex
+	vec3 i = normalize(Position - cameraPos);
+	vec3 r = reflect(i, normalize(Normal));
 	Color = texture(uTexMap, r);
 }

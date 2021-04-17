@@ -13,34 +13,30 @@ namespace OpenGL
 
 	public:
 		void BeginScene(GLFWwindow* context) override;
-
-
 		void RenderScene(GLFWwindow* context, double currentTime) override;
-
-
 		void RenderSkyBox(GLFWwindow* context, double currentTime) override;
-
-
 		void RenderShadow(GLFWwindow* context, double currentTime) override;
-
-
 		void RenderGeometry(GLFWwindow* context, double currentTime) override;
 
 	private:
-		std::shared_ptr<Camera> m_Camera;
-		std::shared_ptr<glm::vec3> m_LightPosition;
-		std::shared_ptr<glm::vec3> m_LightColor;
+		std::shared_ptr<Camera>		mCamera;
+		std::shared_ptr<glm::vec3>	mLightPosition;
+		std::shared_ptr<glm::vec3>	mLightColor;
 		
-		std::shared_ptr<Shader> m_PBRShader;
-		std::shared_ptr<Material> m_BronzeMaterial;
+		std::stack<glm::mat4> mModelMatStack;
+		
+		// Cubemap
+		std::shared_ptr<Mesh>			mCubeMap;
+		std::shared_ptr<Shader>			mCubeMapShader;
+		std::shared_ptr<TextureCubeMap> mTexCubeMap;
 
-		std::shared_ptr<Mesh> m_Sphere;
-		std::stack<glm::mat4> m_ModelMatStack;
-
-		std::shared_ptr<Texture2D> m_AlbedoMap;
-		std::shared_ptr<Texture2D> m_MetallicMap;
-		std::shared_ptr<Texture2D> m_RoughnessMap;
-		std::shared_ptr<Texture2D> m_NormalMap;
-		std::shared_ptr<Texture2D> m_AOMap;
+		// Geometry scene
+		std::shared_ptr<Mesh>		mSphere;
+		std::shared_ptr<Shader>		mPBRShader;
+		std::shared_ptr<Material>	mMaterial;
+		std::shared_ptr<Texture2D>	mAlbedoMap;
+		std::shared_ptr<Texture2D>	mMetallicMap;
+		std::shared_ptr<Texture2D>	mRoughnessMap;
+		std::shared_ptr<Texture2D>	mNormalMap;
 	};
 }

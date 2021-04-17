@@ -10,17 +10,16 @@ namespace OpenGL
 {
 	void HeightMapScene::BeginScene(GLFWwindow* context)
 	{
-		m_Camera = make_shared<Camera>(vec3(.0f, .0f, 4.0f), .02f);
+		mCamera = make_shared<Camera>(vec3(.0f, .0f, 4.0f), .02f);
 		m_HeightMapShader = make_shared<Shader>("assets/shaders/HeightMapping/vertHeightMapShader.glsl", "assets/shaders/HeightMapping/fragHeightMapShader.glsl");
 		m_LightSource = make_shared<Light>();
-		m_BronzeMaterial = make_shared<BronzeMaterial>();
-		m_Sphere = make_shared<Sphere>(256);
+		mSphere = make_shared<Sphere>(256);
 		m_HeightMap = make_shared<Texture2D>("assets/textures/heightmap_test.png");
 	}
 
 	void HeightMapScene::RenderScene(GLFWwindow* context, double currentTime)
 	{
-		m_Camera->ProcessInput(context);
+		mCamera->ProcessInput(context);
 
 		glClearColor(.0f, .0f, .1f, 1.0f);
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
@@ -45,16 +44,15 @@ namespace OpenGL
 		mat4 sphereModelMatrix = translate(mat4(1.0f), vec3(.0f));
 
 		m_HeightMapShader->SetUniformMatrix4("uModel", sphereModelMatrix);
-		m_HeightMapShader->SetUniformMatrix4("uView", m_Camera->GetViewMatrix());
-		m_HeightMapShader->SetUniformMatrix4("uProjection", m_Camera->GetProjMatrix());
+		m_HeightMapShader->SetUniformMatrix4("uView", mCamera->GetViewMatrix());
+		m_HeightMapShader->SetUniformMatrix4("uProjection", mCamera->GetProjMatrix());
 
 		m_LightSource->CommitToProgram(*m_HeightMapShader);
-		m_BronzeMaterial->CommitToProgram(*m_HeightMapShader);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, *m_HeightMap);
 		m_HeightMapShader->SetUniformInt("uHeightMap", 0);
-		m_Sphere->Draw(*m_HeightMapShader);
+		//mSphere->Draw(*m_HeightMapShader);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 }

@@ -23,16 +23,16 @@ namespace OpenGL
 		void RenderGeometry(GLFWwindow* context, double currentTime) override;
 
 	private:
-		std::shared_ptr<Camera> m_Camera;
+		std::shared_ptr<Camera> mCamera;
 
 		std::shared_ptr<Material>	m_EnvMappingMaterial;
 		std::shared_ptr<Shader>		m_EnvMappingShader;
-		std::shared_ptr<Shader>		m_CubeMapShader;
+		std::shared_ptr<Shader>		mCubeMapShader;
 
-		std::shared_ptr<Mesh> m_Sphere;
+		std::shared_ptr<Mesh> mSphere;
 
-		std::shared_ptr<Mesh> m_CubeMap;
+		std::shared_ptr<Mesh> mCubeMap;
 
-		std::shared_ptr<TextureCubeMap> m_TexCubeMap;
+		std::shared_ptr<TextureCubeMap> mTexCubeMap;
 	};
 }

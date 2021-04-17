@@ -1,61 +1,101 @@
 #pragma once
 
 #include "Shader.h"
+#include "Texture.h"
 
 #include <glm/glm.hpp>
+
+#include <memory>
+#include <vector>
+#include <string>
 
 namespace OpenGL
 {
 	/**
-	 * Object materials can be simulated in an ADS lighting model by specifying
-	 * four values:
-	 * 
-	 * - ambient, simulates a low-level illumination that equally affects everything in the scene. 
-	 * - diffuse, brightens objects to various degrees depending on the light's angle of incidence.
-	 * - specular, coveys the shininess of an object by strategically placing a highlight of appropriate 
-	 *				size on the object's surface where light is reflected most directly towards our eyes.
-	 * - shininess, which is used to build an appropriate specular highlight for the intended material.
-	 * 
-	 * ADS and shininess values have been developed for many different types of common materials.
+	 * This is a template structure that represent any possible parameter used in materials.
+	 * It provides: Generic Value, Name, Prefix.
+	 */
+	template <class T>
+	class MaterialParameter
+	{
+	public:
+		MaterialParameter() = default;
+		MaterialParameter<T>(const std::string name, T value) : Name(name), Value(value) { }
+		~MaterialParameter() = default;
+
+		/** Returns a reference to generic value. #Note: this return the address to a copy-value */
+		const T& GetValue() const { return Value; }
+
+		/** Returns the reference to name. #Note: this return the address to a copy-value */
+		const std::string& GetName() const { return Name; }
+
+		/** Returns a copy-string to prefix + name. */
+		const std::string GetMetaName() const { return Prefix + Name; }
+
+		T Value;
+		std::string Name = "Default";
+		const std::string Prefix = "";
+	};
+
+	// Syntactic sugar
+	using FloatMatParam		= MaterialParameter<float>;
+	using Vec3MatParam		= MaterialParameter<glm::vec3>;
+	using Mat4MatParam		= MaterialParameter<glm::mat4>;
+	using Vec3PtrMatParam	= MaterialParameter<const glm::vec3*>;
+	using Mat4PtrMatParam	= MaterialParameter<const glm::mat4*>;
+	using TextureMatParam	= MaterialParameter<std::shared_ptr<Texture>>;
+
+	/**
+	 * Material asset is designed in a way that any parameter can be added dynamically.
+	 * This way the user can add any parameter as he want after the material instance is created.
+	 * This as some benefits like avoid inheritance to specify some pecular materials.
+	 * Pecular materials like PBR or Environment mapping are different instances filled with the proper parameters.
+	 * Those instances will be resided in the AssetManager.
+	 * Material contains heavy (textures, shaders, ...) and light (float, vec3, mat4, ...) parameters.
 	 */
 	class Material
 	{
 	public:
 		Material() = default;
 
-	public:
-		virtual void CommitToProgram(Shader& shader);
-			
-	protected:
-		glm::vec3 m_GlobalAmbient = glm::vec3(.7f, .7f, .7f);
-		glm::vec3 m_Ambient = glm::vec3(.11f, .06f, .11f);
-		glm::vec3 m_Diffuse = glm::vec3(.43f, .47f, .54f);
-		glm::vec3 m_Specular = glm::vec3(.33f, .33f, .52f);
-		float m_Shininess = 9.85f;
-		// float m_Trasparency = 1.0f; Used for some materials. For now I leave it as unused.
-	};
+		Material(const char* vertShaderSrc, const char* fragShaderSrc);
 
-	class PewterMaterial : public Material
-	{
-	public:
-		PewterMaterial();
-	};
+		/** Copy-constructor is usefull to prevent copy heavy parameters */
+		Material(const Material& material);
 
-	class GoldMaterial : public Material
-	{
-	public:
-		GoldMaterial();
-	};
+		/** Commit to program shader all parameters subscribed. It will be called just before drawing geometry */
+		virtual void CommitToProgram();
 
-	class SilverMaterial : public Material
-	{
-	public:
-		SilverMaterial();
-	};
+		/** Unbind all heavy parameters subscribed from the program shader. It will be called just after drawing geometry */
+		virtual void UnbindHeavyAssetsToProgram();
 
-	class BronzeMaterial : public Material
-	{
-	public:
-		BronzeMaterial();
+		/** Create a shared pointer MaterialParamter<float> */
+		void AddFloatParam(std::shared_ptr<FloatMatParam> floatParameter) { mFloatParameters.push_back(floatParameter); }
+
+		/** Create a shared pointer MaterialParamter<glm::vec3> */
+		void AddVec3Param(std::shared_ptr<Vec3MatParam> vec3Parameter) { mVec3Parameters.push_back(vec3Parameter); }
+
+		/** Create a shared pointer MaterialParamter<glm::mat4> */
+		void AddMat4Param(std::shared_ptr<Mat4MatParam> mat4Parameter) { mMat4Parameters.push_back(mat4Parameter); }
+
+		/** Create a shared pointer MaterialParamter<glm::vec3> */
+		void AddVec3PtrParam(std::shared_ptr<Vec3PtrMatParam> vec3PtrParameter) { mVec3PtrParameters.push_back(vec3PtrParameter); }
+
+		/** Create a shared pointer MaterialParamter<glm::mat4*>. Use it to bind view, model, projection matrix for example */
+		void AddMat4PtrParam(std::shared_ptr<Mat4PtrMatParam> mat4PtrParameter) { mMat4PtrParameters.push_back(mat4PtrParameter); }
+
+		/** Create a shared pointer MaterialParamter<std::shared_ptr<Texture>> */
+		void AddTextureParam(std::shared_ptr<TextureMatParam> textureParameter) { mTextureParameters.push_back(textureParameter); }
+
+		operator GLuint() const { return *mShader; }
+
+	private:
+		std::shared_ptr<Shader>							mShader;
+		std::vector<std::shared_ptr<FloatMatParam>>		mFloatParameters;
+		std::vector<std::shared_ptr<Vec3MatParam>>		mVec3Parameters;
+		std::vector<std::shared_ptr<Mat4MatParam>>		mMat4Parameters;
+		std::vector<std::shared_ptr<Vec3PtrMatParam>>	mVec3PtrParameters;
+		std::vector<std::shared_ptr<Mat4PtrMatParam>>	mMat4PtrParameters;
+		std::vector<std::shared_ptr<TextureMatParam>>	mTextureParameters;
 	};
 }

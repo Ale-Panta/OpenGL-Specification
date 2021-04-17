@@ -11,10 +11,10 @@ namespace OpenGL
 
 	void EnvironmentMappingScene::BeginScene(GLFWwindow* context)
 	{
-		m_Camera = make_shared<Camera>(vec3(0.0f, 0.0f, 4.0f), 0.03f);
-		m_Sphere = make_shared<Sphere>();
-		m_CubeMap = make_shared<Cube>();
-		m_TexCubeMap = make_shared<TextureCubeMap>(
+		mCamera = make_shared<Camera>(vec3(0.0f, 0.0f, 4.0f), 0.03f);
+		mSphere = make_shared<Sphere>();
+		mCubeMap = make_shared<Cube>();
+		mTexCubeMap = make_shared<TextureCubeMap>(
 			"assets/textures/skybox/right.jpg",
 			"assets/textures/skybox/left.jpg",
 			"assets/textures/skybox/top.jpg",
@@ -22,13 +22,13 @@ namespace OpenGL
 			"assets/textures/skybox/front.jpg",
 			"assets/textures/skybox/back.jpg"
 			);
-		m_CubeMapShader = make_shared<Shader>("assets/shaders/CubeMap/vertCubeMapShader.glsl", "assets/shaders/CubeMap/fragCubeMapShader.glsl");
+		mCubeMapShader = make_shared<Shader>("assets/shaders/CubeMap/vertCubeMapShader.glsl", "assets/shaders/CubeMap/fragCubeMapShader.glsl");
 		m_EnvMappingShader = make_shared<Shader>("assets/shaders/EnvironmentMapping/vertEnvMapping.glsl", "assets/shaders/EnvironmentMapping/fragEnvMapping.glsl");
 	}
 
 	void EnvironmentMappingScene::RenderScene(GLFWwindow* context, double currentTime)
 	{
-		m_Camera->ProcessInput(context);
+		mCamera->ProcessInput(context);
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -39,10 +39,10 @@ namespace OpenGL
 
 	void EnvironmentMappingScene::RenderSkyBox(GLFWwindow* context, double currentTime)
 	{
-		m_CubeMapShader->SetUniformMatrix4("uModel", m_Camera->GetModelMatrix());
-		m_CubeMapShader->SetUniformMatrix4("uView", m_Camera->GetViewMatrix());
-		m_CubeMapShader->SetUniformMatrix4("uProjection", m_Camera->GetProjMatrix());
-		m_CubeMap->Draw(*m_CubeMapShader);
+		//mCubeMapShader->SetUniformMatrix4("uModel", mCamera->GetModelMatrix());
+		//mCubeMapShader->SetUniformMatrix4("uView", mCamera->GetViewMatrix());
+		//mCubeMapShader->SetUniformMatrix4("uProjection", mCamera->GetProjMatrix());
+		//mCubeMap->Draw(*mCubeMapShader);
 	}
 
 	void EnvironmentMappingScene::RenderShadow(GLFWwindow* context, double currentTime)
@@ -54,12 +54,12 @@ namespace OpenGL
 		mat4 sphereModel = translate(mat4(1.0f), vec3(0.0f));
 
 		m_EnvMappingShader->SetUniformMatrix4("uModel", sphereModel);
-		m_EnvMappingShader->SetUniformMatrix4("uView", m_Camera->GetViewMatrix());
-		m_EnvMappingShader->SetUniformMatrix4("uProjection", m_Camera->GetProjMatrix());
+		m_EnvMappingShader->SetUniformMatrix4("uView", mCamera->GetViewMatrix());
+		m_EnvMappingShader->SetUniformMatrix4("uProjection", mCamera->GetProjMatrix());
 		
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, *m_TexCubeMap);
-		m_Sphere->Draw(*m_EnvMappingShader);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, *mTexCubeMap);
+		//mSphere->Draw(*m_EnvMappingShader);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	}
 }

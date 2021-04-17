@@ -1,9 +1,12 @@
 #include "OpenGLApp.h"
+
+// Begin scene assets
+#include "../assets/scenes/PBRScene.h"
 #include "../assets/scenes/ShadowScene.h"
+#include "../assets/scenes/HeightMapScene.h"
 #include "../assets/scenes/NormalMappingScene.h"
 #include "../assets/scenes/EnvironmentMappingScene.h"
-#include "../assets/scenes/HeightMapScene.h"
-#include "../assets/scenes/PBRScene.h"
+// End scene assets
 
 #include <iostream>
 
@@ -38,7 +41,7 @@ namespace OpenGL
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
-		// Declare multi-sample
+		// Declare multi-sample. Must be declared before creating the context.
 		glfwWindowHint(GLFW_SAMPLES, 4);
 
 		// Create the window context.

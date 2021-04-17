@@ -22,6 +22,7 @@ namespace OpenGL
 
 	public:
 		const TextureType GetTextureType() const { return m_TexType; }
+		const GLuint GetID() const { return m_ID; }
 		operator GLuint() { return m_ID; }
 
 	protected:

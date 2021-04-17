@@ -21,7 +21,7 @@ namespace OpenGL
 
 	public:
 		// Rendering
-		std::shared_ptr<Camera> m_Camera = NULL;
+		std::shared_ptr<Camera> mCamera = NULL;
 
 		// Lights
 		std::shared_ptr<Light> m_Light = NULL;
@@ -29,12 +29,12 @@ namespace OpenGL
 		// Shaders
 		std::shared_ptr<Shader> m_DepthTestShader = NULL;
 		std::shared_ptr<Shader> m_ShadowShader = NULL;
-		std::shared_ptr<Shader> m_CubeMapShader = NULL;
+		std::shared_ptr<Shader> mCubeMapShader = NULL;
 
 		// Geometry
 		std::shared_ptr<Mesh> m_Torus = NULL;
-		std::shared_ptr<Mesh> m_Sphere = NULL;
-		std::shared_ptr<Mesh> m_CubeMap = NULL;
+		std::shared_ptr<Mesh> mSphere = NULL;
+		std::shared_ptr<Mesh> mCubeMap = NULL;
 
 		// FrameBuffers and Textures
 		GLuint m_DepthFBO = 0;

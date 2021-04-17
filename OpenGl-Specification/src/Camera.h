@@ -16,10 +16,14 @@ namespace OpenGL
 		void ProcessRotation(float xOffset, float yOffset, GLboolean constraintPitch = true);
 		void ProcessZoom(float yOffset);
 
-		const glm::mat4& GetViewMatrix() const { return m_View; }
-		const glm::mat4& GetModelMatrix() const { return glm::translate(glm::mat4(1.0f), m_Position); }
-		const glm::mat4& GetProjMatrix() const { return m_Projection; }
-		const glm::vec3& GetPosition() const { return m_Position; }
+		const glm::mat4& GetViewMatrix()	const { return m_View; }
+		const glm::mat4& GetModelMatrix()	const { return glm::translate(glm::mat4(1.0f), m_Position); }
+		const glm::mat4& GetProjMatrix()	const { return m_Projection; }
+		const glm::vec3& GetPosition()		const { return m_Position; }
+
+		const glm::mat4* GetViewMatrixPtr() const { return &m_View; }
+		const glm::mat4* GetProjMatrixPtr() const { return &m_Projection; }
+		const glm::vec3* GetPositionPtr()	const { return &m_Position; }
 
 	private:
 		void UpdateCameraVectors();

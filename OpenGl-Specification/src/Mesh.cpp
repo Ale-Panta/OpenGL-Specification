@@ -1,4 +1,5 @@
 #include "Mesh.h"
+
 #include <SOIL2.h>
 
 namespace OpenGL
@@ -9,26 +10,20 @@ namespace OpenGL
 		SetupMesh();
 	}
 
-	void Mesh::Draw(Shader& shader)
+	void Mesh::Draw(Material& material)
 	{
-		glUseProgram(shader);
+		material.CommitToProgram();
+		glUseProgram(material);
 
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_CCW);
 
-		// Draw Mesh
-		// shader.SetUniformInt("uMaterial.diffuse", 0);
-		// glActiveTexture(GL_TEXTURE0);
-		// glBindTexture(GL_TEXTURE_2D, Textures[0].ID);
-		// shader.SetUniformInt("uMaterial.specular", 1);
-		// glActiveTexture(GL_TEXTURE1);
-		// glBindTexture(GL_TEXTURE_2D, Textures[1].ID);
-
 		glBindVertexArray(VAO);	// Bind
 		glDrawElements(GL_TRIANGLES, VertexIndices.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);	// Unbind
+		material.UnbindHeavyAssetsToProgram();
 	}
 
 	void Mesh::SetupMesh()

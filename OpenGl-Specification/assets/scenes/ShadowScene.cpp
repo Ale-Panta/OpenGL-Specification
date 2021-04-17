@@ -14,15 +14,10 @@ namespace OpenGL
 	ShadowScene::ShadowScene()
 	{
 		// Create camera
-		m_Camera = make_shared<Camera>(glm::vec3(0.0f, 0.0f, 4.0f), 0.005f, false);
+		mCamera = make_shared<Camera>(glm::vec3(0.0f, 0.0f, 4.0f), 0.005f, false);
 
 		// Create light
 		m_Light = make_shared<Light>();
-
-		// Create materials
-		m_BronzeMaterial = make_shared<BronzeMaterial>();
-		m_SilverMaterial = make_shared<SilverMaterial>();
-		m_GoldMaterial = make_shared<GoldMaterial>();
 
 		// Create Bias matrix (division and addition).
 		m_ShadowTexBias = {
@@ -40,7 +35,7 @@ namespace OpenGL
 
 	void ShadowScene::RenderScene(GLFWwindow* context, double currentTime)
 	{
-		m_Camera->ProcessInput(context);
+		mCamera->ProcessInput(context);
 
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -57,12 +52,12 @@ namespace OpenGL
 		// Create shaders
 		m_DepthTestShader = make_shared<Shader>("assets/shaders/Shadow/vertDepthShader.glsl", "assets/shaders/Shadow/fragDepthShader.glsl");
 		m_ShadowShader = make_shared<Shader>("assets/shaders/Shadow/vertShadowShader.glsl", "assets/shaders/Shadow/fragShadowShader.glsl");
-		m_CubeMapShader = make_shared<Shader>("assets/shaders/CubeMap/vertCubeMapShader.glsl", "assets/shaders/CubeMap/fragCubeMapShader.glsl");
+		mCubeMapShader = make_shared<Shader>("assets/shaders/CubeMap/vertCubeMapShader.glsl", "assets/shaders/CubeMap/fragCubeMapShader.glsl");
 
 		// Create geometries
 		m_Torus = make_shared<Torus>();
-		m_Sphere = make_shared<Sphere>();
-		m_CubeMap = make_shared<Cube>();
+		mSphere = make_shared<Sphere>();
+		mCubeMap = make_shared<Cube>();
 
 		glfwGetFramebufferSize(context, &m_ScreenSizeX, &m_ScreenSizeY);
 
@@ -75,10 +70,10 @@ namespace OpenGL
 
 	void ShadowScene::RenderSkyBox(GLFWwindow* context, double currentTime)
 	{
-		m_CubeMapShader->SetUniformMatrix4("uModel", m_Camera->GetModelMatrix());
-		m_CubeMapShader->SetUniformMatrix4("uView", m_Camera->GetViewMatrix());
-		m_CubeMapShader->SetUniformMatrix4("uProjection", m_Camera->GetProjMatrix());
-		m_CubeMap->Draw(*m_CubeMapShader);
+		mCubeMapShader->SetUniformMatrix4("uModel", mCamera->GetModelMatrix());
+		mCubeMapShader->SetUniformMatrix4("uView", mCamera->GetViewMatrix());
+		mCubeMapShader->SetUniformMatrix4("uProjection", mCamera->GetProjMatrix());
+		//mCubeMap->Draw(*mCubeMapShader);
 	}
 
 	void ShadowScene::RenderShadow(GLFWwindow* context, double currentTime)
@@ -102,13 +97,13 @@ namespace OpenGL
 
 		mat4 torusModel = translate(glm::mat4(1.0f), vec3(0.0f)) * glm::rotate(glm::mat4(1.0f), 90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 		m_DepthTestShader->SetUniformMatrix4("uShadowMVP", m_Light->GetProjMatrix() * m_Light->GetViewMatrix() * torusModel);
-		m_Torus->Draw(*m_DepthTestShader);
+		//m_Torus->Draw(*m_DepthTestShader);
 
 		glCullFace(GL_FRONT);	// Avoid wrong shadow rendering on sphere
 
 		mat4 sphereModel = translate(glm::mat4(1.0f), glm::vec3(sin((float)currentTime) * 3.0f, 0.0f, cos((float)currentTime) * 2.0f)) * glm::rotate(glm::mat4(1.0f), 90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 		m_DepthTestShader->SetUniformMatrix4("uShadowMVP", m_Light->GetProjMatrix() * m_Light->GetViewMatrix() * sphereModel);
-		m_Sphere->Draw(*m_DepthTestShader);
+		//mSphere->Draw(*m_DepthTestShader);
 
 		glCullFace(GL_BACK);	// Reset cull face.
 
@@ -134,20 +129,20 @@ namespace OpenGL
 
 		m_ShadowShader->SetUniformFloat("uTime", (float)currentTime);
 
-		m_ShadowShader->SetUniformMatrix4("uView", m_Camera->GetViewMatrix());
-		m_ShadowShader->SetUniformMatrix4("uProjection", m_Camera->GetProjMatrix());
+		m_ShadowShader->SetUniformMatrix4("uView", mCamera->GetViewMatrix());
+		m_ShadowShader->SetUniformMatrix4("uProjection", mCamera->GetProjMatrix());
 
 		mat4 torusModel = translate(glm::mat4(1.0f), vec3(0.0f)) * glm::rotate(glm::mat4(1.0f), 90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-		m_SilverMaterial->CommitToProgram(*m_ShadowShader);
+		//m_SilverMaterial->CommitToProgram(*m_ShadowShader);
 		m_ShadowShader->SetUniformMatrix4("uModel", torusModel);
 		m_ShadowShader->SetUniformMatrix4("uShadowMVP", m_ShadowTexBias * m_Light->GetProjMatrix() * m_Light->GetViewMatrix() * torusModel);
-		m_Torus->Draw(*m_ShadowShader);
+		//m_Torus->Draw(*m_ShadowShader);
 
 		mat4 sphereModel = translate(glm::mat4(1.0f), glm::vec3(sin((float)currentTime) * 3.0f, 0.0f, cos((float)currentTime) * 2.0f)) * glm::rotate(glm::mat4(1.0f), 90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-		m_GoldMaterial->CommitToProgram(*m_ShadowShader);
+		//m_GoldMaterial->CommitToProgram(*m_ShadowShader);
 		m_ShadowShader->SetUniformMatrix4("uModel", sphereModel);
 		m_ShadowShader->SetUniformMatrix4("uShadowMVP", m_ShadowTexBias * m_Light->GetProjMatrix() * m_Light->GetViewMatrix() * sphereModel);
-		m_Sphere->Draw(*m_ShadowShader);
+		//mSphere->Draw(*m_ShadowShader);
 
 		// #End pass two
 	}

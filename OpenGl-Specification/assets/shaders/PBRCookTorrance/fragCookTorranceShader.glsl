@@ -6,6 +6,7 @@ struct Material
 	float metallic;
 	float roughness;
 	float ao;
+
 };
 
 struct Light
@@ -62,6 +63,7 @@ void main()
 	// float metallic = uMaterial.metallic;
 	// float roughness = uMaterial.roughness;
 	// float ambientOcclusion = uMaterial.ao;
+	// vec3 normal = Normal;
 	
 	vec3 n = normalize(normal);
 	vec3 v = normalize(uCameraPosition - Position);
