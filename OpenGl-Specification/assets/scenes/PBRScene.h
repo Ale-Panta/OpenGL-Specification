@@ -34,9 +34,5 @@ namespace OpenGL
 		std::shared_ptr<Mesh>		mSphere;
 		std::shared_ptr<Shader>		mPBRShader;
 		std::shared_ptr<Material>	mMaterial;
-		std::shared_ptr<Texture2D>	mAlbedoMap;
-		std::shared_ptr<Texture2D>	mMetallicMap;
-		std::shared_ptr<Texture2D>	mRoughnessMap;
-		std::shared_ptr<Texture2D>	mNormalMap;
 	};
 }

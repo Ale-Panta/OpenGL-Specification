@@ -12,18 +12,22 @@ namespace OpenGL
 
 	Material::Material(const Material& material)
 	{
+		// The ownership is shared. Theorically deleting the Material passed as parameter in this function
+		// will not delete the mShader reference until the last instance sharing the ownership is deleted
 		mShader = material.mShader;
 
 		for (auto fParam : material.mFloatParameters)
-			mFloatParameters.emplace_back(fParam);		// Construct a new object and push back
+			mFloatParameters.emplace_back(fParam);			// Construct a new object and push back
 		for (auto v3Param : material.mVec3Parameters)
-			mVec3Parameters.emplace_back(v3Param);		// Construct a new object and push back
+			mVec3Parameters.emplace_back(v3Param);			// Construct a new object and push back
 		for (auto m4Param : material.mMat4Parameters)
-			mMat4Parameters.emplace_back(m4Param);		// Construct a new object and push back
+			mMat4Parameters.emplace_back(m4Param);			// Construct a new object and push back
 		for (auto tParam : material.mTextureParameters)
-			mTextureParameters.push_back(tParam);		// Push the object directly because it's a pointer
+			mTextureParameters.push_back(tParam);			// Push the object directly because it's a pointer
 		for (auto m4PtrParam : material.mMat4PtrParameters)
 			mMat4PtrParameters.push_back(m4PtrParam);		// Push the object directly because it's a pointer
+		for (auto v3PtrParam : material.mVec3PtrParameters)
+			mVec3PtrParameters.push_back(v3PtrParam);		// Push the object directly because it's a pointer
 	}
 
 	void Material::CommitToProgram()

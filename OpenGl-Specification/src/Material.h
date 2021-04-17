@@ -49,15 +49,15 @@ namespace OpenGL
 	 * Material asset is designed in a way that any parameter can be added dynamically.
 	 * This way the user can add any parameter as he want after the material instance is created.
 	 * This as some benefits like avoid inheritance to specify some pecular materials.
-	 * Pecular materials like PBR or Environment mapping are different instances filled with the proper parameters.
-	 * Those instances will be resided in the AssetManager.
 	 * Material contains heavy (textures, shaders, ...) and light (float, vec3, mat4, ...) parameters.
+	 * #Note: must be created before binding textures or parameters.
 	 */
 	class Material
 	{
 	public:
 		Material() = default;
 
+		/** Constructing material will construct the shader automatically */
 		Material(const char* vertShaderSrc, const char* fragShaderSrc);
 
 		/** Copy-constructor is usefull to prevent copy heavy parameters */
@@ -90,6 +90,7 @@ namespace OpenGL
 		operator GLuint() const { return *mShader; }
 
 	private:
+		/** I want the shader to be shared pointer because copying material can happens */
 		std::shared_ptr<Shader>							mShader;
 		std::vector<std::shared_ptr<FloatMatParam>>		mFloatParameters;
 		std::vector<std::shared_ptr<Vec3MatParam>>		mVec3Parameters;
