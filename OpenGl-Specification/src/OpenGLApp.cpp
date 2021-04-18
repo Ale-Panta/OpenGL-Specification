@@ -21,7 +21,7 @@ namespace OpenGL
 	OpenGLApp::OpenGLApp(const char* name)
 		: m_Name(name)
 	{
-		m_ActiveScene = new PBRScene();
+		m_ActiveScene = new EnvironmentMappingScene();
 	}
 
 	OpenGLApp::OpenGLApp(const char* name, int width, int height)

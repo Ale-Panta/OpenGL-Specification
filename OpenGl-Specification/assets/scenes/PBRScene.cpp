@@ -16,6 +16,8 @@ namespace OpenGL
 		mLightColor = make_shared<vec3>(50.0f);
 		mSphere = make_shared<Sphere>(64);
 
+		mCubeMap = std::make_shared<Cube>();
+
 		mMaterial = make_shared<Material>("assets/shaders/PBRCookTorrance/vertCookTorranceShader.glsl", "assets/shaders/PBRCookTorrance/fragCookTorranceShader.glsl");
 		// Material local properties
 		mMaterial->AddFloatParam(make_shared<FloatMatParam>("uMaterial.ao", 1.0f));
@@ -60,7 +62,8 @@ namespace OpenGL
 		mLightPosition->y = .0f;
 		mLightPosition->z = cos((float)currentTime) * 10.0f;
 
-		mSphere->Draw(*mMaterial);
+		mCubeMap->Draw(*mMaterial);
+		//mSphere->Draw(*mMaterial);
 	}
 
 }

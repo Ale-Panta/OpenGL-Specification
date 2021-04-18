@@ -21,6 +21,7 @@ namespace OpenGL
 		const glm::mat4& GetProjMatrix()	const { return m_Projection; }
 		const glm::vec3& GetPosition()		const { return m_Position; }
 
+		const glm::mat4* GetModelMatrixPtr() { mModel = glm::translate(glm::mat4(1.0f), m_Position); return &mModel; }
 		const glm::mat4* GetViewMatrixPtr() const { return &m_View; }
 		const glm::mat4* GetProjMatrixPtr() const { return &m_Projection; }
 		const glm::vec3* GetPositionPtr()	const { return &m_Position; }
@@ -30,6 +31,7 @@ namespace OpenGL
 
 	private:
 		glm::mat4 m_View;
+		glm::mat4 mModel;
 		glm::mat4 m_Projection = glm::perspective(1.0472f, 1280.0f / 720.0f, 0.1f, 1000.0f);
 
 		glm::vec3 m_Position	= glm::vec3(0.0f, 0.0f, 3.0f);

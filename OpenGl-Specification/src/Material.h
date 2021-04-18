@@ -70,15 +70,15 @@ namespace OpenGL
 		virtual void UnbindHeavyAssetsToProgram();
 
 		/** Create a shared pointer MaterialParamter<float> */
-		void AddFloatParam(std::shared_ptr<FloatMatParam> floatParameter) { mFloatParameters.push_back(floatParameter); }
+		void AddFloatParam(std::shared_ptr<FloatMatParam> floatParameter)		{ mFloatParameters.push_back(floatParameter); }
 
 		/** Create a shared pointer MaterialParamter<glm::vec3> */
-		void AddVec3Param(std::shared_ptr<Vec3MatParam> vec3Parameter) { mVec3Parameters.push_back(vec3Parameter); }
+		void AddVec3Param(std::shared_ptr<Vec3MatParam> vec3Parameter)			{ mVec3Parameters.push_back(vec3Parameter); }
 
 		/** Create a shared pointer MaterialParamter<glm::mat4> */
-		void AddMat4Param(std::shared_ptr<Mat4MatParam> mat4Parameter) { mMat4Parameters.push_back(mat4Parameter); }
+		void AddMat4Param(std::shared_ptr<Mat4MatParam> mat4Parameter)			{ mMat4Parameters.push_back(mat4Parameter); }
 
-		/** Create a shared pointer MaterialParamter<glm::vec3> */
+		/** Create a shared pointer MaterialParamter<glm::vec3*>. Use it to bind values that change over time */
 		void AddVec3PtrParam(std::shared_ptr<Vec3PtrMatParam> vec3PtrParameter) { mVec3PtrParameters.push_back(vec3PtrParameter); }
 
 		/** Create a shared pointer MaterialParamter<glm::mat4*>. Use it to bind view, model, projection matrix for example */

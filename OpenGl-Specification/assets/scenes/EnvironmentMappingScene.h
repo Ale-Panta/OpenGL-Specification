@@ -27,7 +27,7 @@ namespace OpenGL
 
 		std::shared_ptr<Material>	m_EnvMappingMaterial;
 		std::shared_ptr<Shader>		m_EnvMappingShader;
-		std::shared_ptr<Shader>		mCubeMapShader;
+		std::shared_ptr<Material>	mCubeMapMaterial;
 
 		std::shared_ptr<Mesh> mSphere;
 

@@ -7,112 +7,198 @@ namespace OpenGL
 {
 	Cube::Cube()
 	{
-		for (size_t i = 0; i < 36; i++)
+		for (size_t i = 0; i < 24; i++)
 		{
 			Vertices.push_back(Vertex());
 		}
-			
-		Vertices[0].Position = vec3(-1.0f, 1.0f, -1.0f);
-		Vertices[1].Position = vec3(-1.0f, -1.0f, -1.0f);
-		Vertices[2].Position = vec3(1.0f, -1.0f, -1.0f);
-		Vertices[3].Position = vec3(1.0f, -1.0f, -1.0f);
-		Vertices[4].Position = vec3(1.0f, 1.0f, -1.0f);
-		Vertices[5].Position = vec3(-1.0f, 1.0f, -1.0f);
 
-		Vertices[6].Position = vec3(-1.0f, -1.0f, 1.0f);
-		Vertices[7].Position = vec3(-1.0f, -1.0f, -1.0f);
-		Vertices[8].Position = vec3(-1.0f, 1.0f, -1.0f);
-		Vertices[9].Position = vec3(-1.0f, 1.0f, -1.0f);
-		Vertices[10].Position = vec3(-1.0f, 1.0f, 1.0f);
-		Vertices[11].Position = vec3(-1.0f, -1.0f, 1.0f);
+		// Define the coordinates of each corner of the cube
+		vec3 c[8] =
+		{
+			vec3(- 1.0f, - 1.0f, + 1.0f),
+			vec3(+ 1.0f, - 1.0f, + 1.0f),
+			vec3(+ 1.0f, - 1.0f, - 1.0f),
+			vec3(- 1.0f, - 1.0f, - 1.0f),
 
-		Vertices[12].Position = vec3(1.0f, -1.0f, -1.0f);
-		Vertices[13].Position = vec3(1.0f, -1.0f, 1.0f);
-		Vertices[14].Position = vec3(1.0f, 1.0f, 1.0f);
-		Vertices[15].Position = vec3(1.0f, 1.0f, 1.0f);
-		Vertices[16].Position = vec3(1.0f, 1.0f, -1.0f);
-		Vertices[17].Position = vec3(1.0f, -1.0f, -1.0f);
-		
-		Vertices[18].Position = vec3(-1.0f, -1.0f, 1.0f);
-		Vertices[19].Position = vec3(-1.0f, 1.0f, 1.0f);
-		Vertices[20].Position = vec3(1.0f, 1.0f, 1.0f);
-		Vertices[21].Position = vec3(1.0f, 1.0f, 1.0f);
-		Vertices[22].Position = vec3(1.0f, -1.0f, 1.0f);
-		Vertices[23].Position = vec3(-1.0f, -1.0f, 1.0f);
-		
-		Vertices[24].Position = vec3(-1.0f, 1.0f, -1.0f);
-		Vertices[25].Position = vec3(1.0f, 1.0f, -1.0f);
-		Vertices[26].Position = vec3(1.0f, 1.0f, 1.0f);
-		Vertices[27].Position = vec3(1.0f, 1.0f, 1.0f);
-		Vertices[28].Position = vec3(-1.0f, 1.0f, 1.0f);
-		Vertices[29].Position = vec3(-1.0f, 1.0f, -1.0f);
-		
-		Vertices[30].Position = vec3(-1.0f, -1.0f, -1.0f);
-		Vertices[31].Position = vec3(-1.0f, -1.0f, 1.0f);
-		Vertices[32].Position = vec3(1.0f, -1.0f, -1.0f);
-		Vertices[33].Position = vec3(1.0f, -1.0f, -1.0f);
-		Vertices[34].Position = vec3(-1.0f, -1.0f, 1.0f);
-		Vertices[35].Position = vec3(1.0f, -1.0f, 1.0f);
-		
-		//Begin Function CalculateSurfaceNormal(Input Triangle) Returns Vector
+			vec3(- 1.0f, + 1.0f, + 1.0f),
+			vec3(+ 1.0f, + 1.0f, + 1.0f),
+			vec3(+ 1.0f, + 1.0f, - 1.0f),
+			vec3(- 1.0f, + 1.0f, - 1.0f)
+		};
 
-		//	Set Vector U to(Triangle.p2 minus Triangle.p1)
-		//	Set Vector V to(Triangle.p3 minus Triangle.p1)
+		// Define the vertices that the cube is composed of:
+		// I have used 24 vertices (4 vertices per side).
+		// This is because I want the vertices of each side to have separate normals.
 
-		//	Set Normal.x to(multiply U.y by V.z) minus(multiply U.z by V.y)
-		//	Set Normal.y to(multiply U.z by V.x) minus(multiply U.x by V.z)
-		//	Set Normal.z to(multiply U.x by V.y) minus(multiply U.y by V.x)
+		// Bottom
+		Vertices[0].Position = c[0]; 
+		Vertices[1].Position = c[1]; 
+		Vertices[2].Position = c[2]; 
+		Vertices[3].Position = c[3];
+		// Left
+		Vertices[4].Position = c[7]; 
+		Vertices[5].Position = c[4]; 
+		Vertices[6].Position = c[0]; 
+		Vertices[7].Position = c[3];
+		// Front
+		Vertices[8].Position = c[4]; 
+		Vertices[9].Position = c[5]; 
+		Vertices[10].Position = c[1];
+		Vertices[11].Position = c[0];
+		// Back
+		Vertices[12].Position = c[6]; 
+		Vertices[13].Position = c[7]; 
+		Vertices[14].Position = c[3]; 
+		Vertices[15].Position = c[2];
+		// Right
+		Vertices[16].Position = c[5]; 
+		Vertices[17].Position = c[6]; 
+		Vertices[18].Position = c[2]; 
+		Vertices[19].Position = c[1];
+		// Top
+		Vertices[20].Position = c[7]; 
+		Vertices[21].Position = c[6]; 
+		Vertices[22].Position = c[5]; 
+		Vertices[23].Position = c[4];
 
-		//	Returning Normal
+		// Define each vertex's tangent
+		for (size_t i = 4; i < 24; i += 4)
+		{
+			vec3 tangent = Vertices[i - 3].Position - Vertices[i - 4].Position;
+
+			for (size_t j = 0; j < 4; j++)
+			{
+				Vertices[i - j].Tangent = tangent;
+			}
+		}
+
+		// Define each vertex's normal
+
+		// Bottom
+		Vertices[0].Normal = vec3(0.0, -1.0f, 0.0f); 
+		Vertices[1].Normal = vec3(0.0, -1.0f, 0.0f); 
+		Vertices[2].Normal = vec3(0.0, -1.0f, 0.0f); 
+		Vertices[3].Normal = vec3(0.0, -1.0f, 0.0f);
+
+		// Left
+		Vertices[4].Normal = vec3(-1.0, 0.0f, 0.0f);
+		Vertices[5].Normal = vec3(-1.0, 0.0f, 0.0f);
+		Vertices[6].Normal = vec3(-1.0, 0.0f, 0.0f);
+		Vertices[7].Normal = vec3(-1.0, 0.0f, 0.0f);
+
+		// Front
+		Vertices[8].Normal = vec3(0.0, 0.0f, 1.0f);
+		Vertices[9].Normal = vec3(0.0, 0.0f, 1.0f);
+		Vertices[10].Normal =vec3(0.0, 0.0f, 1.0f);
+		Vertices[11].Normal =vec3(0.0, 0.0f, 1.0f);
+
+		// Back
+		Vertices[12].Normal = vec3(0.0, 0.0f, -1.0f);
+		Vertices[13].Normal = vec3(0.0, 0.0f, -1.0f);
+		Vertices[14].Normal = vec3(0.0, 0.0f, -1.0f);
+		Vertices[15].Normal = vec3(0.0, 0.0f, -1.0f);
+
+		// Right
+		Vertices[16].Normal = vec3(1.0, 0.0f, 0.0f);
+		Vertices[17].Normal = vec3(1.0, 0.0f, 0.0f);
+		Vertices[18].Normal = vec3(1.0, 0.0f, 0.0f);
+		Vertices[19].Normal = vec3(1.0, 0.0f, 0.0f);
+
+		// Top
+		Vertices[20].Normal = vec3(0.0, 1.0f, 0.0f);
+		Vertices[21].Normal = vec3(0.0, 1.0f, 0.0f);
+		Vertices[22].Normal = vec3(0.0, 1.0f, 0.0f);
+		Vertices[23].Normal = vec3(0.0, 1.0f, 0.0f);
+
+		// Define each vetex uv coordinates
+
+		// Bottom
+		Vertices[0].TexCoords = vec2(1.0, 1.0f);
+		Vertices[1].TexCoords = vec2(0.0, 1.0f);
+		Vertices[2].TexCoords = vec2(0.0, 0.0f);
+		Vertices[3].TexCoords = vec2(1.0, 0.0f);
+											  
+		// Left								  
+		Vertices[4].TexCoords = vec2(1.0, 1.0f);
+		Vertices[5].TexCoords = vec2(0.0, 1.0f);
+		Vertices[6].TexCoords = vec2(0.0, 0.0f);
+		Vertices[7].TexCoords = vec2(1.0, 0.0f);
+											  
+		// Front							  
+		Vertices[8].TexCoords = vec2(1.0, 1.0f);
+		Vertices[9].TexCoords = vec2(0.0, 1.0f);
+		Vertices[10].TexCoords = vec2(0.0, 0.0f);
+		Vertices[11].TexCoords = vec2(1.0, 0.0f);
+											  
+		// Back								  
+		Vertices[12].TexCoords = vec2(1.0, 1.0f);
+		Vertices[13].TexCoords = vec2(0.0, 1.0f);
+		Vertices[14].TexCoords = vec2(0.0, 0.0f);
+		Vertices[15].TexCoords = vec2(1.0, 0.0f);
+											  
+		// Right							  
+		Vertices[16].TexCoords = vec2(1.0, 1.0f);
+		Vertices[17].TexCoords = vec2(0.0, 1.0f);
+		Vertices[18].TexCoords = vec2(0.0, 0.0f);
+		Vertices[19].TexCoords = vec2(1.0, 0.0f);
+											  
+		// Top								  
+		Vertices[20].TexCoords = vec2(1.0, 1.0f);
+		Vertices[21].TexCoords = vec2(0.0, 1.0f);
+		Vertices[22].TexCoords = vec2(0.0, 0.0f);
+		Vertices[23].TexCoords = vec2(1.0, 0.0f);
 
 		//End Function
 
+		VertexIndices.push_back(3);
+		VertexIndices.push_back(1);
+		VertexIndices.push_back(0);
+
+		VertexIndices.push_back(3);
+		VertexIndices.push_back(2);
+		VertexIndices.push_back(1);
+
+		VertexIndices.push_back(7);
+		VertexIndices.push_back(5);
+		VertexIndices.push_back(4);
+
+		VertexIndices.push_back(7);
+		VertexIndices.push_back(6);
+		VertexIndices.push_back(5);
+
+		VertexIndices.push_back(11);
+		VertexIndices.push_back(9);
+		VertexIndices.push_back(8);
+
+		VertexIndices.push_back(11);
+		VertexIndices.push_back(10);
+		VertexIndices.push_back(9);
+
+		VertexIndices.push_back(15);
+		VertexIndices.push_back(13);
+		VertexIndices.push_back(12);
+
+		VertexIndices.push_back(15);
+		VertexIndices.push_back(14);
+		VertexIndices.push_back(13);
+
+		VertexIndices.push_back(19);
+		VertexIndices.push_back(17);
+		VertexIndices.push_back(16);
+
+		VertexIndices.push_back(19);
+		VertexIndices.push_back(18);
+		VertexIndices.push_back(17);
+
+		VertexIndices.push_back(23);
+		VertexIndices.push_back(21);
+		VertexIndices.push_back(20);
+
+
+		VertexIndices.push_back(23);
+		VertexIndices.push_back(22);
+		VertexIndices.push_back(21);
+
 		SetupMesh();
-	}
-
-	//void Cube::Draw(Shader& shader)
-	//{
-	//	glUseProgram(shader);
-
-	//	glActiveTexture(GL_TEXTURE0);
-	//	glBindTexture(GL_TEXTURE_CUBE_MAP, *mCubeMap);
-
-	//	glEnable(GL_CULL_FACE);
-	//	glFrontFace(GL_CCW);
-
-	//	glDisable(GL_DEPTH_TEST);
-	//	glBindVertexArray(VAO);	// Bind
-	//	glDrawArrays(GL_TRIANGLES, 0, 36);
-	//	glBindVertexArray(0);	// Unbind
-	//	glEnable(GL_DEPTH_TEST);
-	//}
-
-	void Cube::SetupMesh()
-	{
-		mCubeMap = new TextureCubeMap(
-			"assets/textures/skybox/right.jpg",
-			"assets/textures/skybox/left.jpg",
-			"assets/textures/skybox/top.jpg",
-			"assets/textures/skybox/bottom.jpg",
-			"assets/textures/skybox/front.jpg",
-			"assets/textures/skybox/back.jpg"
-		);
-
-		glGenVertexArrays(1, &VAO);
-		glGenBuffers(1, &VBO);
-
-		glBindVertexArray(VAO);
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(VertexPositions), VertexPositions, GL_STATIC_DRAW);
-
-		// Vertex position.
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-		// Texture coordinates
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
-
-		glBindVertexArray(0);
 	}
 }
