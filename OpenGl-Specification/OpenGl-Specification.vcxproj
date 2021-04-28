@@ -153,10 +153,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="assets\meshes\Cube.cpp" />
-    <ClCompile Include="assets\meshes\Torus.cpp" />
     <ClCompile Include="assets\scenes\EnvironmentMappingScene.cpp" />
-    <ClCompile Include="assets\scenes\HeightMapScene.cpp" />
-    <ClCompile Include="assets\scenes\NormalMappingScene.cpp" />
     <ClCompile Include="assets\scenes\PBRScene.cpp" />
     <ClCompile Include="assets\scenes\ShadowScene.cpp" />
     <ClCompile Include="src\Application.cpp" />
@@ -171,10 +168,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="assets\meshes\Cube.h" />
-    <ClInclude Include="assets\meshes\Torus.h" />
     <ClInclude Include="assets\scenes\EnvironmentMappingScene.h" />
-    <ClInclude Include="assets\scenes\HeightMapScene.h" />
-    <ClInclude Include="assets\scenes\NormalMappingScene.h" />
     <ClInclude Include="assets\scenes\PBRScene.h" />
     <ClInclude Include="assets\scenes\ShadowScene.h" />
     <ClInclude Include="src\Camera.h" />
@@ -188,12 +182,8 @@
     <ClInclude Include="src\Texture.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\shaders\BlinnPhong\fragBlinnPhongShader.glsl" />
     <None Include="assets\shaders\CubeMap\fragCubeMapShader.glsl" />
     <None Include="assets\shaders\CubeMap\vertCubeMapShader.glsl" />
-    <None Include="assets\shaders\EnvironmentMapping\fragEnvMapping.glsl" />
-    <None Include="assets\shaders\EnvironmentMapping\vertEnvMapping.glsl" />
-    <None Include="assets\shaders\Gouraud\fragGouraudShader.glsl" />
     <None Include="assets\shaders\fragLitShader.glsl" />
     <None Include="assets\shaders\HeightMapping\fragHeightMapShader.glsl" />
     <None Include="assets\shaders\HeightMapping\vertHeightMapShader.glsl" />
@@ -201,16 +191,12 @@
     <None Include="assets\shaders\NormalMapping\vertNormalMappingShader.glsl" />
     <None Include="assets\shaders\PBRCookTorrance\fragCookTorranceShader.glsl" />
     <None Include="assets\shaders\PBRCookTorrance\vertCookTorranceShader.glsl" />
-    <None Include="assets\shaders\Phong\fragPhongShader.glsl" />
     <None Include="assets\shaders\fragShader.glsl" />
-    <None Include="assets\shaders\BlinnPhong\vertBlinnPhongShader.glsl" />
-    <None Include="assets\shaders\Gouraud\vertGouraudShader.glsl" />
     <None Include="assets\shaders\Shadow\fragDepthShader.glsl" />
     <None Include="assets\shaders\Shadow\fragShadowShader.glsl" />
     <None Include="assets\shaders\Shadow\vertDepthShader.glsl" />
     <None Include="assets\shaders\Shadow\vertShadowShader.glsl" />
     <None Include="assets\shaders\vertLitShader.glsl" />
-    <None Include="assets\shaders\Phong\vertPhongShader.glsl" />
     <None Include="assets\shaders\vertShader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

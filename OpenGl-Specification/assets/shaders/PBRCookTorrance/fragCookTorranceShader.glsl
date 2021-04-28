@@ -8,29 +8,29 @@ struct Material
 	float ao;
 };
 
-struct Light
+layout (std140, binding = 13) uniform LitProperties
 {
-	vec3 position;
-	vec3 color;
+	mat4 CamModelMat;
+	mat4 CamViewMat;
+	mat4 CamProjMat;
+	vec4 CamPos;
+	vec4 LightPos;
+	vec4 LightColor;
+	vec4 LightAmbient;
 };
 
 // PBR maps
 layout (binding = 0) uniform sampler2D uAlbedoMap;
-layout (binding = 1) uniform sampler2D uMetallicMap;
-layout (binding = 2) uniform sampler2D uRoughnessMap;
-layout (binding = 3) uniform sampler2D uNormalMap;
-layout (binding = 4) uniform sampler2D uAOMap;
+layout (binding = 1) uniform sampler2D uAOMap;
+layout (binding = 2) uniform sampler2D uHeightMap;
+layout (binding = 3) uniform sampler2D uMetallicMap;
+layout (binding = 4) uniform sampler2D uNormalMap;
+layout (binding = 5) uniform sampler2D uRoughnessMap;
 
 // Matrices parameteres
 uniform mat4 uModel;
-uniform mat4 uView;
-uniform mat4 uProjection;
-
-// Camera parameters
-uniform vec3 uCameraPosition;
-
+uniform float uTilingFactor;
 uniform Material uMaterial;
-uniform Light uLight;
 
 in vec3 Position;
 in vec2 TexCoord;
@@ -55,27 +55,22 @@ void main()
 	albedo.b = pow(albedo.b, 2.2);
 	float metallic = texture(uMetallicMap, TexCoord).r;
 	float roughness = texture(uRoughnessMap, TexCoord).r;
-	float ambientOcclusion = uMaterial.ao;
+	float ambientOcclusion = texture(uAOMap, TexCoord).r;
 	vec3 normal = CalcNewNormal();
-
-	// vec3 albedo = uMaterial.albedo;
-	// float metallic = uMaterial.metallic;
-	// float roughness = uMaterial.roughness;
-	// float ambientOcclusion = uMaterial.ao;
 	
 	vec3 n = normalize(normal);
-	vec3 v = normalize(uCameraPosition - Position);
+	vec3 v = normalize(CamPos.xyz - Position);
 
 	vec3 fo = vec3(0.04);
 	fo = mix(fo, albedo, metallic);
 
 	// Reflectance equation
-	vec3 l = normalize(uLight.position - Position);
+	vec3 l = normalize(LightPos.xyz - Position);
 	vec3 h = normalize(v + l);
 	
-	float distance = length(uLight.position - Position);
+	float distance = length(LightPos.xyz - Position);
 	float attenuation = 1.0 / (distance * distance);
-	vec3 radiance = uLight.color * attenuation;
+	vec3 radiance = LightColor.rgb * attenuation;
 
 	// Cook-Torrance BDRDF
 	float ndf = DistributionGGX(n, h, roughness);

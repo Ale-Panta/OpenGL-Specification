@@ -1,7 +1,6 @@
 #include "ShadowScene.h"
 
 #include "../../assets/meshes/Cube.h"
-#include "../../assets/meshes/Torus.h"
 #include "../../assets/meshes/Sphere.h"
 
 #include <glm/ext/matrix_float4x4.hpp>
@@ -60,7 +59,6 @@ namespace OpenGL
 		m_CubeMapShader = make_shared<Shader>("assets/shaders/CubeMap/vertCubeMapShader.glsl", "assets/shaders/CubeMap/fragCubeMapShader.glsl");
 
 		// Create geometries
-		m_Torus = make_shared<Torus>();
 		m_Sphere = make_shared<Sphere>();
 		m_CubeMap = make_shared<Cube>();
 
