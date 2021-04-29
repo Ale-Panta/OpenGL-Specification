@@ -26,7 +26,7 @@ namespace OpenGL
 
 	private:
 		glm::mat4 m_View;
-		glm::mat4 m_Projection = glm::perspective(1.0472f, 1.0f, 0.1f, 100.0f);
+		glm::mat4 m_Projection = glm::perspective(1.0472f, 1920.0f / 1080.0f, 0.1f, 100.0f);
 
 		glm::vec3 m_Position	= glm::vec3(0.0f, 0.0f, 3.0f);
 		glm::vec3 m_Forward		= glm::vec3(0.0f, 0.0f, -1.0f);

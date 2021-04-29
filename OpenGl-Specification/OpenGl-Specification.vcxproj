@@ -185,10 +185,6 @@
     <None Include="assets\shaders\CubeMap\fragCubeMapShader.glsl" />
     <None Include="assets\shaders\CubeMap\vertCubeMapShader.glsl" />
     <None Include="assets\shaders\fragLitShader.glsl" />
-    <None Include="assets\shaders\HeightMapping\fragHeightMapShader.glsl" />
-    <None Include="assets\shaders\HeightMapping\vertHeightMapShader.glsl" />
-    <None Include="assets\shaders\NormalMapping\fragNormalMappingShader.glsl" />
-    <None Include="assets\shaders\NormalMapping\vertNormalMappingShader.glsl" />
     <None Include="assets\shaders\PBRCookTorrance\fragCookTorranceShader.glsl" />
     <None Include="assets\shaders\PBRCookTorrance\vertCookTorranceShader.glsl" />
     <None Include="assets\shaders\fragShader.glsl" />

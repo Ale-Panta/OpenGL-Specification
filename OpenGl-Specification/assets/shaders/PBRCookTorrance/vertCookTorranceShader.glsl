@@ -40,16 +40,19 @@ uniform Material uMaterial;
 
 out vec3 Position;
 out vec2 TexCoord;
-out vec3 Normal;
-out vec3 Tangent;
+out mat3 TBN;
 
 void main()
 {
 	vec3 vertexDisplacement = aPosition + (aNormal * texture(uHeightMap, aTexCoord * uTilingFactor).r * uDisplacementFactor);
 	Position = (uModel * vec4(vertexDisplacement, 1.0)).xyz;
 	TexCoord = aTexCoord * uTilingFactor;
-	Normal = (uModel * vec4(aNormal, 0.0)).xyz;
-	Tangent = (uModel * vec4(aTangent, 0.0)).xyz;
+
+	vec3 T = normalize(vec3(uModel * vec4(aTangent, 0.0)));
+	vec3 N = normalize(vec3(uModel * vec4(aNormal,	0.0)));
+	T = normalize(T - dot(T, N) * N);
+	vec3 B = cross(N, T);
+	TBN = mat3(T, B, N);
 
 	gl_Position = CamProjMat * CamViewMat * uModel * vec4(vertexDisplacement, 1.0);
 }

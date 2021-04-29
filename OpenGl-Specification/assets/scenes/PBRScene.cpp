@@ -3,6 +3,8 @@
 #include "../meshes/Sphere.h"
 #include "glm/gtc/type_ptr.hpp"
 
+#include <iostream>
+
 using namespace glm;
 using namespace std;
 
@@ -11,10 +13,10 @@ namespace OpenGL
 
 	void PBRScene::BeginScene(GLFWwindow* context)
 	{
-		m_Camera = make_shared<Camera>(vec3(.0f, .0f, 4.0f), .01f);
+		m_Camera = make_shared<Camera>(vec3(.0f, .0f, 3.0f), .01f);
 		
-		m_LightPosition = make_shared<vec3>(0.0f, 0.0f, 4.0f);
-		m_LightColor = make_shared<vec3>(50.0f);
+		m_LightPosition = make_shared<vec3>(0.0f, 0.0f, 5.0f);
+		m_LightColor = make_shared<vec3>(50.0f, 45.0f, 43.0f);
 
 		m_SphereCD = make_shared<Sphere>(128);
 		m_SpherePG = make_shared<Sphere>(128);
@@ -66,11 +68,8 @@ namespace OpenGL
 
 	void PBRScene::RenderScene(GLFWwindow* context, double currentTime)
 	{
-		glClearColor(.05f, .05f, .05f, 1.0f);
+		glClearColor(.09f, .088f, .092f, 1.0f);
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-
-		glEnable(GL_POLYGON_OFFSET_FILL);
-		glPolygonOffset(1.0f, 2.0f);
 
 		RenderSkyBox(context, currentTime);
 		RenderShadow(context, currentTime);
@@ -87,35 +86,32 @@ namespace OpenGL
 
 	void PBRScene::RenderGeometry(GLFWwindow* context, double currentTime)
 	{
-		//m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(-3.0f, 0.0f, 1.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 5.0f), vec3(0.0f, 1.0f, 0.0f)));
-		//m_PBRShader->SetUniformFloat("uTilingFactor", 3.0f);
-		//m_PBRShader->SetUniformFloat("uDisplacementFactor", 0.03f);
+		vec4 lightPosition = vec4(sin(currentTime * 0.5) * 5.0f, 0.0f, cos(currentTime * 0.5) * 5.0f, 0.0f);
 
-		//glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_PG_Albedo);
-		//glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, *m_PG_AO);
-		//glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, *m_PG_Height);
-		//glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, *m_PG_Metallic);
-		//glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, *m_PG_Normal);
-		//glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_PG_Roughness);
+		// Update sub data of uniform block every frame
+		glBindBuffer(GL_UNIFORM_BUFFER, m_UBO);
+		glBufferSubData(GL_UNIFORM_BUFFER, offsetof(LitProperties, LitProperties::LightPos), sizeof(vec4), value_ptr(lightPosition));
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-		//m_SpherePG->Draw(*m_PBRShader);
-
-		//m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(-1.5f, 0.0f, -2.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 10.0f), vec3(0.0f, 1.0f, 0.0f)));
-		//m_PBRShader->SetUniformFloat("uTilingFactor", 1.0f);
-		//m_PBRShader->SetUniformFloat("uDisplacementFactor", 0.3f);
-
-		//glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_CD_Albedo);
-		//glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, *m_CD_AO);
-		//glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, *m_CD_Height);
-		//glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, *m_CD_Metallic);
-		//glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, *m_CD_Normal);
-		//glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_CD_Roughness);
-
-		//m_SphereCD->Draw(*m_PBRShader);
-
-		m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 10.0f), vec3(0.0f, 1.0f, 0.0f)));
+		/*
+		m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)));
 		m_PBRShader->SetUniformFloat("uTilingFactor", 3.0f);
-		m_PBRShader->SetUniformFloat("uDisplacementFactor", 0.3f);
+		m_PBRShader->SetUniformFloat("uDisplacementFactor", 0.0333f);
+
+		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_PG_Albedo);
+		glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, *m_PG_AO);
+		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, *m_PG_Height);
+		glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, *m_PG_Metallic);
+		glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, *m_PG_Normal);
+		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_PG_Roughness);
+
+		m_SpherePG->Draw(*m_PBRShader);
+		*/
+
+		/*
+		m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)));
+		m_PBRShader->SetUniformFloat("uTilingFactor", 1.0f);
+		m_PBRShader->SetUniformFloat("uDisplacementFactor", 0.333f);
 
 		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_CD_Albedo);
 		glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, *m_CD_AO);
@@ -125,32 +121,35 @@ namespace OpenGL
 		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_CD_Roughness);
 
 		m_SphereCD->Draw(*m_PBRShader);
+		*/
 
-		//m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(1.5f, 0.0f, -2.0f)) * rotate(mat4(1.0f), (float)radians(-currentTime * 10.0f), vec3(0.0f, 1.0f, 0.0f)));
-		//m_PBRShader->SetUniformFloat("uTilingFactor", 5.0f);
-		//m_PBRShader->SetUniformFloat("uDisplacementFactor", 0.1f);
+		/*
+		m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)));
+		m_PBRShader->SetUniformFloat("uTilingFactor", 4.0f);
+		m_PBRShader->SetUniformFloat("uDisplacementFactor", 0.2222f);
 
-		//glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_SS_Albedo);
-		//glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, *m_SS_AO);
-		//glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, *m_SS_Height);
-		//glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, *m_SS_Metallic);
-		//glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, *m_SS_Normal);
-		//glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_SS_Roughness);
+		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_SS_Albedo);
+		glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, *m_SS_AO);
+		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, *m_SS_Height);
+		glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, *m_SS_Metallic);
+		glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, *m_SS_Normal);
+		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_SS_Roughness);
 
-		//m_SphereSS->Draw(*m_PBRShader);
+		m_SphereSS->Draw(*m_PBRShader);
 
-		//m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(3.0f, 0.0f, 1.0f)) * rotate(mat4(1.0f), (float)radians(-currentTime * 5.0f), vec3(0.0f, 1.0f, 0.0f)));
-		//m_PBRShader->SetUniformFloat("uTilingFactor", 2.0f);
-		//m_PBRShader->SetUniformFloat("uDisplacementFactor", 0.03f);
+		m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)));
+		m_PBRShader->SetUniformFloat("uTilingFactor", 2.0f);
+		m_PBRShader->SetUniformFloat("uDisplacementFactor", 0.03f);
 
-		//glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_VM_Albedo);
-		//glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, *m_VM_AO);
-		//glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, *m_VM_Height);
-		//glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, *m_VM_Metallic);
-		//glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, *m_VM_Normal);
-		//glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_VM_Roughness);
+		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_VM_Albedo);
+		glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, *m_VM_AO);
+		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, *m_VM_Height);
+		glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, *m_VM_Metallic);
+		glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, *m_VM_Normal);
+		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_VM_Roughness);
 
-		//m_SphereVM->Draw(*m_PBRShader);
+		m_SphereVM->Draw(*m_PBRShader);
+		*/
 	}
 
 }

@@ -34,8 +34,7 @@ uniform Material uMaterial;
 
 in vec3 Position;
 in vec2 TexCoord;
-in vec3 Normal;
-in vec3 Tangent;
+in mat3 TBN;
 
 out vec4 Color;
 
@@ -69,7 +68,7 @@ void main()
 	vec3 h = normalize(v + l);
 	
 	float distance = length(LightPos.xyz - Position);
-	float attenuation = 1.0 / (distance * distance);
+	float attenuation = 1.0 / pow(distance, 2);
 	vec3 radiance = LightColor.rgb * attenuation;
 
 	// Cook-Torrance BDRDF
@@ -83,13 +82,14 @@ void main()
 
 	vec3 numerator = ndf * g * f;
 	float denominator = 4.0 * max(dot(n, v), 0.0) * max(dot(n, l), 0.0);
-	vec3 specular = numerator / max(denominator, 0.001);
+	vec3 specular = numerator / max(denominator, 1.0);
 
 	// Add to outgoing radiance Lo
 	float nDotL = max(dot(n, l), 0.0);
 	vec3 lo = (kD * albedo / PI + specular) * radiance * nDotL;
 
-	vec3 ambient = vec3(0.088) * albedo * ambientOcclusion;
+	vec3 ambientColor = vec3(0.03, 0.0295, 0.02903);
+	vec3 ambient = ambientColor * albedo * ambientOcclusion;
 	vec3 outColor = ambient + lo;
 
 	outColor = outColor / (outColor + vec3(1.0));
@@ -98,29 +98,37 @@ void main()
 	Color = vec4(outColor, 1.0);
 }
 
+/**
+ * For the normal distribution function (NDF), we found Disney's choice of GGX/Trowbridge-Retiz to
+ * be well worth the cost. The additional expense over using Blinn-Phong is fairly small, and the distinct,
+ * natural apperance produced by the longer "tail" appealed to our artist. We also adopted Disney's reparameterization
+ * of a = pow(Roughness, 2).
+ */
 float DistributionGGX(vec3 N, vec3 H, float roughness)
 {
-    float a      = roughness*roughness;
-    float a2     = a * a;
+    float a      = pow(roughness, 2);
+    float a2     = pow(a, 2);
     float NdotH  = max(dot(N, H), 0.0);
-    float NdotH2 = NdotH * NdotH;
+    float NdotH2 = pow(NdotH, 2);
 	
-    float num   = a2;
     float denom = (NdotH2 * (a2 - 1.0) + 1.0);
-    denom = PI * denom * denom;
+    denom = PI * pow(denom, 2);
 	
-    return num / denom;
+    return a2 / denom;
 }
 
 float GeometrySchlickGGX(float NdotV, float roughness)
 {
-    float r = (roughness + 1.0);
-    float k = (r*r) / 8.0;
+	/*
+	* r can be calculated also like this to reduce the "hotness" ny remapping roughness.
+	* This adjustement is only used for analytic light source; if applied to image-based lighting,
+	* the result at glatcing angles will be much too dark
+	* float r = pow((roughness + 1.0) / 2, 2);
+	*/
+    float r = pow(roughness + 1.0, 2);
+    float k = r / 8.0;
 
-    float num   = NdotV;
-    float denom = NdotV * (1.0 - k) + k;
-	
-    return num / denom;
+    return NdotV / (NdotV * (1.0 - k) + k);
 }
 
 float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
@@ -133,6 +141,11 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
     return ggx1 * ggx2;
 }
 
+/**
+ * For Fresnel, we using Schlick's approximation, but with a minor modification
+ * we use a Spherical Gaussian approximation to replace the power. It is slightly
+ * more efficient to calculate and the difference is impredictable.
+ */
 vec3 FresnelSchlick(float cosTheta, vec3 F0)
 {
     return F0 + (1.0 - F0) * pow(max(1.0 - cosTheta, 0.0), 5.0);
@@ -140,19 +153,11 @@ vec3 FresnelSchlick(float cosTheta, vec3 F0)
 
 vec3 CalcNewNormal()
 {
-	vec3 normal = normalize(Normal);
-	vec3 tangent = normalize(Tangent);
-	
-	// Tangent is perpendicular to normal
-	tangent = normalize(tangent - dot(tangent, normal) * normal);
-	vec3 bitangent = cross(tangent, -normal);
-	
 	// TBN matrix to convert to camera space
 	vec3 retrievedNormal = texture(uNormalMap, TexCoord).xyz;
 	retrievedNormal = normalize(retrievedNormal * 2.0 - 1.0);
 
-	mat3 tbn = mat3(tangent, bitangent, normal);
-	vec3 newNormal = tbn * retrievedNormal;
-	newNormal = normalize(newNormal);
+	vec3 newNormal = normalize(TBN * retrievedNormal);
+	
 	return newNormal;
 }

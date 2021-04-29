@@ -10,13 +10,13 @@ namespace OpenGL
 {
 	struct LitProperties
 	{
-		glm::mat4 ViewMat = glm::mat4(1.0f);
-		glm::mat4 ModelMat = glm::mat4(1.0f);
-		glm::mat4 ProjMat = glm::mat4(1.0f);
-		glm::vec4 CamPos = glm::vec4(1.0f);
-		glm::vec4 LightPos = glm::vec4(1.0f);
-		glm::vec4 LightColor = glm::vec4(1.0f);
-		glm::vec4 LightAmbient = glm::vec4(1.0f);
+		glm::mat4 ViewMat		= glm::mat4(1.0f);	// 0
+		glm::mat4 ModelMat		= glm::mat4(1.0f);	// 64
+		glm::mat4 ProjMat		= glm::mat4(1.0f);	// 128
+		glm::vec4 CamPos		= glm::vec4(1.0f);	// 192
+		glm::vec4 LightPos		= glm::vec4(1.0f);	// 208
+		glm::vec4 LightColor	= glm::vec4(1.0f);	// 224
+		glm::vec4 LightAmbient	= glm::vec4(1.0f);	// 240
 	};
 
 	class PBRScene : public Scene
