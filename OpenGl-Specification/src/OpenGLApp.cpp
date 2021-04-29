@@ -37,7 +37,7 @@ namespace OpenGL
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
 		// Declare multi-sample
-		glfwWindowHint(GLFW_SAMPLES, 8);
+		glfwWindowHint(GLFW_SAMPLES, 4);
 
 		// Create the window context.
 		// Note: Creating the window doesn't make it current context by default.

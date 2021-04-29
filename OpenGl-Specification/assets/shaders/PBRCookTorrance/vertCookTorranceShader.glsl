@@ -46,10 +46,10 @@ out vec3 Tangent;
 void main()
 {
 	vec3 vertexDisplacement = aPosition + (aNormal * texture(uHeightMap, aTexCoord * uTilingFactor).r * uDisplacementFactor);
-	Position = vertexDisplacement;
+	Position = (uModel * vec4(vertexDisplacement, 1.0)).xyz;
 	TexCoord = aTexCoord * uTilingFactor;
-	Normal = aNormal;
-	Tangent = aTangent;
+	Normal = (uModel * vec4(aNormal, 0.0)).xyz;
+	Tangent = (uModel * vec4(aTangent, 0.0)).xyz;
 
 	gl_Position = CamProjMat * CamViewMat * uModel * vec4(vertexDisplacement, 1.0);
 }

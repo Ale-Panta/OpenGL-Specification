@@ -1,6 +1,7 @@
 #include "PBRScene.h"
 #include "../../src/Texture.h"
 #include "../meshes/Sphere.h"
+#include "glm/gtc/type_ptr.hpp"
 
 using namespace glm;
 using namespace std;
@@ -12,8 +13,8 @@ namespace OpenGL
 	{
 		m_Camera = make_shared<Camera>(vec3(.0f, .0f, 4.0f), .01f);
 		
-		m_LightPosition = make_shared<vec3>(2.0f, 1.0f, 4.0f);
-		m_LightColor = make_shared<vec3>(100.0f);
+		m_LightPosition = make_shared<vec3>(0.0f, 0.0f, 4.0f);
+		m_LightColor = make_shared<vec3>(50.0f);
 
 		m_SphereCD = make_shared<Sphere>(128);
 		m_SpherePG = make_shared<Sphere>(128);
@@ -68,6 +69,9 @@ namespace OpenGL
 		glClearColor(.05f, .05f, .05f, 1.0f);
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
+		glEnable(GL_POLYGON_OFFSET_FILL);
+		glPolygonOffset(1.0f, 2.0f);
+
 		RenderSkyBox(context, currentTime);
 		RenderShadow(context, currentTime);
 		RenderGeometry(context, currentTime);
@@ -83,7 +87,6 @@ namespace OpenGL
 
 	void PBRScene::RenderGeometry(GLFWwindow* context, double currentTime)
 	{
-
 		//m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(-3.0f, 0.0f, 1.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 5.0f), vec3(0.0f, 1.0f, 0.0f)));
 		//m_PBRShader->SetUniformFloat("uTilingFactor", 3.0f);
 		//m_PBRShader->SetUniformFloat("uDisplacementFactor", 0.03f);
@@ -111,7 +114,7 @@ namespace OpenGL
 		//m_SphereCD->Draw(*m_PBRShader);
 
 		m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 10.0f), vec3(0.0f, 1.0f, 0.0f)));
-		m_PBRShader->SetUniformFloat("uTilingFactor", 2.0f);
+		m_PBRShader->SetUniformFloat("uTilingFactor", 3.0f);
 		m_PBRShader->SetUniformFloat("uDisplacementFactor", 0.3f);
 
 		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_CD_Albedo);

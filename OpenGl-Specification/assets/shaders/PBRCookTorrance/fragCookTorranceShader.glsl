@@ -96,7 +96,6 @@ void main()
 	outColor = pow(outColor, vec3(1.0 / 2.2));	// Gamma correction
 
 	Color = vec4(outColor, 1.0);
-	// Color = vec4(Tangent, 1.0);
 }
 
 float DistributionGGX(vec3 N, vec3 H, float roughness)
