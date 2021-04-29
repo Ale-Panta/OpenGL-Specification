@@ -46,7 +46,7 @@ out vec3 Tangent;
 void main()
 {
 	vec3 vertexDisplacement = aPosition + (aNormal * texture(uHeightMap, aTexCoord * uTilingFactor).r * uDisplacementFactor);
-	Position = (uModel * vec4(vertexDisplacement, 1.0)).xyz;
+	Position = vertexDisplacement;
 	TexCoord = aTexCoord * uTilingFactor;
 	Normal = aNormal;
 	Tangent = aTangent;

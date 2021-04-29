@@ -89,21 +89,22 @@ void main()
 	float nDotL = max(dot(n, l), 0.0);
 	vec3 lo = (kD * albedo / PI + specular) * radiance * nDotL;
 
-	vec3 ambient = vec3(0.03) * albedo * ambientOcclusion;
+	vec3 ambient = vec3(0.088) * albedo * ambientOcclusion;
 	vec3 outColor = ambient + lo;
 
 	outColor = outColor / (outColor + vec3(1.0));
 	outColor = pow(outColor, vec3(1.0 / 2.2));	// Gamma correction
 
 	Color = vec4(outColor, 1.0);
+	// Color = vec4(Tangent, 1.0);
 }
 
 float DistributionGGX(vec3 N, vec3 H, float roughness)
 {
     float a      = roughness*roughness;
-    float a2     = a*a;
+    float a2     = a * a;
     float NdotH  = max(dot(N, H), 0.0);
-    float NdotH2 = NdotH*NdotH;
+    float NdotH2 = NdotH * NdotH;
 	
     float num   = a2;
     float denom = (NdotH2 * (a2 - 1.0) + 1.0);
@@ -145,15 +146,13 @@ vec3 CalcNewNormal()
 	
 	// Tangent is perpendicular to normal
 	tangent = normalize(tangent - dot(tangent, normal) * normal);
-	vec3 bitangent = cross(tangent, normal);
+	vec3 bitangent = cross(tangent, -normal);
 	
 	// TBN matrix to convert to camera space
-	mat3 tbn = mat3(tangent, bitangent, normal);
 	vec3 retrievedNormal = texture(uNormalMap, TexCoord).xyz;
+	retrievedNormal = normalize(retrievedNormal * 2.0 - 1.0);
 
-	// Convert from RGB space
-	retrievedNormal = retrievedNormal * 2.0 - 1.0;
-
+	mat3 tbn = mat3(tangent, bitangent, normal);
 	vec3 newNormal = tbn * retrievedNormal;
 	newNormal = normalize(newNormal);
 	return newNormal;

@@ -44,8 +44,8 @@ namespace OpenGL
 		// Context
 		GLFWwindow* m_Context = nullptr;
 		std::string m_Name = "OpenGL Default Demo Window";
-		int m_Width = 1280;
-		int m_Height = 720;
+		int m_Width = 800;
+		int m_Height = 800;
 		float m_AspectRatio = 1.0f;
 
 		Scene* m_ActiveScene = NULL;
