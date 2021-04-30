@@ -1,11 +1,11 @@
 #pragma once
 
+#include <GL/glew.h>
 #include "Shader.h"
 #include "Texture.h"
 
 #include <string>
 #include <vector>
-#include <GL/glew.h>
 #include <GLM/ext/matrix_float4x2_precision.hpp>
 #include <glm/ext/matrix_transform.hpp>
 
@@ -24,53 +24,68 @@ namespace OpenGL
 		glm::vec3 Color;
 	};
 
+	/**
+	 * Mesh contains data to vertex position. This allow us to store in one point the geometry we want to draw.
+	 * 
+	 * @see mesh
+	 * @see mesh vertex
+	 */
 	class Mesh
 	{
 	public:
 		Mesh() = default;
+
+		/**
+		 * Mesh constructor.
+		 * 
+		 * @param vertices, list / vector of Vertex
+		 * @see OpenGL::Vertex
+		 * 
+		 * @param indices, list / vector of GLuint
+		 * @see Vertex indices
+		 */
 		Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices);
 
 	public:
 		/**
-		 * Activate the proper VAO and textures slot.
-		 * Call glDrawElements().
+		 * Draw the geometry with the program passed as parameter.
+		 * 
+		 * @param shader, shader program
+		 * @see OpenGL::Shader
+		 * 
+		 * Enable depth test and cull face. Check if this settings fit for you.
+		 * Bind the proper VAO and call glDrawElements.
+		 * @see glDrawElements()
 		 */
 		virtual void Draw(Shader& shader);
-		void SetPosition(const glm::vec3& RefPosition) { m_Position = RefPosition; }
-		const glm::mat4& GetModelMatrix() const { return glm::translate(glm::mat4(1.0f), m_Position); }
 
 	protected:
-		/**
-		 * Setup vertex and indices buffers, attributes, textures.
-		 */
+		/** Setup vertex and indices buffers, attributes */
 		virtual void SetupMesh();
 
 	public:
-		glm::vec3 m_Position = glm::vec3(0.0f);
-
-		// Mesh data
+		/** Collection of all vertex data */
 		std::vector<Vertex> Vertices;
-		std::vector<Texture*> Textures;
+
+		/** Collection of all vertex indices */
 		std::vector<GLuint> VertexIndices;
-		std::vector<GLuint> TexCoordIndices;
-		std::vector<GLuint> NormalsIndices;
 
 	protected:
 		/**
 		 * Vertex array object
-		 * #TODO: Explain what is it
+		 * @see VAO
 		 */
 		GLuint VAO = 0;
 
 		/**
 		 * Vertex buffer object
-		 * #TODO: Explain what is it
+		 * @see VBO
 		 */
 		GLuint VBO = 0;
 
 		/**
 		 * Element buffer object
-		 * #TODO: Explain what is it.
+		 * @see EBO
 		 */
 		GLuint EBO = 0;
 	};

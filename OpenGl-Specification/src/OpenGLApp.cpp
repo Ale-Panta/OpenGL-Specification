@@ -1,6 +1,4 @@
 #include "OpenGLApp.h"
-#include "../assets/scenes/ShadowScene.h"
-#include "../assets/scenes/EnvironmentMappingScene.h"
 #include "../assets/scenes/PBRScene.h"
 
 #include <iostream>

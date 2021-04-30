@@ -1,25 +1,7 @@
 #version 430
 
-struct Material
-{
-	vec3 albedo;
-	float metallic;
-	float roughness;
-	float ao;
-};
+// --- Begin layout uniform textures ----------------------------------------------------------------------------------
 
-layout (std140, binding = 13) uniform LitProperties
-{
-	mat4 CamModelMat;
-	mat4 CamViewMat;
-	mat4 CamProjMat;
-	vec4 CamPos;
-	vec4 LightPos;
-	vec4 LightColor;
-	vec4 LightAmbient;
-};
-
-// PBR maps
 layout (binding = 0) uniform sampler2D uAlbedoMap;
 layout (binding = 1) uniform sampler2D uAOMap;
 layout (binding = 2) uniform sampler2D uHeightMap;
@@ -27,16 +9,50 @@ layout (binding = 3) uniform sampler2D uMetallicMap;
 layout (binding = 4) uniform sampler2D uNormalMap;
 layout (binding = 5) uniform sampler2D uRoughnessMap;
 
-// Matrices parameteres
+// --- End layout uniform textures ------------------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// --- Begin layout uniform blocks ------------------------------------------------------------------------------------
+
+layout (std140, binding = 24) uniform CameraProperties
+{
+	mat4 CamModelMat;
+	mat4 CamViewMat;
+	mat4 CamProjMat;
+	vec4 CamPos;
+};
+
+layout (std140, binding = 25) uniform LightProperties
+{
+	vec4 LightPos;
+	vec4 LightColor;
+	vec4 LightAmbient;
+};
+
+// --- End layout uniform blocks --------------------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// --- Begin local program uniforms -----------------------------------------------------------------------------------
+
 uniform mat4 uModel;
 uniform float uTilingFactor;
-uniform Material uMaterial;
+uniform float uDisplacementFactor;
+
+// --- End local program uniforms -------------------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// --- Begin in values ------------------------------------------------------------------------------------------------
 
 in vec3 Position;
-in vec2 TexCoord;
+in vec2 UV;
 in mat3 TBN;
 
+// --- End in values --------------------------------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// --- Begin out values -----------------------------------------------------------------------------------------------
+
 out vec4 Color;
+
+// --- End out values -------------------------------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// --- Begin others values --------------------------------------------------------------------------------------------
 
 const float PI = 3.14159265359;
 
@@ -46,15 +62,17 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness);
 vec3 FresnelSchlick(float cosTheta, vec3 F0);
 vec3 CalcNewNormal();
 
+// --- End others values ----------------------------------------------------------------------------------------------
+
 void main()
 {
-	vec3 albedo = texture(uAlbedoMap, TexCoord).rgb;
+	vec3 albedo = texture(uAlbedoMap, UV).rgb;
 	albedo.r = pow(albedo.r, 2.2);
 	albedo.g = pow(albedo.g, 2.2);
 	albedo.b = pow(albedo.b, 2.2);
-	float metallic = texture(uMetallicMap, TexCoord).r;
-	float roughness = texture(uRoughnessMap, TexCoord).r;
-	float ambientOcclusion = texture(uAOMap, TexCoord).r;
+	float metallic = texture(uMetallicMap, UV).r;
+	float roughness = texture(uRoughnessMap, UV).r;
+	float ambientOcclusion = texture(uAOMap, UV).r;
 	vec3 normal = CalcNewNormal();
 	
 	vec3 n = normalize(normal);
@@ -154,7 +172,7 @@ vec3 FresnelSchlick(float cosTheta, vec3 F0)
 vec3 CalcNewNormal()
 {
 	// TBN matrix to convert to camera space
-	vec3 retrievedNormal = texture(uNormalMap, TexCoord).xyz;
+	vec3 retrievedNormal = texture(uNormalMap, UV).xyz;
 	retrievedNormal = normalize(retrievedNormal * 2.0 - 1.0);
 
 	vec3 newNormal = normalize(TBN * retrievedNormal);

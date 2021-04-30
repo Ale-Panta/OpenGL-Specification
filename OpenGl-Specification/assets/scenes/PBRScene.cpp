@@ -13,10 +13,8 @@ namespace OpenGL
 
 	void PBRScene::BeginScene(GLFWwindow* context)
 	{
-		m_Camera = make_shared<Camera>(vec3(.0f, .0f, 3.0f), .01f);
+		m_Camera = make_shared<Camera>(vec4(0.0f, 0.0f, 3.0f, 0.0f), 1.0472f, 1920.0f / 1080.0f, 0.1f, 100.0f);
 		
-		m_LightPosition = make_shared<vec3>(0.0f, 0.0f, 5.0f);
-		m_LightColor = make_shared<vec3>(50.0f, 45.0f, 43.0f);
 
 		m_SphereCD = make_shared<Sphere>(128);
 		m_SpherePG = make_shared<Sphere>(128);
@@ -53,17 +51,28 @@ namespace OpenGL
 		m_VM_Normal		= new Texture2D("assets/textures/vented-metal-panel/vented-metal-panel1_normal-dx.png");
 		m_VM_Roughness	= new Texture2D("assets/textures/vented-metal-panel/vented-metal-panel1_roughness.png");
 
-		LitProperties properties = {m_Camera->GetModelMatrix(), m_Camera->GetViewMatrix(), m_Camera->GetProjMatrix(), vec4(m_Camera->GetPosition(), 1.0f), vec4(*m_LightPosition, 1.0f), vec4(*m_LightColor, 1.0f), vec4(0.0f)};
 
-		m_LitPropertiesLocation = glGetUniformBlockIndex(*m_PBRShader, "LitProperties");
-		glUniformBlockBinding(*m_PBRShader, m_LitPropertiesLocation, 13);
+		GLint camPrtiesLocation = glGetUniformBlockIndex(*m_PBRShader, "CameraProperties");
+		glUniformBlockBinding(*m_PBRShader, camPrtiesLocation, 24);
 
-		glGenBuffers(1, &m_UBO);
-		glBindBuffer(GL_UNIFORM_BUFFER, m_UBO);
-		glBufferData(GL_UNIFORM_BUFFER, sizeof(LitProperties), &properties, GL_STATIC_DRAW);
+		glGenBuffers(1, &m_UBOCamPrties);
+		glBindBuffer(GL_UNIFORM_BUFFER, m_UBOCamPrties);
+		glBufferData(GL_UNIFORM_BUFFER, sizeof(CameraProperties), NULL, GL_STATIC_DRAW);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+		glBindBufferBase(GL_UNIFORM_BUFFER, 24, m_UBOCamPrties);
 
-		glBindBufferBase(GL_UNIFORM_BUFFER, 13, m_UBO);
+		LightSource = new Light(vec4(0.0f, 0.0f, 5.0f, 0.0f), vec4(0.0f), vec4(50.0f, 45.0f, 43.0f, 1.0f), vec4(1.0f));
+		GLint lightPrtiesLocation = glGetUniformBlockIndex(*m_PBRShader, "LightProperties");
+		glUniformBlockBinding(*m_PBRShader, lightPrtiesLocation, 25);
+
+		glGenBuffers(1, &m_UBOLightPrties);
+		glBindBuffer(GL_UNIFORM_BUFFER, m_UBOLightPrties);
+		glBufferData(GL_UNIFORM_BUFFER, sizeof(LightProperties), NULL, GL_STATIC_DRAW);
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+		glBindBufferBase(GL_UNIFORM_BUFFER, 25, m_UBOLightPrties);
+
+		m_Camera->UpdateUniformBlock(m_UBOCamPrties);
+		LightSource->UpdateUniformBlock(m_UBOLightPrties);
 	}
 
 	void PBRScene::RenderScene(GLFWwindow* context, double currentTime)
@@ -86,13 +95,6 @@ namespace OpenGL
 
 	void PBRScene::RenderGeometry(GLFWwindow* context, double currentTime)
 	{
-		vec4 lightPosition = vec4(sin(currentTime * 0.5) * 5.0f, 0.0f, cos(currentTime * 0.5) * 5.0f, 0.0f);
-
-		// Update sub data of uniform block every frame
-		glBindBuffer(GL_UNIFORM_BUFFER, m_UBO);
-		glBufferSubData(GL_UNIFORM_BUFFER, offsetof(LitProperties, LitProperties::LightPos), sizeof(vec4), value_ptr(lightPosition));
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
 		/*
 		m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)));
 		m_PBRShader->SetUniformFloat("uTilingFactor", 3.0f);
@@ -109,6 +111,7 @@ namespace OpenGL
 		*/
 
 		/*
+		*/
 		m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)));
 		m_PBRShader->SetUniformFloat("uTilingFactor", 1.0f);
 		m_PBRShader->SetUniformFloat("uDisplacementFactor", 0.333f);
@@ -121,7 +124,6 @@ namespace OpenGL
 		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_CD_Roughness);
 
 		m_SphereCD->Draw(*m_PBRShader);
-		*/
 
 		/*
 		m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)));

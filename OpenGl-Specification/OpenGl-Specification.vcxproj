@@ -129,7 +129,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\GLFW\lib-vc2019;$(SolutionDir)Dependencies\GLEW\lib\Release\Win32;$(SolutionDir)Dependencies\SOIL2\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>soil2.lib;glew32s.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);glfw3.lib</AdditionalDependencies>
+      <AdditionalDependencies>soil2.lib;glew32s.lib;glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -148,18 +148,15 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\GLFW\lib-vc2019;$(SolutionDir)Dependencies\GLEW\lib\Release\Win32;$(SolutionDir)Dependencies\SOIL2\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>soil2.lib;glew32s.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);glfw3.lib</AdditionalDependencies>
+      <AdditionalDependencies>soil2.lib;glew32s.lib;glfw3.lib;opengl32.lib;User32.lib;Gdi32.lib;Shell32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="assets\meshes\Cube.cpp" />
-    <ClCompile Include="assets\scenes\EnvironmentMappingScene.cpp" />
     <ClCompile Include="assets\scenes\PBRScene.cpp" />
-    <ClCompile Include="assets\scenes\ShadowScene.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Light.cpp" />
-    <ClCompile Include="src\Material.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\OpenGLApp.cpp" />
     <ClCompile Include="src\Shader.cpp" />
@@ -168,12 +165,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="assets\meshes\Cube.h" />
-    <ClInclude Include="assets\scenes\EnvironmentMappingScene.h" />
     <ClInclude Include="assets\scenes\PBRScene.h" />
-    <ClInclude Include="assets\scenes\ShadowScene.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Light.h" />
-    <ClInclude Include="src\Material.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\OpenGLApp.h" />
     <ClInclude Include="src\Scene.h" />
@@ -187,13 +181,7 @@
     <None Include="assets\shaders\fragLitShader.glsl" />
     <None Include="assets\shaders\PBRCookTorrance\fragCookTorranceShader.glsl" />
     <None Include="assets\shaders\PBRCookTorrance\vertCookTorranceShader.glsl" />
-    <None Include="assets\shaders\fragShader.glsl" />
-    <None Include="assets\shaders\Shadow\fragDepthShader.glsl" />
-    <None Include="assets\shaders\Shadow\fragShadowShader.glsl" />
-    <None Include="assets\shaders\Shadow\vertDepthShader.glsl" />
-    <None Include="assets\shaders\Shadow\vertShadowShader.glsl" />
     <None Include="assets\shaders\vertLitShader.glsl" />
-    <None Include="assets\shaders\vertShader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

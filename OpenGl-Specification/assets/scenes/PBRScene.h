@@ -2,27 +2,17 @@
 #include "../../src/Scene.h"
 #include "../../src/Camera.h"
 #include "../../src/Shader.h"
-#include "../../src/Material.h"
 #include "../../src/Mesh.h"
+#include "../../src/Light.h"
 #include <stack>
 
 namespace OpenGL
 {
-	struct LitProperties
-	{
-		glm::mat4 ViewMat		= glm::mat4(1.0f);	// 0
-		glm::mat4 ModelMat		= glm::mat4(1.0f);	// 64
-		glm::mat4 ProjMat		= glm::mat4(1.0f);	// 128
-		glm::vec4 CamPos		= glm::vec4(1.0f);	// 192
-		glm::vec4 LightPos		= glm::vec4(1.0f);	// 208
-		glm::vec4 LightColor	= glm::vec4(1.0f);	// 224
-		glm::vec4 LightAmbient	= glm::vec4(1.0f);	// 240
-	};
-
 	class PBRScene : public Scene
 	{
-
 	public:
+		PBRScene() = default;
+
 		void BeginScene(GLFWwindow* context) override;
 		void RenderScene(GLFWwindow* context, double currentTime) override;
 		void RenderSkyBox(GLFWwindow* context, double currentTime) override;
@@ -31,11 +21,9 @@ namespace OpenGL
 
 	private:
 		std::shared_ptr<Camera> m_Camera;
-		std::shared_ptr<glm::vec3> m_LightPosition;
-		std::shared_ptr<glm::vec3> m_LightColor;
+		Light* LightSource;
 		
 		std::shared_ptr<Shader> m_PBRShader;
-		std::shared_ptr<Material> m_BronzeMaterial;
 
 		std::shared_ptr<Mesh> m_SphereCD;
 		std::shared_ptr<Mesh> m_SpherePG;
@@ -81,8 +69,8 @@ namespace OpenGL
 		Texture2D* m_VM_Roughness;
 		// End Vented Metal
 
-		GLint m_LitPropertiesLocation = 0;
-		GLuint m_UBO = 0;
+		GLuint m_UBOLightPrties = 0;
+		GLuint m_UBOCamPrties = 0;
 		GLuint m_FBOShadow = 0;
 	};
 }

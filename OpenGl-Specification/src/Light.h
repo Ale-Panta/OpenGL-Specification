@@ -9,37 +9,106 @@
 namespace OpenGL
 {
 	/**
+	 * LightProperties struct allow us to have a reference to memory order in the uniform object buffer.
+	 * This struct is strictly related to shader program. Make sure to update both this struct and the shader.
+	 * 
+	 * @see Uniform Object Buffer (UBO).
+	 */
+	struct LightProperties
+	{
+		/** Light source world position */
+		glm::vec4 Position	= glm::vec4(0.0f);
+
+		/** Light source color emitted */
+		glm::vec4 Color		= glm::vec4(0.0f);
+
+		/** Ambient color */
+		glm::vec4 Ambient	= glm::vec4(0.0f);	// It's not part of the light property but I choose to put it here anyway.
+	};
+
+	/**
 	 * There are many type of lights, each with different characteristics and requiring different
 	 * steps to simulate their effects. Some types include:
-	 * - Global (usually called "global ambient" because it includes only an ambient component).
-	 * - Directional (or "distant").
-	 * - Positional (or "point source" or "point light").
-	 * - Spotlight
+	 * @see Global (usually called "global ambient" because it includes only an ambient component).
+	 * @see Directional (or "distant").
+	 * @see Positional (or "point source" or "point light").
+	 * @see Spotlight.
+	 */
+
+	/**
+	 * Light class is similar to camera class. It offer MVP matrices that can be used for shadow mapping.
+	 * It usually includes other properties such as ambient, diffuse and specular colors. 
+	 * 
+	 * @see OpenGL::Camera class
 	 */
 	class Light
 	{
 	public:
-		Light() = default;
+		/**
+		 * Light constructor.
+		 * 
+		 * @param worldPos, light's start world position.
+		 * @param ambientCol, light's start ambient color.
+		 * @param diffuseCol, light's start diffuse color.
+		 * @param specularCol, light's start specular color.
+		 */
+		Light(glm::vec4 worldPos, glm::vec4 ambientCol, glm::vec4 diffuseCol, glm::vec4 specularCol);
 
-	public:
-		void CommitToProgram(Shader& shader);
-		const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
-		const glm::mat4& GetProjMatrix() const { return m_ProjMatrix; }
+		/**
+		 * Update the uniform block properties.
+		 * 
+		 * @param ubo, ID of the uniform buffer generated.
+		 * @see uniform buffer object.
+		 */
+		void UpdateUniformBlock(GLuint ubo);
+
+		/**
+		 * Return the light model matrix 4x4.
+		 *
+		 * @return the reference to the translation matrix of light position.
+		 */
+		const glm::mat4& GetModelMat()	const { return glm::translate(glm::mat4(1.0f), glm::vec3(m_WorldPos)); }
+
+		/**
+		 * Return the light view matrix 4x4.
+		 *
+		 * @return the reference to the light view matrix.
+		 */
+		const glm::mat4& GetViewMat()	const { return m_ViewMat; }
+
+
+		/**
+		 * Return the light projection matrix 4x4.
+		 *
+		 * @return the reference to the light projection matrix.
+		 */
+		const glm::mat4& GetProjMat()	const { return m_ProjMat; }
 
 	private:
-		glm::vec3 m_Position = glm::vec3(-7.0f, 0.0f, 0.0f);
-		glm::vec3 m_Ambient	= glm::vec3(.0f, .0f, .0f);
-		glm::vec3 m_Diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
-		glm::vec3 m_Specular = glm::vec3(1.0f, 1.0f, 1.0f);
-		glm::mat4 m_ViewMatrix = glm::lookAt(m_Position, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		glm::mat4 m_ProjMatrix = glm::perspective(1.0472f, 1280.0f / 720.0f, 0.1f, 1000.0f);
+		/** Light world position. By default is positioned in vec3(4.0f), top right corner */
+		glm::vec4 m_WorldPos	= glm::vec4(4.0f);
+
+		/** Light ambient color. This influence the the model's color of the zone that is not facing the light source */
+		glm::vec4 m_AmbientCol	= glm::vec4(0.0f);
+
+		/** Light diffuse color. It is the color that the model revels under pure white light */
+		glm::vec4 m_DiffuseCol	= glm::vec4(1.0f);
+
+		/** Light specular color. Color of the light of a specular reflection. */
+		glm::vec4 m_SpecularCol = glm::vec4(1.0f);
+
+		/** Light view matrix */
+		glm::mat4 m_ViewMat		= glm::mat4(1.0f);
+
+		/** Light projection matrix */
+		glm::mat4 m_ProjMat		= glm::mat4(1.0f);
 	};
 
 	/**
 	 * Global ambient light is the simplest type of light to model. Global ambient light has no source
 	 * position-the light is equal everywhere, at each pixel on every object in the scene, regardless
 	 * of where the objects are. Global ambient lighting simulates the real-world phenomenon of light 
-	 * that has bounced around so many times that its source and direction are undeterminable. Global
+	 * that has bounced around so many times that its source and direction are indeterminable. Global
 	 * ambient light has only an ambient component, specified as an RGBA value; it has no diffuse or
 	 * specular components.
 	 * RGBA values range from 0 to 1, so global ambient light is usually modeled as dim white light,

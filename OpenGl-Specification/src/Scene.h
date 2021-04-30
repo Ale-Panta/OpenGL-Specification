@@ -4,7 +4,6 @@
 #include "Light.h"
 #include "Camera.h"
 #include "Shader.h"
-#include "Material.h"
 
 #include <memory>
 #include <GLFW/glfw3.h>
