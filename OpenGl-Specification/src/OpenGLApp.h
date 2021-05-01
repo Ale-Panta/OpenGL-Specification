@@ -19,12 +19,18 @@ namespace OpenGL
 		OpenGLApp(const char* name, int width, int height);
 
 	public:
-		/** Initialize the context window */
+		/** 
+		 * Initialize the context window
+		 * 
+		 * @return success or fail
+		 */
 		bool InitWindow();
 
 		/**
-		 * Must be called after InitWindow().
 		 * Initialize glew. It retrieve the function to communicate with GPU.
+		 * Must be called after InitWindow().
+		 * 
+		 * @return success or fail
 		 */
 		bool IntiOpenGL();
 
@@ -39,15 +45,25 @@ namespace OpenGL
 		void Terminate();
 
 	private:
+		/** Track the initialization status between stages */
 		bool m_IsInitializedProperly = false;
 
-		// Context
+		/** Window ptr of the application */
 		GLFWwindow* m_Context = nullptr;
+
+		/** Name of the window */
 		std::string m_Name = "OpenGL Default Demo Window";
-		int m_Width = 1920;
-		int m_Height = 1080;
+
+		/** Window width */
+		int m_Width = 600;
+
+		/** Window height */
+		int m_Height = 600;
+
+		/** Window aspect ratio */
 		float m_AspectRatio = 1.0f;
 
+		/** Scene ptr asset to render */
 		Scene* m_ActiveScene = NULL;
 	};
 }

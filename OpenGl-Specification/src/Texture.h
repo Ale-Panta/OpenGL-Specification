@@ -20,8 +20,13 @@ namespace OpenGL
 		Texture() = default;
 		~Texture();
 
-	public:
-		const TextureType GetTextureType() const { return m_TexType; }
+		/** 
+		 * Return the reference to texture type 
+		 *
+		 * @see OpenGL::TextureType
+		 */
+		const TextureType& GetTextureType() const { return m_TexType; }
+
 		operator GLuint() { return m_ID; }
 
 	protected:
@@ -38,6 +43,12 @@ namespace OpenGL
 	{
 	public:
 		Texture2D() = default;
+
+		/**
+		 * Texture2D constructor.
+		 * 
+		 * @param filePath, asset path including extension
+		 */
 		Texture2D(const char* filePath);
 	};
 
@@ -61,6 +72,14 @@ namespace OpenGL
 	{
 	public:
 		TextureShadow() = default;
+
+		/**
+		 * TextureShadow constructor.
+		 *
+		 * @param frameBufferObject, FBO
+		 * @param width, texture width
+		 * @param height, texture height
+		 */
 		TextureShadow(GLuint& frameBufferObject, int width, int height);
 	};
 }
