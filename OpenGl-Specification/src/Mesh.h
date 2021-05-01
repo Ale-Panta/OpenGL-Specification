@@ -1,13 +1,11 @@
 #pragma once
 
-#include <GL/glew.h>
 #include "Shader.h"
-#include "Texture.h"
 
-#include <string>
 #include <vector>
 #include <GLM/ext/matrix_float4x2_precision.hpp>
 #include <glm/ext/matrix_transform.hpp>
+#include "GL/glew.h"
 
 namespace OpenGL
 {

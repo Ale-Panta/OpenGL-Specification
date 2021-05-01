@@ -22,4 +22,10 @@ namespace OpenGL
 		glBufferSubData(GL_UNIFORM_BUFFER, offsetof(LightProperties, LightProperties::Ambient),		sizeof(vec4), value_ptr(m_AmbientCol));
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
+
+	void Light::SetWorldPos(glm::vec4 worldPos)
+	{
+		m_WorldPos = worldPos;
+	}
+
 }

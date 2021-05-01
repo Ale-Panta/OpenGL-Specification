@@ -39,10 +39,7 @@
     <ClCompile Include="src\Light.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
-    <ClCompile Include="assets\meshes\Cube.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="assets\scenes\PBRScene.cpp">
+    <ClCompile Include="assets\scenes\LitScene.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
   </ItemGroup>
@@ -68,21 +65,16 @@
     <ClInclude Include="src\Light.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="assets\meshes\Cube.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
     <ClInclude Include="src\Scene.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="assets\scenes\PBRScene.h">
+    <ClInclude Include="assets\scenes\LitScene.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\vertLitShader.glsl" />
     <None Include="assets\shaders\fragLitShader.glsl" />
-    <None Include="assets\shaders\CubeMap\vertCubeMapShader.glsl" />
-    <None Include="assets\shaders\CubeMap\fragCubeMapShader.glsl" />
     <None Include="assets\shaders\PBRCookTorrance\fragCookTorranceShader.glsl" />
     <None Include="assets\shaders\PBRCookTorrance\vertCookTorranceShader.glsl" />
   </ItemGroup>

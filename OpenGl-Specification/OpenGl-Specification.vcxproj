@@ -152,8 +152,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="assets\meshes\Cube.cpp" />
-    <ClCompile Include="assets\scenes\PBRScene.cpp" />
+    <ClCompile Include="assets\scenes\LitScene.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Light.cpp" />
@@ -164,8 +163,7 @@
     <ClCompile Include="src\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="assets\meshes\Cube.h" />
-    <ClInclude Include="assets\scenes\PBRScene.h" />
+    <ClInclude Include="assets\scenes\LitScene.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Light.h" />
     <ClInclude Include="src\Mesh.h" />
@@ -176,8 +174,6 @@
     <ClInclude Include="src\Texture.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\shaders\CubeMap\fragCubeMapShader.glsl" />
-    <None Include="assets\shaders\CubeMap\vertCubeMapShader.glsl" />
     <None Include="assets\shaders\fragLitShader.glsl" />
     <None Include="assets\shaders\PBRCookTorrance\fragCookTorranceShader.glsl" />
     <None Include="assets\shaders\PBRCookTorrance\vertCookTorranceShader.glsl" />

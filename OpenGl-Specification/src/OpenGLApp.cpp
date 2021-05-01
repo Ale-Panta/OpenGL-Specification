@@ -1,5 +1,4 @@
 #include "OpenGLApp.h"
-#include "../assets/scenes/PBRScene.h"
 
 #include <iostream>
 
@@ -11,23 +10,23 @@ using namespace glm;
 
 namespace OpenGL
 {
-	OpenGLApp::OpenGLApp(const char* name)
+	OpenGLApp::OpenGLApp(const char* name, IScene* scene)
 		: m_Name(name)
 	{
-		m_ActiveScene = new PBRScene();
+		m_ActiveScene = scene;
 	}
 
-	OpenGLApp::OpenGLApp(const char* name, int width, int height)
+	OpenGLApp::OpenGLApp(const char* name, int width, int height, IScene* scene)
 		: m_Name(name), m_Width(width), m_Height(height)
 	{
-		m_ActiveScene = new PBRScene();
+		m_ActiveScene = scene;
 	}
 
-	bool OpenGLApp::InitWindow()
+	void OpenGLApp::InitWindow()
 	{
 		if (!glfwInit())
 		{
-			m_IsInitializedProperly = false;
+			exit(EXIT_FAILURE);	// Shut down the application
 		}
 
 		// Check versions
@@ -46,17 +45,13 @@ namespace OpenGL
 
 		// Enable multi-samples.
 		glEnable(GL_MULTISAMPLE);
-
-		m_IsInitializedProperly = true;
-		return m_IsInitializedProperly;
 	}
 
-	bool OpenGLApp::IntiOpenGL()
+	void OpenGLApp::IntiOpenGL()
 	{
-		// glewInit must be called after the creation of the context.
 		if (glewInit() != GLEW_OK)
 		{
-			m_IsInitializedProperly = false;
+			exit(EXIT_FAILURE);	// Shut down the application
 		}
 
 		// Active swap buffer
@@ -64,36 +59,20 @@ namespace OpenGL
 
 		// Set up frame buffer
 		glfwGetFramebufferSize(m_Context, &m_Width, &m_Height);
-
-		// Set window resize callback
-		m_IsInitializedProperly = true;
-
-
-		return m_IsInitializedProperly;
 	}
 
 	void OpenGLApp::Run()
 	{
-		if (!m_IsInitializedProperly)
-		{
-			Terminate();
-			return;
-		}
-
 		m_ActiveScene->BeginScene(m_Context);
 
 		while (!glfwWindowShouldClose(m_Context))
 		{
 			m_ActiveScene->RenderScene(m_Context, glfwGetTime());
-			glfwSwapBuffers(m_Context);			// GLFW are by default double-buffered.
-			glfwPollEvents();					// Handle other window-related events.
+			glfwSwapBuffers(m_Context);
+			glfwPollEvents();					// Handle window-related events such as inputs
 		}
-
-		Terminate();
-	}
-
-	void OpenGLApp::Terminate()
-	{
+		
+		// Close OpenGL properly
 		glfwDestroyWindow(m_Context);
 		glfwTerminate();
 	}

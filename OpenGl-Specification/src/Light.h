@@ -84,6 +84,13 @@ namespace OpenGL
 		 */
 		const glm::mat4& GetProjMat()	const { return m_ProjMat; }
 
+		/**
+		 * Set the light world position
+		 * 
+		 * @param worldPos, world position vec3
+		 */
+		void SetWorldPos(glm::vec4 worldPos);
+
 	private:
 		/** Light world position. By default is positioned in vec3(4.0f), top right corner */
 		glm::vec4 m_WorldPos	= glm::vec4(4.0f);

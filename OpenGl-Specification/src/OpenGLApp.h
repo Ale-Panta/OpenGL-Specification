@@ -1,13 +1,14 @@
 #pragma once
-#include "Scene.h"
+#include <GL/glew.h>
+#include <glm/glm.hpp>
+#include <GLFW/glfw3.h>
 
+#include <stack>
 #include <string>
 #include <memory>
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>	// Must be the last one to be included.
-#include <glm/glm.hpp>
-#include <stack>
+#include "Scene.h"
+
 
 namespace OpenGL
 {
@@ -15,34 +16,42 @@ namespace OpenGL
 	{
 	public:
 		OpenGLApp() = default;
-		OpenGLApp(const char* name);
-		OpenGLApp(const char* name, int width, int height);
+
+		/**
+		 * OpenGLApp constructor
+		 * 
+		 * @param name, the name of the application
+		 * @param scene, the scene asset to render
+		 */
+		OpenGLApp(const char* name, IScene* scene);
+
+		/**
+		 * OpenGLApp constructor
+		 *
+		 * @param name, the name of the application
+		 * @param width, the size width of the window
+		 * @param height, the size height of the window
+		 * @param scene, the scene asset to render
+		 */
+		OpenGLApp(const char* name, int width, int height, IScene* scene);
 
 	public:
 		/** 
 		 * Initialize the context window
-		 * 
-		 * @return success or fail
 		 */
-		bool InitWindow();
+		void InitWindow();
 
 		/**
 		 * Initialize glew. It retrieve the function to communicate with GPU.
 		 * Must be called after InitWindow().
-		 * 
-		 * @return success or fail
 		 */
-		bool IntiOpenGL();
+		void IntiOpenGL();
 
 		/**
 		 * Generic OpenGL's running loop.
 		 * Here are processed Display, glfwSwapBuffers and glfwPollEvents
 		 */
 		void Run();
-
-	private:
-		/** Exit the OpenGL context properly */
-		void Terminate();
 
 	private:
 		/** Track the initialization status between stages */
@@ -64,6 +73,6 @@ namespace OpenGL
 		float m_AspectRatio = 1.0f;
 
 		/** Scene ptr asset to render */
-		Scene* m_ActiveScene = NULL;
+		IScene* m_ActiveScene = NULL;
 	};
 }

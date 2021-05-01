@@ -1,11 +1,5 @@
 #pragma once
 
-#include "Mesh.h"
-#include "Light.h"
-#include "Camera.h"
-#include "Shader.h"
-
-#include <memory>
 #include <GLFW/glfw3.h>
 
 namespace OpenGL
@@ -16,7 +10,7 @@ namespace OpenGL
 	 * The child class will have reference to light, frame buffer, geometries and all things you need to have in order
 	 * to renderer the scene you want.
 	 */
-	class Scene
+	class IScene
 	{
 	public:
 		/** Prepare stuff to be rendered in the next steps */

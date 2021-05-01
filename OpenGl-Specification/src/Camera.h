@@ -1,8 +1,9 @@
 #pragma once
-#include <GLFW/glfw3.h>
+
 #include <glm/glm.hpp>
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
+#include "GL/glew.h"
 
 namespace OpenGL
 {
@@ -52,9 +53,9 @@ namespace OpenGL
 		/**
 		 * Return the camera model matrix 4x4.
 		 * 
-		 * @return the reference to the translation matrix of camera position. 
+		 * @return the copy-value to the translation matrix of camera position. 
 		 */
-		const glm::mat4& GetModelMat()	const { return glm::translate(glm::mat4(1.0f), glm::vec3(m_WorldPos)); }
+		const glm::mat4 GetModelMat()	const { return glm::translate(glm::mat4(1.0f), glm::vec3(m_WorldPos)); }
 
 		/**
 		 * Return the camera view matrix 4x4.

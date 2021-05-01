@@ -1,5 +1,4 @@
 #include "Mesh.h"
-#include <SOIL2.h>
 
 namespace OpenGL
 {
