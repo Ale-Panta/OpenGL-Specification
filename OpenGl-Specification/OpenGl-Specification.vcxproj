@@ -175,9 +175,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\fragLitShader.glsl" />
+    <None Include="assets\shaders\Unlit\fragUnlitShader.glsl" />
     <None Include="assets\shaders\PBRCookTorrance\fragCookTorranceShader.glsl" />
     <None Include="assets\shaders\PBRCookTorrance\vertCookTorranceShader.glsl" />
     <None Include="assets\shaders\vertLitShader.glsl" />
+    <None Include="assets\shaders\Unlit\vertUnlitShader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

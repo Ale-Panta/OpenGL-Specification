@@ -77,5 +77,7 @@
     <None Include="assets\shaders\fragLitShader.glsl" />
     <None Include="assets\shaders\PBRCookTorrance\fragCookTorranceShader.glsl" />
     <None Include="assets\shaders\PBRCookTorrance\vertCookTorranceShader.glsl" />
+    <None Include="assets\shaders\Unlit\vertUnlitShader.glsl" />
+    <None Include="assets\shaders\Unlit\fragUnlitShader.glsl" />
   </ItemGroup>
 </Project>
