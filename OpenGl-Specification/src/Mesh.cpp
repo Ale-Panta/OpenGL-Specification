@@ -1,7 +1,5 @@
 #include "Mesh.h"
 
-#include <SOIL2.h>
-
 namespace OpenGL
 {
 	Mesh::Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices)
@@ -10,10 +8,9 @@ namespace OpenGL
 		SetupMesh();
 	}
 
-	void Mesh::Draw(Material& material)
+	void Mesh::Draw(Shader& shader)
 	{
-		material.CommitToProgram();
-		glUseProgram(material);
+		glUseProgram(shader);
 
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
@@ -23,7 +20,6 @@ namespace OpenGL
 		glBindVertexArray(VAO);	// Bind
 		glDrawElements(GL_TRIANGLES, VertexIndices.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);	// Unbind
-		material.UnbindHeavyAssetsToProgram();
 	}
 
 	void Mesh::SetupMesh()

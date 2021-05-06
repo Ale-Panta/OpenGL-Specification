@@ -1,0 +1,252 @@
+Example 11.24: initializing for Order-Indipendent-Trasparency
+Create the required resources but does not initialize them because they need to be initialized before
+each frame anyway.
+
+/**
+ * This is the macimim supported framebuffer width and height. We could support higher resolutions, but this is reasonable
+ * for this application.
+ */
+#define MAX_FRAMBUFFER_WIDTH  2048;
+#define MAX_FRAMBUFFER_HEIGHT 2048;
+
+// Local variables
+GLuint *data;
+size_t total_pixels = MAX_FRAMBUFFER_WIDTH * MAX_FRAMBUFFER_HEIGHT;
+
+/**
+ * Create the 2D image that will be used to store the head pointers for the per-pixel linked lists.
+ */
+GLuint head_pointer_texture;
+glGenTextures(1, &head_pointer_texture);
+glBindTexture(GL_TEXTURE_2D, head_pointer_texture);
+glTexImage2D(GL_TEXTURE_2D, 0, GL_R32UI, MAX_FRAMBUFFER_WIDTH, MAX_FRAMBUFFER_HEIGHT, 0, GL_RED_INTEGER; GL_UNSIGNED_INT, NULL);
+
+/**
+ * We will need to reinitialize the head pointer each frame. The easiest way to do this is probably to copy from a PBO. We'll create that here...
+ */
+GLuint head_pointer_intializer;
+glGenBuffers(1, &head_pointer_initializer);
+glBindBuffer(GL_PIXEL_UNPACK_BUFFER, head_pointer_initializer);
+glBufferData(GL_PIXEL_UNPACK_BUFFER, total_pixels * sizeof(GLuint), NULL, GL_STATIC_DRAW);
+data = (GLuint)glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY);
+memset(data, 0xFF, total_pixels * sizeof(GLuint));
+glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+
+/**
+ * Next, create our atomic counter buffer to back our atomic counter. We need only one counter, so a small buffer will
+ * suffice.
+ */
+GLuint atomic_counter_buffer;
+glGenBuffers(1, &atomic_counter_buffer);
+glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, atomic_counter_buffer);
+glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(GLuint), NULL, GL_DYNAMIC_COPY);
+
+/**
+ * Finally, our large, one-dimensional buffer for fragment storage. We're going to allocate enough storage for 2 fragments
+ * for every pixel on the screen. Note again that this is average overdraw and should be sufficient and allow a few
+ * pixels to include ten's of fragments so long as the average remains low.
+ */
+GLuint fragment_storage_buffer;
+glGenBuffers(1, &fragment_storage_buffer);
+glBindBuffer(GL_TEXTURE_BUFFER, fragment_storage_buffer);
+glBufferData(GL_TEXTURE_BUFFER, 2 * total_pixels * sizeof(vec4), NULL, GL_DYNAMIC_COPY);
+
+Example 11.25: per-frame reset for Order-Independent Trasparency
+
+/**
+ * First, clear the head-pointer 2D image with known values. Bing it to the GL_TEXTURE_2D target and then
+ * initialize it from the PBO that has been preloaded with the value 0x00
+ */
+glBindBuffer(GL_PIXEL_UNPACK_BUFFER, head_pointer_intializer);
+glBindTexture(GL_TEXTURE_2D, head_pointer_texture);
+glTexImage2D(GL_TEXTURE_2D, 0, GL_R32UI, MAX_FRAMBUFFER_WIDTH, MAX_FRAMBUFFER_HEIGHT, 0, GL_UNSIGNED_INT, NULL);
+
+/**
+ * Now bind it to the image unit that will be used for read-write access
+ */
+glBindImageTexture(0, head_pointer_texture, GL_FALSE, 0, GL_READ_WRITE, GL_R32UI);
+
+/**
+ * Now bind the atomic counter buffer ready for use and reset the counter to zero.
+ */
+glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, atomic_counter_buffer);
+
+/**
+ * Note that this also binds the buffer to the generic buffer binding point, so we can use that to initialize the buffer.
+ */
+const GLuint zero = 0;
+glBufferSubData(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(zero), &zero);
+
+Example 11.26: Appending fragment to linked list for later sorting
+
+#version 420 core
+
+// Turn on early fragment testing. This ensure that fragments that are obscured by previously rendered opaque geometry
+// Are not added to the linked list.
+layout (early_fragment_test) in;
+
+// This is the atomic counter used to allocate items in the linked list
+layout (binding = 0, offset = 0) uniform atomic_unit index_counter;
+
+// Linked list 1D buffer
+layout (binding = 0, rgba32ui) uniform imageRect head_pointer_image;
+
+void main()
+{
+	// First, shade the fragment
+	vec4 frag_color = shadeFragment();
+
+	// Allocate an indec in the linked list buffer. Remember, atomicCOunterIncrement increments the atomic counter and returns the
+	// _old_ value of the counter. Thus, the first fragment to execute this code will receive the value 0, the next will
+	// receive 1, and so on.
+	uint new = atomicCounterIncrement(index_counter);
+
+	// Now insert the fragment into the list. To do this, we atomically exchange our newly allocated index with the current content
+	// of the head pointer image. Remember, imageAtomicExchange writes our new value to memory and returns the _old_ value.
+	uint old_head = imageAtomicExchange(head_pointer_image, ivec2(gl_FragCoord.xy), index);
+
+	// Before this code executed, we had: head_pointer_image(x, y) -> old_item
+	// Now we have head_pointer_image(x, y) -> new_item _and_ old_head -> old_item
+
+	// Now assemble the fragment into the buffer. This will be the item...
+	uvec4 item;
+
+	// item.x = next pointer
+	item.x = old_head;
+
+	// Now we have head_pointer_image(x, y) -> new_item(.x) -> old_item.
+
+	// item.y = color
+	item.y = packUnorm4x8(frag_color);
+
+	// item.z = depth
+	item.z = floatBitsToUint(gl_FragCoord.z);
+
+	// item.w - unused
+	item.w = 0;
+
+	// Write the data into the buffer at the right location
+	imageStore(list_buffer, index, item);
+}
+
+Example 11.27: Main body of the final order-independent sorting fragment shader
+
+#version 420 core
+
+// Head pointer 2D buffer
+uniform sampler2D head_pointer_image;
+
+// Linked list 1D buffer
+uniform samplerBuffer list_buffer;
+
+#define MAX_FRAGMENTS 15
+
+// Small buffer to hold all of the framgents corresponding to this pixels
+uvec4 fragments[MAX_FRAGMENTS];
+
+layout (location = 0) out vec4 output_color;
+
+/**
+ * Traverse the linked list, place all of the fragments into the fragments[] array, and return the number of
+ * fragments retrieved from the list.
+ */
+int build_local_fragment_list()
+{
+	uint current;
+	int frag_count = 0;
+
+	// Get the initial head pointer from the header-pointer image
+	current = texelFetch(head_pointer_image, ivec2(gl_FragCoord.xy), 0);
+
+	// While we haven't reached the end of the list or exhausted the storage available in fragments[]...
+	while (current != 0xFFFFFFFF && frag_count < MAX_FRAGMENTS)
+	{
+		// Read an item from the linked list
+		item = texelFetch(list_buffer, current);
+
+		// item.x contains the 'next' pointer - update current
+		current = item.x;
+
+		// Store the fragment in the array
+		uvec4 fragments[frag_count] = item;
+
+		// Update the fragment count
+		frag_count++;
+	}
+
+	// Done - return the fragment count
+	return frag_count;
+}
+
+/**
+ * Simple bubble-sort for sorting the fragments[] array
+ */
+void sort_fragment_list(int frag_count)
+{
+	int i;
+	int j;
+
+	for (i = 0; i < frag_count; i++)
+	{
+		for (j = i + 1; j < frag_count; j++)
+		{
+			// The depth of each fragment is bit encoded into the .z channel of the fragment array. Unpack it here.
+			float depth_i = uintBitsToFloat(fragments[i].z);
+			float depth_j = uintBitsToFloat(fragments[j].z);
+
+			// Compare depth and if the comparison fails...
+			if (depth_i > depth_j)
+			{
+				// Swap the fragments in the array
+				uvec4 temp = fragments[i];
+				fragments[i] = fragments[j];
+				fragments[j] = temp;
+			}
+		}
+	}
+}
+
+/**
+ * Simple alpha blending function.
+ * We could replace this with anything...
+ */
+vec4 blend(vec4 current_color, vec4 new_color)
+{
+	return mix(current_color, new_color, new_color.a);
+}
+
+/**
+ * Function for calculating the final output color. Walks the fragments[] array and blends each pixel on top of each other.
+ */
+vec4 calculate_final_color(int frag_count)
+{
+	// Initialize the final color output
+	vec4 final_color = vec4(0.0);
+
+	// For each fragment in the array...
+	for (i = 0; i < frag_count; i++)
+	{
+		// The color is stored packed into the .y channel of the fragment vector. Unpack it here.
+		vec4 frag_color = unpackUnorm4x8(fragments[i].y);
+
+		// Now call the blending function.
+		final_color = blend(final_color, frag_color);
+	}
+
+	// Done, return the final color.
+	return final_color;
+}
+
+void main()
+{
+	int frag_count;
+
+	// Traverse the list and build an array of fragments
+	frag_count = build_local_fragment_list();
+
+	// Sort the array in depth order
+	sort_fragment_list(frag_count);
+
+	// Blend the sorted fragments together to compute the final output color
+	output_color = calculate_final_color(frag_count);
+}

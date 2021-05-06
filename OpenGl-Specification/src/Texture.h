@@ -4,6 +4,9 @@
 
 namespace OpenGL
 {
+	/**
+	 * Texture type internal format.
+	 */
 	enum class TextureType
 	{
 		Diffuse = GL_TEXTURE_2D, 
@@ -20,9 +23,12 @@ namespace OpenGL
 		Texture() = default;
 		~Texture();
 
-	public:
-		const TextureType GetTextureType() const { return m_TexType; }
-		const GLuint GetID() const { return m_ID; }
+		/** 
+		 * Return the reference to texture type .
+		 * @see TextureType.
+		 */
+		const TextureType& GetTextureType() const { return m_TexType; }
+
 		operator GLuint() { return m_ID; }
 
 	protected:
@@ -33,12 +39,17 @@ namespace OpenGL
 	};
 
 	/**
-	 * 2D texture asset. Use it to create any texture. Texture can be diffuse, specular and so on...
+	 * 2D texture asset. Use it to create any texture. Texture can be diffuse, specular and so on.
 	 */
 	class Texture2D : public Texture
 	{
 	public:
 		Texture2D() = default;
+
+		/**
+		 * Texture2D constructor.
+		 * @param filePath, asset path including extension.
+		 */
 		Texture2D(const char* filePath);
 	};
 
@@ -49,6 +60,16 @@ namespace OpenGL
 	{
 	public:
 		TextureCubeMap() = default;
+
+		/**
+		 * TextureCubeMap constructor.
+		 * @param right - right texture file path.
+		 * @param left - right texture file path.
+		 * @param top - right texture file path.
+		 * @param bottom - right texture file path.
+		 * @param front - right texture file path.
+		 * @param back - right texture file path.
+		 */
 		TextureCubeMap(const char* right, const char* left, const char* top, const char* bottom, const char* front, const char* back);
 	};
 
@@ -62,6 +83,13 @@ namespace OpenGL
 	{
 	public:
 		TextureShadow() = default;
+
+		/**
+		 * TextureShadow constructor.
+		 * @param frameBufferObject - FBO.
+		 * @param width - texture width.
+		 * @param height - texture height.
+		 */
 		TextureShadow(GLuint& frameBufferObject, int width, int height);
 	};
 }

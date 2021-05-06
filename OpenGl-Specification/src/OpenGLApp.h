@@ -1,13 +1,14 @@
 #pragma once
-#include "Scene.h"
+#include <GL/glew.h>
+#include <glm/glm.hpp>
+#include <GLFW/glfw3.h>
 
+#include <stack>
 #include <string>
 #include <memory>
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>	// Must be the last one to be included.
-#include <glm/glm.hpp>
-#include <stack>
+#include "Scene.h"
+
 
 namespace OpenGL
 {
@@ -15,18 +16,35 @@ namespace OpenGL
 	{
 	public:
 		OpenGLApp() = default;
-		OpenGLApp(const char* name);
-		OpenGLApp(const char* name, int width, int height);
-
-	public:
-		/** Initialize the context window */
-		bool InitWindow();
 
 		/**
-		 * Must be called after InitWindow().
-		 * Initialize glew. It retrieve the function to communicate with GPU.
+		 * OpenGLApp constructor.
+		 * @param name - the name of the application.
+		 * @param scene - the scene asset to render.
 		 */
-		bool IntiOpenGL();
+		OpenGLApp(const char* name, IScene* scene);
+
+		/**
+		 * OpenGLApp constructor.
+		 *
+		 * @param name, the name of the application.
+		 * @param width, the size width of the window.
+		 * @param height, the size height of the window.
+		 * @param scene, the scene asset to render.
+		 */
+		OpenGLApp(const char* name, int width, int height, IScene* scene);
+
+	public:
+		/** 
+		 * Initialize the context window.
+		 */
+		void InitWindow();
+
+		/**
+		 * Initialize glew. It retrieve the function to communicate with GPU.
+		 * Must be called after InitWindow().
+		 */
+		void IntiOpenGL();
 
 		/**
 		 * Generic OpenGL's running loop.
@@ -35,19 +53,25 @@ namespace OpenGL
 		void Run();
 
 	private:
-		/** Exit the OpenGL context properly */
-		void Terminate();
-
-	private:
+		/** Track the initialization status between stages. */
 		bool m_IsInitializedProperly = false;
 
-		// Context
+		/** Window ptr of the application. */
 		GLFWwindow* m_Context = nullptr;
+
+		/** Name of the window. */
 		std::string m_Name = "OpenGL Default Demo Window";
-		int m_Width = 1280;
-		int m_Height = 720;
+
+		/** Window width. */
+		int m_Width = 600;
+
+		/** Window height. */
+		int m_Height = 600;
+
+		/** Window aspect ratio. */
 		float m_AspectRatio = 1.0f;
 
-		Scene* m_ActiveScene = NULL;
+		/** Scene ptr asset to render. */
+		IScene* m_ActiveScene = NULL;
 	};
 }

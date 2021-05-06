@@ -117,7 +117,7 @@ namespace OpenGL
 	void Shader::SetUniformVec4(const char* uniformName, const glm::vec4& value)
 	{
 		GLuint uLocation = glGetUniformLocation(m_ShaderProgram, uniformName);
-		glProgramUniform3fv(m_ShaderProgram, uLocation, 1, glm::value_ptr(value));
+		glProgramUniform4fv(m_ShaderProgram, uLocation, 1, glm::value_ptr(value));
 	}
 
 	void Shader::SetUniformMatrix4(const char* uniformName, const glm::mat4& matrix, GLboolean transpose)
