@@ -13,19 +13,57 @@ namespace OpenGL
 	class IScene
 	{
 	public:
-		/** Prepare stuff to be rendered in the next steps */
+		/**
+		 * Initialize the scene.
+		 * Initialize here all resources of the scene.
+		 * @warning Shaders, textures, and other assets related to OpenGL must be initialized here and not in the constructor of the scene.
+		 * @param context - context window.
+		 */
 		virtual void BeginScene(GLFWwindow* context) = 0;
 
-		/** Draw skybox, shadow and geometries */
+		/**
+		 * Render the scene.
+		 * It clears depth and color buffer.
+		 * Calls RenderSkyBox, RenderShadow, RenderGeometry, respectively.
+		 * @param context - context window.
+		 * @param currentTime - application's time elapsed.
+		 * @see RenderSkyBox.
+		 * @see RenderShadow.
+		 * @see RenderGeometry.
+		 */
 		virtual void RenderScene(GLFWwindow* context, double currentTime) = 0;
 
-		/** Bind the texture skybox and render it */
+		/**
+		 * Render the sky box.
+		 * It must be the first to be rendered.
+		 * The cube wrap the camera, you need to enable the back face rendering. The model matrix must be the camera's model.
+		 * The cube must be renderer with the proper shader program.
+		 * @param context - context window.
+		 * @param currentTime - application's time elapsed.
+		 */
 		virtual void RenderSkyBox(GLFWwindow* context, double currentTime) = 0;
 
-		/** Bind the shadow texture and custom shadow frame buffer and draw on it */
+		/** 
+		 * Render shadow map.
+		 * New dedicated buffer is bound to the buffer. All geometries are rendered with the proper shader program.
+		 * The scene is renderer from the Light source point of view this step.
+		 * The view and projection matrices uploaded to the shader comes from the Light source.
+		 * @param context - context window.
+		 * @param currentTime - application's time elapsed.
+		 * @see Light.
+		 */
 		virtual void RenderShadow(GLFWwindow* context, double currentTime) = 0;
 
-		/** Restore frame buffer, commit uniforms and draw geometry to the screen */
+		/**
+		 * Render the scene.
+		 * Restore the frame buffer to the default one.
+		 * Here the geometries are rendered with the shader programs that you want.
+		 * The scene must be rendered from the camera point of view.
+		 * The view and projection matrices uploaded to the shader comes from the Camera.
+		 * @param context - context window.
+		 * @param currentTime - application's time elapsed.
+		 * @see Camera.
+		 */
 		virtual void RenderGeometry(GLFWwindow* context, double currentTime) = 0;
 	};
 }

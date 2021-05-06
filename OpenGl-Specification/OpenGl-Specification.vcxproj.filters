@@ -42,6 +42,9 @@
     <ClCompile Include="assets\scenes\LitScene.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
+    <ClCompile Include="assets\meshes\Plane.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="assets\meshes\Sphere.h">
@@ -71,6 +74,9 @@
     <ClInclude Include="assets\scenes\LitScene.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+    <ClInclude Include="assets\meshes\Plane.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\vertLitShader.glsl" />
@@ -79,5 +85,8 @@
     <None Include="assets\shaders\PBRCookTorrance\vertCookTorranceShader.glsl" />
     <None Include="assets\shaders\Unlit\vertUnlitShader.glsl" />
     <None Include="assets\shaders\Unlit\fragUnlitShader.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="src\OrderIndipendentTrasparency.txt" />
   </ItemGroup>
 </Project>

@@ -1,5 +1,6 @@
 #include "LitScene.h"
 #include "../meshes/Sphere.h"
+#include "../meshes/Plane.h"
 #include "glm/gtc/type_ptr.hpp"
 
 #include <iostream>
@@ -12,47 +13,46 @@ namespace OpenGL
 
 	LitScene::LitScene(float fovy, float aspectRatio, float near, float far)
 	{
-		m_Camera = new Camera(vec4(0.0f, 0.0f, 3.0f, 0.0f), fovy, aspectRatio, near, far);
+		m_Camera = new Camera(vec4(0.0f, 0.0f, 4.0f, 0.0f), fovy, aspectRatio, near, far);
 		m_LightSource = new Light(vec4(0.0f, 0.0f, 5.0f, 0.0f), vec4(0.0f), vec4(50.0f, 45.0f, 43.0f, 1.0f), vec4(1.0f));
 	}
 
 	void LitScene::BeginScene(GLFWwindow* context)
 	{
-
-		m_SphereCD = new Sphere(128);
-		m_SpherePG = new Sphere(128);
-		m_SphereSS = new Sphere(128);
-		m_SphereVM = new Sphere(128);
+		m_SphereCD = new Sphere(256);
+		m_SpherePG = new Sphere(256);
+		m_SphereSS = new Sphere(256);
+		m_SphereVM = new Sphere(256);
 
 		m_LitShader = new Shader("assets/shaders/PBRCookTorrance/vertCookTorranceShader.glsl", "assets/shaders/PBRCookTorrance/fragCookTorranceShader.glsl");
 
-		m_PG_Albedo = new Texture2D("assets/textures/pirate-gold/pirate-gold_albedo.png");
-		m_PG_AO = new Texture2D("assets/textures/pirate-gold/pirate-gold_ao.png");
-		m_PG_Height = new Texture2D("assets/textures/pirate-gold/pirate-gold_height.png");
-		m_PG_Metallic = new Texture2D("assets/textures/pirate-gold/pirate-gold_metallic.png");
-		m_PG_Normal = new Texture2D("assets/textures/pirate-gold/pirate-gold_normal-dx.png");
-		m_PG_Roughness = new Texture2D("assets/textures/pirate-gold/pirate-gold_roughness.png");
+		m_PG_Albedo		= new Texture2D("assets/textures/pirate-gold/pirate-gold_albedo.png");
+		m_PG_AO			= new Texture2D("assets/textures/pirate-gold/pirate-gold_ao.png");
+		m_PG_Height		= new Texture2D("assets/textures/pirate-gold/pirate-gold_height.png");
+		m_PG_Metallic	= new Texture2D("assets/textures/pirate-gold/pirate-gold_metallic.png");
+		m_PG_Normal		= new Texture2D("assets/textures/pirate-gold/pirate-gold_normal-dx.png");
+		m_PG_Roughness	= new Texture2D("assets/textures/pirate-gold/pirate-gold_roughness.png");
 
-		m_CD_Albedo = new Texture2D("assets/textures/cavern-deposits/cavern-deposits_albedo.png");
-		m_CD_AO = new Texture2D("assets/textures/cavern-deposits/cavern-deposits_ao.png");
-		m_CD_Height = new Texture2D("assets/textures/cavern-deposits/cavern-deposits_height.png");
-		m_CD_Metallic = new Texture2D("assets/textures/cavern-deposits/cavern-deposits_metallic.png");
-		m_CD_Normal = new Texture2D("assets/textures/cavern-deposits/cavern-deposits_normal-dx.png");
-		m_CD_Roughness = new Texture2D("assets/textures/cavern-deposits/cavern-deposits_roughness.png");
+		m_CD_Albedo		= new Texture2D("assets/textures/cavern-deposits/cavern-deposits_albedo.png");
+		m_CD_AO			= new Texture2D("assets/textures/cavern-deposits/cavern-deposits_ao.png");
+		m_CD_Height		= new Texture2D("assets/textures/cavern-deposits/cavern-deposits_height.png");
+		m_CD_Metallic	= new Texture2D("assets/textures/cavern-deposits/cavern-deposits_metallic.png");
+		m_CD_Normal		= new Texture2D("assets/textures/cavern-deposits/cavern-deposits_normal-dx.png");
+		m_CD_Roughness	= new Texture2D("assets/textures/cavern-deposits/cavern-deposits_roughness.png");
 
-		m_SS_Albedo = new Texture2D("assets/textures/spaceship-panels/spaceship-panels1-albedo.png");
-		m_SS_AO = new Texture2D("assets/textures/spaceship-panels/spaceship-panels1-ao.png");
-		m_SS_Height = new Texture2D("assets/textures/spaceship-panels/spaceship-panels1-height.png");
-		m_SS_Metallic = new Texture2D("assets/textures/spaceship-panels/spaceship-panels1-metallic.png");
-		m_SS_Normal = new Texture2D("assets/textures/spaceship-panels/spaceship-panels1-normal-dx.png");
-		m_SS_Roughness = new Texture2D("assets/textures/spaceship-panels/spaceship-panels1-roughness.png");
+		m_SS_Albedo		= new Texture2D("assets/textures/spaceship-panels/spaceship-panels1-albedo.png");
+		m_SS_AO			= new Texture2D("assets/textures/spaceship-panels/spaceship-panels1-ao.png");
+		m_SS_Height		= new Texture2D("assets/textures/spaceship-panels/spaceship-panels1-height.png");
+		m_SS_Metallic	= new Texture2D("assets/textures/spaceship-panels/spaceship-panels1-metallic.png");
+		m_SS_Normal		= new Texture2D("assets/textures/spaceship-panels/spaceship-panels1-normal-dx.png");
+		m_SS_Roughness	= new Texture2D("assets/textures/spaceship-panels/spaceship-panels1-roughness.png");
 
-		m_VM_Albedo = new Texture2D("assets/textures/vented-metal-panel/vented-metal-panel1_albedo.png");
-		m_VM_AO = new Texture2D("assets/textures/vented-metal-panel/vented-metal-panel1_ao.png");
-		m_VM_Height = new Texture2D("assets/textures/vented-metal-panel/vented-metal-panel1_height.png");
-		m_VM_Metallic = new Texture2D("assets/textures/vented-metal-panel/vented-metal-panel1_metallic.png");
-		m_VM_Normal = new Texture2D("assets/textures/vented-metal-panel/vented-metal-panel1_normal-dx.png");
-		m_VM_Roughness = new Texture2D("assets/textures/vented-metal-panel/vented-metal-panel1_roughness.png");
+		m_VM_Albedo		= new Texture2D("assets/textures/vented-metal-panel/vented-metal-panel1_albedo.png");
+		m_VM_AO			= new Texture2D("assets/textures/vented-metal-panel/vented-metal-panel1_ao.png");
+		m_VM_Height		= new Texture2D("assets/textures/vented-metal-panel/vented-metal-panel1_height.png");
+		m_VM_Metallic	= new Texture2D("assets/textures/vented-metal-panel/vented-metal-panel1_metallic.png");
+		m_VM_Normal		= new Texture2D("assets/textures/vented-metal-panel/vented-metal-panel1_normal-dx.png");
+		m_VM_Roughness	= new Texture2D("assets/textures/vented-metal-panel/vented-metal-panel1_roughness.png");
 
 		// Retrieve uniform block location
 		GLint camPrtiesLocation = glGetUniformBlockIndex(*m_LitShader, "CameraProperties");
@@ -174,5 +174,4 @@ namespace OpenGL
 		break;
 		}
 	}
-
 }

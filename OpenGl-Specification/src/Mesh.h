@@ -10,8 +10,7 @@
 namespace OpenGL
 {
 	/**
-	 * Vertex contains useful values such as:
-	 * position, texture coordinates, normal, tangent, color.
+	 * Vertex data structure.
 	 */
 	struct Vertex
 	{
@@ -24,9 +23,7 @@ namespace OpenGL
 
 	/**
 	 * Mesh contains data to vertex position. This allow us to store in one point the geometry we want to draw.
-	 * 
-	 * @see mesh
-	 * @see mesh vertex
+	 * @see Vertex.
 	 */
 	class Mesh
 	{
@@ -35,55 +32,46 @@ namespace OpenGL
 
 		/**
 		 * Mesh constructor.
-		 * 
-		 * @param vertices, list / vector of Vertex
-		 * @see OpenGL::Vertex
-		 * 
-		 * @param indices, list / vector of GLuint
-		 * @see Vertex indices
+		 * @param vertices - list / vector of Vertex.
+		 * @param indices - list / vector of GLuint.
+		 * @see Vertex.
 		 */
 		Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices);
 
 	public:
 		/**
 		 * Draw the geometry with the program passed as parameter.
-		 * 
-		 * @param shader, shader program
-		 * @see OpenGL::Shader
-		 * 
 		 * Enable depth test and cull face. Check if this settings fit for you.
 		 * Bind the proper VAO and call glDrawElements.
-		 * @see glDrawElements()
+		 * @param shader - shader program.
+		 * @see Shader.
 		 */
 		virtual void Draw(Shader& shader);
 
 	protected:
-		/** Setup vertex and indices buffers, attributes */
+		/** Setup vertex and indices buffers, attributes. */
 		virtual void SetupMesh();
 
 	public:
-		/** Collection of all vertex data */
+		/** Collection of all vertex data. */
 		std::vector<Vertex> Vertices;
 
-		/** Collection of all vertex indices */
+		/** Collection of all vertex indices. */
 		std::vector<GLuint> VertexIndices;
 
 	protected:
 		/**
-		 * Vertex array object
-		 * @see VAO
+		 * Vertex array object.
 		 */
 		GLuint VAO = 0;
 
 		/**
-		 * Vertex buffer object
-		 * @see VBO
+		 * Vertex buffer object.
 		 */
 		GLuint VBO = 0;
 
 		/**
-		 * Element buffer object
-		 * @see EBO
+		 * Element buffer object.
 		 */
 		GLuint EBO = 0;
 	};

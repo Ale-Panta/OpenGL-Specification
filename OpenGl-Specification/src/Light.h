@@ -9,10 +9,12 @@
 namespace OpenGL
 {
 	/**
+	 * Light Properties. 
 	 * LightProperties struct allow us to have a reference to memory order in the uniform object buffer.
-	 * This struct is strictly related to shader program. Make sure to update both this struct and the shader.
-	 * 
-	 * @see Uniform Object Buffer (UBO).
+	 * Update this struct if you need more light's data.
+	 * @warning Make sure to update the UpdateUniformBlock function.
+	 * @warning Make sure to update the shader program. The uniform buffer layout must match this struct order.
+	 * @see UpdateUniformBlock.
 	 */
 	struct LightProperties
 	{
@@ -29,17 +31,16 @@ namespace OpenGL
 	/**
 	 * There are many type of lights, each with different characteristics and requiring different
 	 * steps to simulate their effects. Some types include:
-	 * @see Global (usually called "global ambient" because it includes only an ambient component).
-	 * @see Directional (or "distant").
-	 * @see Positional (or "point source" or "point light").
-	 * @see Spotlight.
+	 * Global (usually called "global ambient" because it includes only an ambient component).
+	 * Directional (or "distant").
+	 * Positional (or "point source" or "point light").
+	 * Spotlight.
 	 */
 
 	/**
 	 * Light class is similar to camera class. It offer MVP matrices that can be used for shadow mapping.
 	 * It usually includes other properties such as ambient, diffuse and specular colors. 
-	 * 
-	 * @see OpenGL::Camera class
+	 * @see Camera.
 	 */
 	class Light
 	{
@@ -47,31 +48,27 @@ namespace OpenGL
 		/**
 		 * Light constructor.
 		 * 
-		 * @param worldPos, light's start world position.
-		 * @param ambientCol, light's start ambient color.
-		 * @param diffuseCol, light's start diffuse color.
-		 * @param specularCol, light's start specular color.
+		 * @param worldPos - light's start world position.
+		 * @param ambientCol - light's start ambient color.
+		 * @param diffuseCol - light's start diffuse color.
+		 * @param specularCol - light's start specular color.
 		 */
 		Light(glm::vec4 worldPos, glm::vec4 ambientCol, glm::vec4 diffuseCol, glm::vec4 specularCol);
 
 		/**
 		 * Update the uniform block properties.
-		 * 
-		 * @param ubo, ID of the uniform buffer generated.
-		 * @see uniform buffer object.
+		 * @param ubo - ID of the uniform buffer generated.
 		 */
 		void UpdateUniformBlock(GLuint ubo);
 
 		/**
 		 * Return the light model matrix 4x4.
-		 *
 		 * @return the reference to the translation matrix of light position.
 		 */
 		const glm::mat4& GetModelMat()	const { return glm::translate(glm::mat4(1.0f), glm::vec3(m_WorldPos)); }
 
 		/**
 		 * Return the light view matrix 4x4.
-		 *
 		 * @return the reference to the light view matrix.
 		 */
 		const glm::mat4& GetViewMat()	const { return m_ViewMat; }
@@ -79,35 +76,33 @@ namespace OpenGL
 
 		/**
 		 * Return the light projection matrix 4x4.
-		 *
 		 * @return the reference to the light projection matrix.
 		 */
 		const glm::mat4& GetProjMat()	const { return m_ProjMat; }
 
 		/**
-		 * Set the light world position
-		 * 
-		 * @param worldPos, world position vec3
+		 * Set the light world position.
+		 * @param worldPos - world position vec3.
 		 */
 		void SetWorldPos(glm::vec4 worldPos);
 
 	private:
-		/** Light world position. By default is positioned in vec3(4.0f), top right corner */
+		/** Light world position. By default is positioned in vec3(4.0f), top right corner. */
 		glm::vec4 m_WorldPos	= glm::vec4(4.0f);
 
-		/** Light ambient color. This influence the the model's color of the zone that is not facing the light source */
+		/** Light ambient color. This influence the the model's color of the zone that is not facing the light source. */
 		glm::vec4 m_AmbientCol	= glm::vec4(0.0f);
 
-		/** Light diffuse color. It is the color that the model revels under pure white light */
+		/** Light diffuse color. It is the color that the model revels under pure white light. */
 		glm::vec4 m_DiffuseCol	= glm::vec4(1.0f);
 
 		/** Light specular color. Color of the light of a specular reflection. */
 		glm::vec4 m_SpecularCol = glm::vec4(1.0f);
 
-		/** Light view matrix */
+		/** Light view matrix. */
 		glm::mat4 m_ViewMat		= glm::mat4(1.0f);
 
-		/** Light projection matrix */
+		/** Light projection matrix. */
 		glm::mat4 m_ProjMat		= glm::mat4(1.0f);
 	};
 

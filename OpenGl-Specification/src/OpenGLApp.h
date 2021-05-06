@@ -18,26 +18,25 @@ namespace OpenGL
 		OpenGLApp() = default;
 
 		/**
-		 * OpenGLApp constructor
-		 * 
-		 * @param name, the name of the application
-		 * @param scene, the scene asset to render
+		 * OpenGLApp constructor.
+		 * @param name - the name of the application.
+		 * @param scene - the scene asset to render.
 		 */
 		OpenGLApp(const char* name, IScene* scene);
 
 		/**
-		 * OpenGLApp constructor
+		 * OpenGLApp constructor.
 		 *
-		 * @param name, the name of the application
-		 * @param width, the size width of the window
-		 * @param height, the size height of the window
-		 * @param scene, the scene asset to render
+		 * @param name, the name of the application.
+		 * @param width, the size width of the window.
+		 * @param height, the size height of the window.
+		 * @param scene, the scene asset to render.
 		 */
 		OpenGLApp(const char* name, int width, int height, IScene* scene);
 
 	public:
 		/** 
-		 * Initialize the context window
+		 * Initialize the context window.
 		 */
 		void InitWindow();
 
@@ -54,25 +53,25 @@ namespace OpenGL
 		void Run();
 
 	private:
-		/** Track the initialization status between stages */
+		/** Track the initialization status between stages. */
 		bool m_IsInitializedProperly = false;
 
-		/** Window ptr of the application */
+		/** Window ptr of the application. */
 		GLFWwindow* m_Context = nullptr;
 
-		/** Name of the window */
+		/** Name of the window. */
 		std::string m_Name = "OpenGL Default Demo Window";
 
-		/** Window width */
+		/** Window width. */
 		int m_Width = 600;
 
-		/** Window height */
+		/** Window height. */
 		int m_Height = 600;
 
-		/** Window aspect ratio */
+		/** Window aspect ratio. */
 		float m_AspectRatio = 1.0f;
 
-		/** Scene ptr asset to render */
+		/** Scene ptr asset to render. */
 		IScene* m_ActiveScene = NULL;
 	};
 }
