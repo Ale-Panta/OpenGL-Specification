@@ -30,11 +30,16 @@ namespace OpenGL
 		void RenderShadow(GLFWwindow* context, double currentTime) override;
 		void RenderGeometry(GLFWwindow* context, double currentTime) override;
 
+		void OITPass();
+
 	private:
 		Camera* m_Camera		= NULL;
 		Light*	m_LightSource	= NULL;
 		
 		Shader* m_LitShader		= NULL;
+		Shader* m_UnlitShader		= NULL;
+		Shader* m_BuildListShader = NULL;
+		Shader* m_ResolveListShader = NULL;
 
 		/** Cavern deposit mesh */
 		Mesh* m_SphereCD	= NULL;
@@ -44,6 +49,12 @@ namespace OpenGL
 		Mesh* m_SphereSS	= NULL;
 		/** Vented metal mesh */
 		Mesh* m_SphereVM	= NULL;
+
+		Mesh* m_Plane = NULL;
+
+		Mesh* m_TransparentPlane = NULL;
+		Mesh* m_TransparentPlane2 = NULL;
+		Mesh* m_TransparentPlane3 = NULL;
 
 		// --- Textures ---
  
@@ -88,5 +99,14 @@ namespace OpenGL
 
 		/** Camera properties uniform object buffer  */
 		GLuint m_UBOCamPrties = 0;
+
+		GLuint head_pointer_texture;
+		GLuint head_pointer_clear_buffer;
+		GLuint atomic_counter_buffer;
+		GLuint linked_list_buffer;
+		GLuint linked_list_texture;
+		GLuint quad_vao;
+		GLuint quad_vbo;
+
 	};
 }

@@ -102,6 +102,13 @@ namespace OpenGL
 		glProgramUniform1i(m_ShaderProgram, uLocation, value);
 	}
 
+
+	void Shader::SetUniformUInt(const char* uniformName, unsigned int value)
+	{
+		GLuint uLocation = glGetUniformLocation(m_ShaderProgram, uniformName);
+		glProgramUniform1ui(m_ShaderProgram, uLocation, value);
+	}
+
 	void Shader::SetUniformFloat(const char* uniformName, float value)
 	{
 		GLuint uLocation = glGetUniformLocation(m_ShaderProgram, uniformName);

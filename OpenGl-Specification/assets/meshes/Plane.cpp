@@ -40,4 +40,19 @@ namespace OpenGL
 
 		SetupMesh();
 	}
+
+	void Plane::Draw(Shader& shader)
+	{
+		glUseProgram(shader);
+
+		//glEnable(GL_DEPTH_TEST);
+		//glDepthFunc(GL_LEQUAL);
+		//glEnable(GL_CULL_FACE);
+		//glCullFace(GL_CCW);
+
+		glBindVertexArray(VAO);	// Bind
+		glDrawElements(GL_TRIANGLES, VertexIndices.size(), GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);	// Unbind
+	}
+
 }

@@ -8,8 +8,12 @@
 using namespace glm;
 using namespace std;
 
+#define MAX_TEX_WIDTH 2048
+#define MAX_TEX_HEIGHT 2048
+
 namespace OpenGL
 {
+
 
 	LitScene::LitScene(float fovy, float aspectRatio, float near, float far)
 	{
@@ -19,44 +23,88 @@ namespace OpenGL
 
 	void LitScene::BeginScene(GLFWwindow* context)
 	{
-		m_SphereCD = new Sphere(256);
-		m_SpherePG = new Sphere(256);
-		m_SphereSS = new Sphere(256);
+		m_SphereCD = new Sphere(32);
+		m_SpherePG = new Sphere(32);
+		m_SphereSS = new Sphere(32);
 		m_SphereVM = new Sphere(256);
+		m_Plane = new Plane();
+		m_TransparentPlane = new Plane();
+		m_TransparentPlane2 = new Plane();
+		m_TransparentPlane3 = new Plane();
+
 
 		m_LitShader = new Shader("assets/shaders/PBRCookTorrance/vertCookTorranceShader.glsl", "assets/shaders/PBRCookTorrance/fragCookTorranceShader.glsl");
+		m_UnlitShader = new Shader("assets/shaders/Unlit/vertUnlitShader.glsl", "assets/shaders/Unlit/fragUnlitShader.glsl");
+		m_BuildListShader = new Shader("assets/shaders/OIT/vertBuildListShader.glsl", "assets/shaders/OIT/fragBuildListShader.glsl");
+		m_ResolveListShader = new Shader("assets/shaders/OIT/vertResolveListShader.glsl", "assets/shaders/OIT/fragResolveListShader.glsl");
 
-		m_PG_Albedo		= new Texture2D("assets/textures/pirate-gold/pirate-gold_albedo.png");
-		m_PG_AO			= new Texture2D("assets/textures/pirate-gold/pirate-gold_ao.png");
-		m_PG_Height		= new Texture2D("assets/textures/pirate-gold/pirate-gold_height.png");
-		m_PG_Metallic	= new Texture2D("assets/textures/pirate-gold/pirate-gold_metallic.png");
-		m_PG_Normal		= new Texture2D("assets/textures/pirate-gold/pirate-gold_normal-dx.png");
-		m_PG_Roughness	= new Texture2D("assets/textures/pirate-gold/pirate-gold_roughness.png");
+		// Create head pointer texture
+		glActiveTexture(GL_TEXTURE0);
+		glGenTextures(1, &head_pointer_texture);
+		glBindTexture(GL_TEXTURE_2D, head_pointer_texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_R32UI, MAX_TEX_WIDTH, MAX_TEX_HEIGHT, 0, GL_RED_INTEGER, GL_UNSIGNED_INT, NULL);
+		glBindTexture(GL_TEXTURE_2D, 0);
 
-		m_CD_Albedo		= new Texture2D("assets/textures/cavern-deposits/cavern-deposits_albedo.png");
-		m_CD_AO			= new Texture2D("assets/textures/cavern-deposits/cavern-deposits_ao.png");
-		m_CD_Height		= new Texture2D("assets/textures/cavern-deposits/cavern-deposits_height.png");
-		m_CD_Metallic	= new Texture2D("assets/textures/cavern-deposits/cavern-deposits_metallic.png");
-		m_CD_Normal		= new Texture2D("assets/textures/cavern-deposits/cavern-deposits_normal-dx.png");
-		m_CD_Roughness	= new Texture2D("assets/textures/cavern-deposits/cavern-deposits_roughness.png");
+		glBindImageTexture(0, head_pointer_texture, 0, GL_TRUE, 0, GL_READ_WRITE, GL_R32UI);
 
-		m_SS_Albedo		= new Texture2D("assets/textures/spaceship-panels/spaceship-panels1-albedo.png");
-		m_SS_AO			= new Texture2D("assets/textures/spaceship-panels/spaceship-panels1-ao.png");
-		m_SS_Height		= new Texture2D("assets/textures/spaceship-panels/spaceship-panels1-height.png");
-		m_SS_Metallic	= new Texture2D("assets/textures/spaceship-panels/spaceship-panels1-metallic.png");
-		m_SS_Normal		= new Texture2D("assets/textures/spaceship-panels/spaceship-panels1-normal-dx.png");
-		m_SS_Roughness	= new Texture2D("assets/textures/spaceship-panels/spaceship-panels1-roughness.png");
+		// Create buffer for clearing the head pointer texture
+		GLuint* data;
 
-		m_VM_Albedo		= new Texture2D("assets/textures/vented-metal-panel/vented-metal-panel1_albedo.png");
-		m_VM_AO			= new Texture2D("assets/textures/vented-metal-panel/vented-metal-panel1_ao.png");
-		m_VM_Height		= new Texture2D("assets/textures/vented-metal-panel/vented-metal-panel1_height.png");
-		m_VM_Metallic	= new Texture2D("assets/textures/vented-metal-panel/vented-metal-panel1_metallic.png");
-		m_VM_Normal		= new Texture2D("assets/textures/vented-metal-panel/vented-metal-panel1_normal-dx.png");
-		m_VM_Roughness	= new Texture2D("assets/textures/vented-metal-panel/vented-metal-panel1_roughness.png");
+		glGenBuffers(1, &head_pointer_clear_buffer);
+		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, head_pointer_clear_buffer);
+		glBufferData(GL_PIXEL_UNPACK_BUFFER, MAX_TEX_WIDTH * MAX_TEX_HEIGHT * sizeof(GLuint), NULL, GL_STATIC_DRAW);
+		data = (GLuint*)glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY);
+		memset(data, 0x00, MAX_TEX_WIDTH * MAX_TEX_HEIGHT * sizeof(GLuint));
+		glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+		
+		// Create the atomic counter buffer
+		glGenBuffers(1, &atomic_counter_buffer);
+		glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, atomic_counter_buffer);
+		glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(GLuint), NULL, GL_DYNAMIC_COPY);
+
+		// Create the linked list storage buffer
+		glGenBuffers(1, &linked_list_buffer);
+		glBindBuffer(GL_TEXTURE_BUFFER, linked_list_buffer);
+		glBufferData(GL_TEXTURE_BUFFER, MAX_TEX_WIDTH * MAX_TEX_HEIGHT * 3 * sizeof(vec4), NULL, GL_DYNAMIC_COPY);
+		glBindBuffer(GL_TEXTURE_BUFFER, 0);
+
+		// Bind it to a texture (for use as a TBO)
+		glGenTextures(1, &linked_list_texture);
+		glBindTexture(GL_TEXTURE_BUFFER, linked_list_texture);
+		glTexBuffer(GL_TEXTURE_BUFFER, GL_RGBA32UI, linked_list_buffer);
+		glBindTexture(GL_TEXTURE_BUFFER, 0);
+
+		glBindImageTexture(1, linked_list_texture, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32UI);
+
+		glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT | GL_ATOMIC_COUNTER_BARRIER_BIT | GL_SHADER_STORAGE_BARRIER_BIT);
+
+		glGenVertexArrays(1, &quad_vao);
+		glBindVertexArray(quad_vao);
+
+		static const GLfloat quad_verts[] =
+		{
+			-0.0f, -1.0f,
+			 1.0f, -1.0f,
+			-0.0f,  1.0f,
+			 1.0f,  1.0f
+		};
+
+		glGenBuffers(1, &quad_vbo);
+		glBindBuffer(GL_ARRAY_BUFFER, quad_vbo);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(quad_verts), quad_verts, GL_STATIC_DRAW);
+		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+		glEnableVertexAttribArray(0);
+
+		glClearDepth(1.0f);
 
 		// Retrieve uniform block location
 		GLint camPrtiesLocation = glGetUniformBlockIndex(*m_LitShader, "CameraProperties");
 		glUniformBlockBinding(*m_LitShader, camPrtiesLocation, 24);
+		glUniformBlockBinding(*m_UnlitShader, camPrtiesLocation, 24);
+		glUniformBlockBinding(*m_BuildListShader, camPrtiesLocation, 24);
+		glUniformBlockBinding(*m_ResolveListShader, camPrtiesLocation, 24);
 
 		// Initialize uniform block
 		glGenBuffers(1, &m_UBOCamPrties);
@@ -82,12 +130,48 @@ namespace OpenGL
 
 	void LitScene::RenderScene(GLFWwindow* context, double currentTime)
 	{
-		glClearColor(.09f, .088f, .092f, 1.0f);
-		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+		GLuint* data;
+
+		glDisable(GL_DEPTH_TEST);
+		glDisable(GL_CULL_FACE);
+
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		// Render opaque.
+
+		// Reset atomic counter
+		glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, atomic_counter_buffer);
+		data = (GLuint*)glMapBuffer(GL_ATOMIC_COUNTER_BUFFER, GL_WRITE_ONLY);
+		data[0] = 0;
+		glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
+
+		// Clear head-pointer image
+		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, head_pointer_clear_buffer);
+		glBindTexture(GL_TEXTURE_2D, head_pointer_texture);
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1080, 1080, GL_RED_INTEGER, GL_UNSIGNED_INT, NULL);
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		// Bind head-pointer image for read-write
+		glBindImageTexture(0, head_pointer_texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32UI);
+
+		// Bind linked-list buffer for write
+		glBindImageTexture(1, linked_list_texture, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32UI);
+
+		glEnable(GL_BLEND);
+		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
 
 		RenderSkyBox(context, currentTime);
 		RenderShadow(context, currentTime);
 		RenderGeometry(context, currentTime);
+
+		glDisable(GL_BLEND);
+
+		// m_Plane->Draw(*m_ResolveListShader);
+
+		// glBindVertexArray(quad_vao);
+		// glUseProgram(*m_ResolveListShader);
+		// glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	}
 
 	void LitScene::RenderSkyBox(GLFWwindow* context, double currentTime)
@@ -104,74 +188,18 @@ namespace OpenGL
 		m_LightSource->SetWorldPos(vec4(sin(currentTime / 5.0f) * lightDistance, 0.0f, cos(currentTime / 5.0f) * lightDistance, 0.0f));
 		m_LightSource->UpdateUniformBlock(m_UBOLightPrties);
 
-		uint8 cycleCount = (uint8)((float)currentTime / 10.0f) % 4;
+		m_UnlitShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, 0.0f, 0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)) * scale(mat4(1.0f), vec3(0.8f, 0.8f, 0.8f)));
+		m_UnlitShader->SetUniformVec4("uColor", vec4(0.0f, 0.5f, 0.5f, 0.7f));
+		m_SphereSS->Draw(*m_UnlitShader);
 
-		switch (cycleCount)
-		{
-		case 0:
-		{
-			m_LitShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)));
-			m_LitShader->SetUniformFloat("uTilingFactor", 3.0f);
-			m_LitShader->SetUniformFloat("uDisplacementFactor", 0.0333f);
+		m_UnlitShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, 0.0f, 0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(1.0f, 0.3f, 0.0f)) * scale(mat4(1.0f), vec3(1.0f, 1.0f, 1.0f)));
+		m_UnlitShader->SetUniformVec4("uColor", vec4(0.0f, 0.5f, 0.0f, 0.3f));
+		m_SpherePG->Draw(*m_UnlitShader);
 
-			glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_PG_Albedo);
-			glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, *m_PG_AO);
-			glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, *m_PG_Height);
-			glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, *m_PG_Metallic);
-			glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, *m_PG_Normal);
-			glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_PG_Roughness);
-
-			m_SpherePG->Draw(*m_LitShader);
-		}
-		break;
-		case 1:
-		{
-			m_LitShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)));
-			m_LitShader->SetUniformFloat("uTilingFactor", 1.0f);
-			m_LitShader->SetUniformFloat("uDisplacementFactor", 0.333f);
-
-			glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_CD_Albedo);
-			glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, *m_CD_AO);
-			glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, *m_CD_Height);
-			glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, *m_CD_Metallic);
-			glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, *m_CD_Normal);
-			glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_CD_Roughness);
-
-			m_SphereCD->Draw(*m_LitShader);
-		}
-		break;
-		case 2:
-		{
-			m_LitShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)));
-			m_LitShader->SetUniformFloat("uTilingFactor", 6.0f);
-			m_LitShader->SetUniformFloat("uDisplacementFactor", 0.2222f);
-
-			glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_SS_Albedo);
-			glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, *m_SS_AO);
-			glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, *m_SS_Height);
-			glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, *m_SS_Metallic);
-			glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, *m_SS_Normal);
-			glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_SS_Roughness);
-
-			m_SphereSS->Draw(*m_LitShader);
-		}
-		break;
-		case 3:
-		{
-			m_LitShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)));
-			m_LitShader->SetUniformFloat("uTilingFactor", 2.0f);
-			m_LitShader->SetUniformFloat("uDisplacementFactor", 0.03f);
-
-			glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_VM_Albedo);
-			glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, *m_VM_AO);
-			glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, *m_VM_Height);
-			glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, *m_VM_Metallic);
-			glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, *m_VM_Normal);
-			glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_VM_Roughness);
-
-			m_SphereVM->Draw(*m_LitShader);
-		}
-		break;
-		}
+		m_UnlitShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, 0.0f, 0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 2.0f), vec3(1.0f, 1.0f, 0.0f)) * scale(mat4(1.0f), vec3(1.2f, 1.2f, 1.2f)));
+		m_UnlitShader->SetUniformVec4("uColor", vec4(1.0f, 0.5f, 0.5f, 0.3f));
+		m_SphereCD->Draw(*m_UnlitShader);
+		/*
+		*/
 	}
 }

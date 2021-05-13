@@ -85,6 +85,10 @@
     <None Include="assets\shaders\PBRCookTorrance\vertCookTorranceShader.glsl" />
     <None Include="assets\shaders\Unlit\vertUnlitShader.glsl" />
     <None Include="assets\shaders\Unlit\fragUnlitShader.glsl" />
+    <None Include="assets\shaders\OIT\fragBuildListShader.glsl" />
+    <None Include="assets\shaders\OIT\vertBuildListShader.glsl" />
+    <None Include="assets\shaders\OIT\vertResolveListShader.glsl" />
+    <None Include="assets\shaders\OIT\fragResolveListShader.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\OrderIndipendentTrasparency.txt" />

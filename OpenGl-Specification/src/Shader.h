@@ -39,6 +39,13 @@ namespace OpenGL
 		void SetUniformInt(const char* uniformName, int value);
 
 		/**
+		 * Set uniform uint value in shader program.
+		 * @param uniformName - name of the uniform inside the shader program.
+		 * @param value - int value to assign to shader program.
+		 */
+		void SetUniformUInt(const char* uniformName, unsigned int value);
+
+		/**
 		 * Set uniform float value in shader program.
 		 * @param uniformName - name of the uniform inside the shader program.
 		 * @param value - float value to assign to shader program.
