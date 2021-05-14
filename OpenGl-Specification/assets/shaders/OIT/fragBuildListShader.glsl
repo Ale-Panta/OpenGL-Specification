@@ -13,7 +13,15 @@ in vec3 frag_normal;
 in vec4 surface_color;
 in int gl_SampleMaskIn[];
 
-uniform vec3 light_position = vec3(40.0, 20.0, 100.0);
+// --- Begin layout uniform blocks ------------------------------------------------------------------------------------
+layout (std140, binding = 25) uniform LightProperties
+{
+	vec4 LightPos;
+	vec4 LightColor;
+	vec4 LightAmbient;
+};
+
+// --- End layout uniform blocks --------------------------------------------------------------------------------------
 
 void main()
 {
@@ -25,15 +33,7 @@ void main()
 	index = atomicCounterIncrement(list_counter);
 	old_head = imageAtomicExchange(head_pointer_image, ivec2(gl_FragCoord.xy), index);
 
-	vec3 L = normalize(light_position - frag_position);
-	vec3 V = normalize(-frag_position);
-	vec3 N = normalize(frag_normal);
-	vec3 H = normalize(L + V);
-
-	float NdotL = dot(N, L);
-	float NdotH = dot(N, H);
-
-	vec4 modulator = vec4(surface_color.rgb * NdotL, surface_color.a);
+	vec4 modulator = vec4(surface_color.rgb, surface_color.a);
 
 	item.x = old_head;
 	item.y = packUnorm4x8(modulator);

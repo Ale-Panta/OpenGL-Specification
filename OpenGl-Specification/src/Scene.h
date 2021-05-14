@@ -24,12 +24,12 @@ namespace OpenGL
 		/**
 		 * Render the scene.
 		 * It clears depth and color buffer.
-		 * Calls RenderSkyBox, RenderShadow, RenderGeometry, respectively.
+		 * Calls RenderSkyBox, RenderShadow, RenderOpaque, RenderTransparency, respectively.
 		 * @param context - context window.
 		 * @param currentTime - application's time elapsed.
 		 * @see RenderSkyBox.
-		 * @see RenderShadow.
-		 * @see RenderGeometry.
+		 * @see RenderOpaque.
+		 * @see RenderTrasparency.
 		 */
 		virtual void RenderScene(GLFWwindow* context, double currentTime) = 0;
 
@@ -64,6 +64,17 @@ namespace OpenGL
 		 * @param currentTime - application's time elapsed.
 		 * @see Camera.
 		 */
-		virtual void RenderGeometry(GLFWwindow* context, double currentTime) = 0;
+		virtual void RenderOpaque(GLFWwindow* context, double currentTime) = 0;
+
+		/**
+		 * Render the scene.
+		 * Here the transparent geometries are rendered with the shader programs.
+		 * The scene must be rendered from the camera point of view.
+		 * The view and projection matrices uploaded to the shader comes from the Camera.
+		 * @param context - context window.
+		 * @param currentTime - application's time elapsed.
+		 * @see Camera.
+		 */
+		virtual void RenderTrasparency(GLFWwindow* context, double currentTime) = 0;
 	};
 }

@@ -28,9 +28,8 @@ namespace OpenGL
 		void RenderScene(GLFWwindow* context, double currentTime) override;
 		void RenderSkyBox(GLFWwindow* context, double currentTime) override;
 		void RenderShadow(GLFWwindow* context, double currentTime) override;
-		void RenderGeometry(GLFWwindow* context, double currentTime) override;
-
-		void OITPass();
+		void RenderOpaque(GLFWwindow* context, double currentTime) override;
+		void RenderTrasparency(GLFWwindow* context, double currentTime) override;
 
 	private:
 		Camera* m_Camera		= NULL;
@@ -50,11 +49,8 @@ namespace OpenGL
 		/** Vented metal mesh */
 		Mesh* m_SphereVM	= NULL;
 
+		/** Plane to render transparent geometries on the screen */
 		Mesh* m_Plane = NULL;
-
-		Mesh* m_TransparentPlane = NULL;
-		Mesh* m_TransparentPlane2 = NULL;
-		Mesh* m_TransparentPlane3 = NULL;
 
 		// --- Textures ---
  
@@ -100,13 +96,19 @@ namespace OpenGL
 		/** Camera properties uniform object buffer  */
 		GLuint m_UBOCamPrties = 0;
 
+		/**  */
 		GLuint head_pointer_texture;
-		GLuint head_pointer_clear_buffer;
-		GLuint atomic_counter_buffer;
-		GLuint linked_list_buffer;
-		GLuint linked_list_texture;
-		GLuint quad_vao;
-		GLuint quad_vbo;
 
+		/**  */
+		GLuint head_pointer_clear_buffer;
+
+		/**  */
+		GLuint atomic_counter_buffer;
+
+		/**  */
+		GLuint linked_list_buffer;
+
+		/**  */
+		GLuint linked_list_texture;
 	};
 }

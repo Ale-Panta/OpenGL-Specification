@@ -13,8 +13,6 @@ using namespace std;
 
 namespace OpenGL
 {
-
-
 	LitScene::LitScene(float fovy, float aspectRatio, float near, float far)
 	{
 		m_Camera = new Camera(vec4(0.0f, 0.0f, 4.0f, 0.0f), fovy, aspectRatio, near, far);
@@ -28,10 +26,6 @@ namespace OpenGL
 		m_SphereSS = new Sphere(32);
 		m_SphereVM = new Sphere(256);
 		m_Plane = new Plane();
-		m_TransparentPlane = new Plane();
-		m_TransparentPlane2 = new Plane();
-		m_TransparentPlane3 = new Plane();
-
 
 		m_LitShader = new Shader("assets/shaders/PBRCookTorrance/vertCookTorranceShader.glsl", "assets/shaders/PBRCookTorrance/fragCookTorranceShader.glsl");
 		m_UnlitShader = new Shader("assets/shaders/Unlit/vertUnlitShader.glsl", "assets/shaders/Unlit/fragUnlitShader.glsl");
@@ -78,23 +72,6 @@ namespace OpenGL
 
 		glBindImageTexture(1, linked_list_texture, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32UI);
 
-		glGenVertexArrays(1, &quad_vao);
-		glBindVertexArray(quad_vao);
-
-		static const GLfloat quad_verts[] =
-		{
-			-1.0f, -1.0f,
-			 1.0f, -1.0f,
-			-1.0f,  1.0f,
-			 1.0f,  1.0f
-		};
-
-		glGenBuffers(1, &quad_vbo);
-		glBindBuffer(GL_ARRAY_BUFFER, quad_vbo);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(quad_verts), quad_verts, GL_STATIC_DRAW);
-		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
-		glEnableVertexAttribArray(0);
-
 		glClearDepth(1.0f);
 
 		// Retrieve uniform block location
@@ -128,17 +105,32 @@ namespace OpenGL
 
 	void LitScene::RenderScene(GLFWwindow* context, double currentTime)
 	{
-		GLuint* data;
+		// Clear buffers
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glDisable(GL_DEPTH_TEST);
-		glDisable(GL_CULL_FACE);
+		// Reset values...
+		glDisable(GL_BLEND);
 
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		// Setting to draw skybox...
+		RenderSkyBox(context, currentTime);
 
+		// Settings to draw shadow...
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LEQUAL);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_CCW);
+
+		RenderShadow(context, currentTime);
+
+		// Settings to draw opaque...
 		glDepthMask(GL_TRUE);
 
-		// Render opaque.
+		RenderOpaque(context, currentTime);
+
+		// Settings to draw transparency...
+
+		GLuint* data;
 
 		// Reset atomic counter
 		glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, atomic_counter_buffer);
@@ -158,22 +150,15 @@ namespace OpenGL
 		// Bind linked-list buffer for write
 		glBindImageTexture(1, linked_list_texture, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32UI);
 
+		glDisable(GL_CULL_FACE);
 		glDepthMask(GL_FALSE);
 
 		glEnable(GL_BLEND);
-		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		RenderSkyBox(context, currentTime);
-		RenderShadow(context, currentTime);
-		RenderGeometry(context, currentTime);
-
-		glDisable(GL_BLEND);
+		RenderTrasparency(context, currentTime);
 
 		m_Plane->Draw(*m_ResolveListShader);
-
-		// glBindVertexArray(quad_vao);
-		// glUseProgram(*m_ResolveListShader);
-		// glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	}
 
 	void LitScene::RenderSkyBox(GLFWwindow* context, double currentTime)
@@ -184,18 +169,24 @@ namespace OpenGL
 	{
 	}
 
-	void LitScene::RenderGeometry(GLFWwindow* context, double currentTime)
+	void LitScene::RenderOpaque(GLFWwindow* context, double currentTime)
 	{
 		static float lightDistance = 5.0f;
 		m_LightSource->SetWorldPos(vec4(sin(currentTime / 5.0f) * lightDistance, 0.0f, cos(currentTime / 5.0f) * lightDistance, 0.0f));
 		m_LightSource->UpdateUniformBlock(m_UBOLightPrties);
 
+		m_UnlitShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, 0.0f, 0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(1.0f, 1.0f, 0.0f)) * scale(mat4(1.0f), vec3(1.2f, 1.2f, 1.2f)));
+		m_UnlitShader->SetUniformVec4("uColor", vec4(0.8f, 0.2f, 0.2f, 1.0f));
+		m_SphereCD->Draw(*m_UnlitShader);
+	}
 
-		m_BuildListShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(sin(currentTime) * 1.0f, 0.0f, 0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(1.0f, 1.0f, 0.0f)) * scale(mat4(1.0f), vec3(1.2f, 1.2f, 1.2f)));
-		m_BuildListShader->SetUniformVec4("uColor", vec4(1.0f, 0.5f, 0.5f, sin(currentTime * 0.2f) * 0.5f * 0.5f + 0.5f));
-		m_SphereCD->Draw(*m_BuildListShader);
+	void LitScene::RenderTrasparency(GLFWwindow* context, double currentTime)
+	{
+		static float lightDistance = 5.0f;
+		m_LightSource->SetWorldPos(vec4(sin(currentTime / 5.0f) * lightDistance, 0.0f, cos(currentTime / 5.0f) * lightDistance, 0.0f));
+		m_LightSource->UpdateUniformBlock(m_UBOLightPrties);
 
-		m_BuildListShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, cos(currentTime) * 1.0f, 0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(1.0f, 0.3f, 0.0f)) * scale(mat4(1.0f), vec3(1.0f, 1.0f, 1.0f)));
+		m_BuildListShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, cos(currentTime) - 1.0f, 0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(1.0f, 0.3f, 0.0f)) * scale(mat4(1.0f), vec3(1.0f, 1.0f, 1.0f)));
 		m_BuildListShader->SetUniformVec4("uColor", vec4(0.0f, 0.5f, 0.0f, sin(currentTime * 0.6f) * 0.3f * 0.5f + 0.5f));
 		m_SpherePG->Draw(*m_BuildListShader);
 
