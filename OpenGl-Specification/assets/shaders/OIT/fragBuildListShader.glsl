@@ -1,4 +1,4 @@
-#version 420 core
+#version 440 core
 
 layout (early_fragment_tests) in;
 
@@ -11,6 +11,7 @@ layout (location = 0) out vec4 color;
 in vec3 frag_position;
 in vec3 frag_normal;
 in vec4 surface_color;
+in int gl_SampleMaskIn[];
 
 uniform vec3 light_position = vec3(40.0, 20.0, 100.0);
 
@@ -32,17 +33,16 @@ void main()
 	float NdotL = dot(N, L);
 	float NdotH = dot(N, H);
 
-	vec4 modulator = vec4(surface_color.rgb * abs(NdotL), surface_color.a);
-	vec4 additive_component = mix(surface_color, vec4(1.0), 0.6) * vec4(pow(clamp(NdotH, 0.0, 1.0), 26.0)) * 0.7;
+	vec4 modulator = vec4(surface_color.rgb * NdotL, surface_color.a);
 
 	item.x = old_head;
 	item.y = packUnorm4x8(modulator);
 	item.z = floatBitsToUint(gl_FragCoord.z);
-	item.w = packUnorm4x8(additive_component);
+	item.w = int(gl_SampleMaskIn[0]);
 
 	imageStore(list_buffer, int(index), item);
 
 	frag_color = modulator;
 
-	//color = frag_color;
+	// color = frag_color;
 }

@@ -45,10 +45,10 @@ namespace OpenGL
 	{
 		glUseProgram(shader);
 
-		//glEnable(GL_DEPTH_TEST);
-		//glDepthFunc(GL_LEQUAL);
-		//glEnable(GL_CULL_FACE);
-		//glCullFace(GL_CCW);
+		// glEnable(GL_DEPTH_TEST);
+		// glDepthFunc(GL_LEQUAL);
+		// glEnable(GL_CULL_FACE);
+		// glCullFace(GL_CW);
 
 		glBindVertexArray(VAO);	// Bind
 		glDrawElements(GL_TRIANGLES, VertexIndices.size(), GL_UNSIGNED_INT, 0);

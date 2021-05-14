@@ -31,7 +31,7 @@ namespace OpenGL
 
 		// Check versions
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
 
 		// Declare multi-sample
 		glfwWindowHint(GLFW_SAMPLES, 4);

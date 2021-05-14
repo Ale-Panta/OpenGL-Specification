@@ -78,16 +78,14 @@ namespace OpenGL
 
 		glBindImageTexture(1, linked_list_texture, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32UI);
 
-		glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT | GL_ATOMIC_COUNTER_BARRIER_BIT | GL_SHADER_STORAGE_BARRIER_BIT);
-
 		glGenVertexArrays(1, &quad_vao);
 		glBindVertexArray(quad_vao);
 
 		static const GLfloat quad_verts[] =
 		{
-			-0.0f, -1.0f,
+			-1.0f, -1.0f,
 			 1.0f, -1.0f,
-			-0.0f,  1.0f,
+			-1.0f,  1.0f,
 			 1.0f,  1.0f
 		};
 
@@ -135,8 +133,10 @@ namespace OpenGL
 		glDisable(GL_DEPTH_TEST);
 		glDisable(GL_CULL_FACE);
 
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		glDepthMask(GL_TRUE);
 
 		// Render opaque.
 
@@ -158,6 +158,8 @@ namespace OpenGL
 		// Bind linked-list buffer for write
 		glBindImageTexture(1, linked_list_texture, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32UI);
 
+		glDepthMask(GL_FALSE);
+
 		glEnable(GL_BLEND);
 		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
 
@@ -167,7 +169,7 @@ namespace OpenGL
 
 		glDisable(GL_BLEND);
 
-		// m_Plane->Draw(*m_ResolveListShader);
+		m_Plane->Draw(*m_ResolveListShader);
 
 		// glBindVertexArray(quad_vao);
 		// glUseProgram(*m_ResolveListShader);
@@ -188,17 +190,19 @@ namespace OpenGL
 		m_LightSource->SetWorldPos(vec4(sin(currentTime / 5.0f) * lightDistance, 0.0f, cos(currentTime / 5.0f) * lightDistance, 0.0f));
 		m_LightSource->UpdateUniformBlock(m_UBOLightPrties);
 
-		m_UnlitShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, 0.0f, 0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)) * scale(mat4(1.0f), vec3(0.8f, 0.8f, 0.8f)));
-		m_UnlitShader->SetUniformVec4("uColor", vec4(0.0f, 0.5f, 0.5f, 0.7f));
-		m_SphereSS->Draw(*m_UnlitShader);
 
-		m_UnlitShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, 0.0f, 0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(1.0f, 0.3f, 0.0f)) * scale(mat4(1.0f), vec3(1.0f, 1.0f, 1.0f)));
-		m_UnlitShader->SetUniformVec4("uColor", vec4(0.0f, 0.5f, 0.0f, 0.3f));
-		m_SpherePG->Draw(*m_UnlitShader);
+		m_BuildListShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(sin(currentTime) * 1.0f, 0.0f, 0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(1.0f, 1.0f, 0.0f)) * scale(mat4(1.0f), vec3(1.2f, 1.2f, 1.2f)));
+		m_BuildListShader->SetUniformVec4("uColor", vec4(1.0f, 0.5f, 0.5f, sin(currentTime * 0.2f) * 0.5f * 0.5f + 0.5f));
+		m_SphereCD->Draw(*m_BuildListShader);
 
-		m_UnlitShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, 0.0f, 0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 2.0f), vec3(1.0f, 1.0f, 0.0f)) * scale(mat4(1.0f), vec3(1.2f, 1.2f, 1.2f)));
-		m_UnlitShader->SetUniformVec4("uColor", vec4(1.0f, 0.5f, 0.5f, 0.3f));
-		m_SphereCD->Draw(*m_UnlitShader);
+		m_BuildListShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, cos(currentTime) * 1.0f, 0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(1.0f, 0.3f, 0.0f)) * scale(mat4(1.0f), vec3(1.0f, 1.0f, 1.0f)));
+		m_BuildListShader->SetUniformVec4("uColor", vec4(0.0f, 0.5f, 0.0f, sin(currentTime * 0.6f) * 0.3f * 0.5f + 0.5f));
+		m_SpherePG->Draw(*m_BuildListShader);
+
+		m_BuildListShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, 0.0f, sin(currentTime) * 1.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)) * scale(mat4(1.0f), vec3(0.8f, 0.8f, 0.8f)));
+		m_BuildListShader->SetUniformVec4("uColor", vec4(0.0f, 0.5f, 0.5f, cos(currentTime * 2.2f) * 0.7f * 0.5f + 0.5f));
+		m_SphereSS->Draw(*m_BuildListShader);
+
 		/*
 		*/
 	}

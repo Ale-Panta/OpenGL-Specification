@@ -1,4 +1,4 @@
-#version 420 core
+#version 440 core
 
 /*
  * OpenGL Programming Guide - Order Independent Transparency Example
@@ -33,9 +33,10 @@ void main(void)
     while (current_index != 0 && fragment_count < MAX_FRAGMENTS)
     {
         uvec4 fragment = imageLoad(list_buffer, int(current_index));
-        fragment_list[fragment_count] = fragment;
+        uint coverage = fragment.w;
+        if ((coverage &(1 << gl_SampleID)) != 0)
+            fragment_list[fragment_count++] = fragment;
         current_index = fragment.x;
-        fragment_count++;
     }
 
     uint i, j;
@@ -66,8 +67,7 @@ void main(void)
     for (i = 0; i < fragment_count; i++)
     {
         vec4 modulator = unpackUnorm4x8(fragment_list[i].y);
-        vec4 additive_component = unpackUnorm4x8(fragment_list[i].w);
-        final_color = mix(final_color, modulator, modulator.a) + additive_component;
+        final_color = mix(final_color, modulator, modulator.a);
     }
 
     color = final_color;
