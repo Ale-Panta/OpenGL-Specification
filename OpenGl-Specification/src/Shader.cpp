@@ -20,6 +20,7 @@ namespace OpenGL
 		string vertShaderStr = ReadShaderSrc(vertShaderSrc);
 		string fragShaderStr = ReadShaderSrc(fragShaderSrc);
 
+		// Never deleted because shader resources are pointing to it.
 		const char* vertShaderCode = vertShaderStr.c_str();
 		const char* fragShaderCode = fragShaderStr.c_str();
 

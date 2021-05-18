@@ -22,6 +22,13 @@ namespace OpenGL
 		m_ActiveScene = scene;
 	}
 
+
+	OpenGLApp::~OpenGLApp()
+	{
+		if (m_ActiveScene)
+			delete m_ActiveScene;
+	}
+
 	void OpenGLApp::InitWindow()
 	{
 		if (!glfwInit())

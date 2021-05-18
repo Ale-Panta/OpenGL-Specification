@@ -80,7 +80,7 @@ namespace OpenGL
 		const glm::vec3& GetWorldPos() const { return m_WorldPos; }
 
 	private:
-		/** Camera view matrix. */
+		/** Camera view matrix. By default lookat() at origin (0,0,0) */
 		glm::mat4 m_ViewMat		= glm::mat4(1.0f);
 
 		/** Camera projection matrix. */

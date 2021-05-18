@@ -26,13 +26,17 @@ namespace OpenGL
 
 		/**
 		 * OpenGLApp constructor.
-		 *
 		 * @param name, the name of the application.
 		 * @param width, the size width of the window.
 		 * @param height, the size height of the window.
 		 * @param scene, the scene asset to render.
 		 */
 		OpenGLApp(const char* name, int width, int height, IScene* scene);
+
+		/**
+		 * OpenGLApp destructor.
+		 */
+		~OpenGLApp();
 
 	public:
 		/** 

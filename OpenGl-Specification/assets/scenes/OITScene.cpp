@@ -1,4 +1,4 @@
-#include "LitScene.h"
+#include "OITScene.h"
 #include "../meshes/Sphere.h"
 #include "../meshes/Plane.h"
 #include "glm/gtc/type_ptr.hpp"
@@ -8,18 +8,33 @@
 using namespace glm;
 using namespace std;
 
-#define MAX_TEX_WIDTH 2048
-#define MAX_TEX_HEIGHT 2048
-
 namespace OpenGL
 {
-	LitScene::LitScene(float fovy, float aspectRatio, float near, float far)
+	OITScene::OITScene(float fovy, float aspectRatio, float near, float far)
 	{
-		m_Camera = new Camera(vec4(0.0f, 0.0f, 4.0f, 0.0f), fovy, aspectRatio, near, far);
+		m_Camera = new Camera(vec4(-5.0f, 0.0f, 4.0f, 0.0f), fovy, aspectRatio, near, far);
 		m_LightSource = new Light(vec4(0.0f, 0.0f, 5.0f, 0.0f), vec4(0.0f), vec4(50.0f, 45.0f, 43.0f, 1.0f), vec4(1.0f));
 	}
 
-	void LitScene::BeginScene(GLFWwindow* context)
+
+	OITScene::~OITScene()
+	{
+		delete m_LitShader;
+		delete m_UnlitShader;
+		delete m_BuildListShader;
+		delete m_ResolveListShader;
+
+		delete m_SphereCD;
+		delete m_SpherePG;
+		delete m_SphereSS;
+		delete m_SphereVM;
+		delete m_Plane;
+
+		delete m_Camera;
+		delete m_LightSource;
+	}
+
+	void OITScene::BeginScene(GLFWwindow* context)
 	{
 		m_SphereCD = new Sphere(32);
 		m_SpherePG = new Sphere(32);
@@ -103,7 +118,7 @@ namespace OpenGL
 		m_LightSource->UpdateUniformBlock(m_UBOLightPrties);	// Fill light uniform block buffer
 	}
 
-	void LitScene::RenderScene(GLFWwindow* context, double currentTime)
+	void OITScene::RenderScene(GLFWwindow* context, double currentTime)
 	{
 		// Clear buffers
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -129,8 +144,6 @@ namespace OpenGL
 		RenderOpaque(context, currentTime);
 
 		// Settings to draw transparency...
-
-		GLuint* data;
 
 		// Reset atomic counter
 		glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, atomic_counter_buffer);
@@ -161,15 +174,15 @@ namespace OpenGL
 		m_Plane->Draw(*m_ResolveListShader);
 	}
 
-	void LitScene::RenderSkyBox(GLFWwindow* context, double currentTime)
+	void OITScene::RenderSkyBox(GLFWwindow* context, double currentTime)
 	{
 	}
 
-	void LitScene::RenderShadow(GLFWwindow* context, double currentTime)
+	void OITScene::RenderShadow(GLFWwindow* context, double currentTime)
 	{
 	}
 
-	void LitScene::RenderOpaque(GLFWwindow* context, double currentTime)
+	void OITScene::RenderOpaque(GLFWwindow* context, double currentTime)
 	{
 		static float lightDistance = 5.0f;
 		m_LightSource->SetWorldPos(vec4(sin(currentTime / 5.0f) * lightDistance, 0.0f, cos(currentTime / 5.0f) * lightDistance, 0.0f));
@@ -180,18 +193,18 @@ namespace OpenGL
 		m_SphereCD->Draw(*m_UnlitShader);
 	}
 
-	void LitScene::RenderTrasparency(GLFWwindow* context, double currentTime)
+	void OITScene::RenderTrasparency(GLFWwindow* context, double currentTime)
 	{
 		static float lightDistance = 5.0f;
 		m_LightSource->SetWorldPos(vec4(sin(currentTime / 5.0f) * lightDistance, 0.0f, cos(currentTime / 5.0f) * lightDistance, 0.0f));
 		m_LightSource->UpdateUniformBlock(m_UBOLightPrties);
 
 		m_BuildListShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, cos(currentTime) - 1.0f, 0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(1.0f, 0.3f, 0.0f)) * scale(mat4(1.0f), vec3(1.0f, 1.0f, 1.0f)));
-		m_BuildListShader->SetUniformVec4("uColor", vec4(0.0f, 0.5f, 0.0f, sin(currentTime * 0.6f) * 0.3f * 0.5f + 0.5f));
+		m_BuildListShader->SetUniformVec4("uColor", vec4(0.0f, 0.5f, 0.0f, sin(currentTime * 0.6f) * 1.0f * 0.5f + 0.5f));
 		m_SpherePG->Draw(*m_BuildListShader);
 
 		m_BuildListShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, 0.0f, sin(currentTime) * 1.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)) * scale(mat4(1.0f), vec3(0.8f, 0.8f, 0.8f)));
-		m_BuildListShader->SetUniformVec4("uColor", vec4(0.0f, 0.5f, 0.5f, cos(currentTime * 2.2f) * 0.7f * 0.5f + 0.5f));
+		m_BuildListShader->SetUniformVec4("uColor", vec4(0.0f, 0.5f, 0.5f, 0.8f));
 		m_SphereSS->Draw(*m_BuildListShader);
 
 		/*

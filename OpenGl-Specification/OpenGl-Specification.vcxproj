@@ -153,7 +153,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="assets\meshes\Plane.cpp" />
-    <ClCompile Include="assets\scenes\LitScene.cpp" />
+    <ClCompile Include="assets\scenes\OITScene.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Light.cpp" />
@@ -165,7 +165,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="assets\meshes\Plane.h" />
-    <ClInclude Include="assets\scenes\LitScene.h" />
+    <ClInclude Include="assets\scenes\OITScene.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Light.h" />
     <ClInclude Include="src\Mesh.h" />
