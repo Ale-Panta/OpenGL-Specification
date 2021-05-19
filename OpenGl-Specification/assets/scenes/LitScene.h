@@ -37,6 +37,7 @@ namespace OpenGL
 		Shader* m_ShadowShader		= NULL;
 		Shader* m_SceneShader		= NULL;
 		Shader* m_ShadowResult		= NULL;
+		Shader* m_LitShader		= NULL;
 
 		/** Cavern deposit mesh */
 		Mesh* m_SphereCD	= NULL;

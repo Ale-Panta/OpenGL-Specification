@@ -26,6 +26,7 @@ namespace OpenGL
 		m_Plane = new Plane();
 		m_Terrain = new Plane();
 
+		m_LitShader = new Shader("assets/shaders/PBRCookTorrance/vertCookTorranceShader.glsl", "assets/shaders/PBRCookTorrance/fragCookTorranceShader.glsl");
 		m_ShadowResult = new Shader("assets/shaders/Shadowmap/vertShadowResult.glsl", "assets/shaders/Shadowmap/fragShadowResult.glsl");
 		m_ShadowShader = new Shader("assets/shaders/Shadowmap/vertShadowmapShadowShader.glsl", "assets/shaders/Shadowmap/fragShadowmapShadowShader.glsl");
 		m_SceneShader = new Shader("assets/shaders/Shadowmap/vertShadowmapSceneShader.glsl", "assets/shaders/Shadowmap/fragShadowmapSceneShader.glsl");
@@ -104,7 +105,7 @@ namespace OpenGL
 
 		RenderSkyBox(context, currentTime);
 		RenderShadow(context, currentTime);
-		// RenderGeometry(context, currentTime);
+		RenderGeometry(context, currentTime);
 	}
 
 	void LitScene::RenderSkyBox(GLFWwindow* context, double currentTime)
@@ -114,7 +115,7 @@ namespace OpenGL
 	void LitScene::RenderShadow(GLFWwindow* context, double currentTime)
 	{
 		static float lightDistance = 5.0f;
-		m_LightSource->SetWorldPos(vec4(sinf((float)currentTime / 6.0f * 3.141592f) * 3.0f, 3.0f, cosf((float)currentTime / 4.0f * 3.141592f) * 1.0f + 2.5f, 1.0f));
+		m_LightSource->SetWorldPos(vec4(sinf((float)currentTime / 6.0f * 3.141592f) * 3.0f, 20.0f, cosf((float)currentTime / 4.0f * 3.141592f) * 1.0f + 2.5f, 1.0f));
 		m_LightSource->UpdateUniformBlock(m_UBOLightPrties);
 
 		glEnable(GL_CULL_FACE);
@@ -144,11 +145,8 @@ namespace OpenGL
 		glPolygonOffset(2.0f, 4.0f);
 
 		// Draw from the light's point of view
-		m_ShadowShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, cosf((float)currentTime / 10.0f), 0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)));
+		m_ShadowShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)));
 		m_SphereCD->Draw(*m_ShadowShader);
-
-		m_ShadowShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(1.0f, 1.0f, -1.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)));
-		m_SphereSS->Draw(*m_ShadowShader);
 
 		m_ShadowShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, -1.5f, 0.0f)) * rotate(mat4(1.0f), (float)radians(-90.0f), vec3(1.0f, 0.0f, 0.0f)) * scale(mat4(1.0f), vec3(10.0f, 10.0f, 10.0f)));
 		m_Terrain->Draw(*m_ShadowShader);
@@ -159,42 +157,67 @@ namespace OpenGL
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glViewport(0, 0, 1080, 1080);
 
-		// glUseProgram(*m_ShadowResult);
-		// glBindTexture(GL_TEXTURE_2D, *m_DepthTexture);
-		// m_Plane->Draw(*m_ShadowResult);
+		glUseProgram(*m_ShadowResult);
+		glBindTexture(GL_TEXTURE_2D, *m_DepthTexture);
+		m_Plane->Draw(*m_ShadowResult);
 
-		// Now render from the viewer's position
-		glUseProgram(*m_SceneShader);
-		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+		//// Now render from the viewer's position
+		//glUseProgram(*m_SceneShader);
+		//glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-		// Setup all the matrices
-		m_SceneShader->SetUniformMatrix4("uShadowMat", scaleBiasMatrix);
+		//// Setup all the matrices
+		//m_SceneShader->SetUniformMatrix4("uShadowMat", scaleBiasMatrix);
 
-		// Bind the depth texture
-		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_DepthTexture);
+		//// Bind the depth texture
+		//glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_DepthTexture);
 
-		// Draw here...
-		m_SceneShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)));
-		m_SphereCD->Draw(*m_SceneShader);
+		//// Draw here...
+		//m_SceneShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)));
+		//m_SphereCD->Draw(*m_SceneShader);
 
-		m_SceneShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, 0.0f, -5.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)));
-		m_SphereSS->Draw(*m_SceneShader);
+		//m_SceneShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, 0.0f, -5.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)));
+		//m_SphereSS->Draw(*m_SceneShader);
 
-		m_SceneShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, -1.5f, 0.0f)) * rotate(mat4(1.0f), (float)radians(-90.0f), vec3(1.0f, 0.0f, 0.0f)) * scale(mat4(1.0f), vec3(10.0f, 1.0f, 10.0f)));
-		m_Terrain->Draw(*m_SceneShader);
+		//m_SceneShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, -1.5f, 0.0f)) * rotate(mat4(1.0f), (float)radians(-90.0f), vec3(1.0f, 0.0f, 0.0f)) * scale(mat4(1.0f), vec3(10.0f, 1.0f, 10.0f)));
+		//m_Terrain->Draw(*m_SceneShader);
 	}
 
 	void LitScene::RenderGeometry(GLFWwindow* context, double currentTime)
 	{
-		uint8 cycleCount = (uint8)((float)currentTime / 10.0f) % 4;
+		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
+
+		const mat4 scaleBiasMatrix = mat4(
+			vec4(0.5f, 0.0f, 0.0f, 0.0f),
+			vec4(0.0f, 0.5f, 0.0f, 0.0f),
+			vec4(0.0f, 0.0f, 0.5f, 0.0f),
+			vec4(0.5f, 0.5f, 0.5f, 1.0f)
+		);
+
+		glUseProgram(*m_LitShader);
+		m_LitShader->SetUniformMatrix4("uShadowMat", scaleBiasMatrix);
+		m_LitShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, -1.5f, 0.0f)) * rotate(mat4(1.0f), (float)radians(-90.0f), vec3(1.0f, 0.0f, 0.0f)) * scale(mat4(1.0f), vec3(10.0f, 10.0f, 10.0f)));
+		m_LitShader->SetUniformFloat("uTilingFactor", 3.0f);
+		m_LitShader->SetUniformFloat("uDisplacementFactor", 0.0333f);
+
+		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_PG_Albedo);
+		glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, *m_PG_AO);
+		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, *m_PG_Height);
+		glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, *m_PG_Metallic);
+		glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, *m_PG_Normal);
+		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_PG_Roughness);
+		glActiveTexture(GL_TEXTURE6); glBindTexture(GL_TEXTURE_2D, *m_DepthTexture);
+		m_Terrain->Draw(*m_LitShader);
+
+		uint8 cycleCount = (uint8)((float)currentTime / 10.0f) % 4;
+		
 		switch (cycleCount)
 		{
 		case 0:
 		{
-			m_ShadowShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)));
-			m_ShadowShader->SetUniformFloat("uTilingFactor", 3.0f);
-			m_ShadowShader->SetUniformFloat("uDisplacementFactor", 0.0333f);
+			m_LitShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)));
+			m_LitShader->SetUniformFloat("uTilingFactor", 3.0f);
+			m_LitShader->SetUniformFloat("uDisplacementFactor", 0.0333f);
 
 			glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_PG_Albedo);
 			glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, *m_PG_AO);
@@ -202,15 +225,16 @@ namespace OpenGL
 			glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, *m_PG_Metallic);
 			glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, *m_PG_Normal);
 			glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_PG_Roughness);
+			glActiveTexture(GL_TEXTURE6); glBindTexture(GL_TEXTURE_2D, *m_DepthTexture);
 
-			m_SpherePG->Draw(*m_ShadowShader);
+			m_SpherePG->Draw(*m_LitShader);
 		}
 		break;
 		case 1:
 		{
-			m_ShadowShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)));
-			m_ShadowShader->SetUniformFloat("uTilingFactor", 1.0f);
-			m_ShadowShader->SetUniformFloat("uDisplacementFactor", 0.333f);
+			m_LitShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)));
+			m_LitShader->SetUniformFloat("uTilingFactor", 1.0f);
+			m_LitShader->SetUniformFloat("uDisplacementFactor", 0.333f);
 
 			glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_CD_Albedo);
 			glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, *m_CD_AO);
@@ -218,15 +242,16 @@ namespace OpenGL
 			glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, *m_CD_Metallic);
 			glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, *m_CD_Normal);
 			glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_CD_Roughness);
+			glActiveTexture(GL_TEXTURE6); glBindTexture(GL_TEXTURE_2D, *m_DepthTexture);
 
-			m_SphereCD->Draw(*m_ShadowShader);
+			m_SphereCD->Draw(*m_LitShader);
 		}
 		break;
 		case 2:
 		{
-			m_ShadowShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)));
-			m_ShadowShader->SetUniformFloat("uTilingFactor", 6.0f);
-			m_ShadowShader->SetUniformFloat("uDisplacementFactor", 0.2222f);
+			m_LitShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)));
+			m_LitShader->SetUniformFloat("uTilingFactor", 6.0f);
+			m_LitShader->SetUniformFloat("uDisplacementFactor", 0.2222f);
 
 			glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_SS_Albedo);
 			glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, *m_SS_AO);
@@ -234,15 +259,16 @@ namespace OpenGL
 			glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, *m_SS_Metallic);
 			glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, *m_SS_Normal);
 			glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_SS_Roughness);
+			glActiveTexture(GL_TEXTURE6); glBindTexture(GL_TEXTURE_2D, *m_DepthTexture);
 
-			m_SphereSS->Draw(*m_ShadowShader);
+			m_SphereSS->Draw(*m_LitShader);
 		}
 		break;
 		case 3:
 		{
-			m_ShadowShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)));
-			m_ShadowShader->SetUniformFloat("uTilingFactor", 2.0f);
-			m_ShadowShader->SetUniformFloat("uDisplacementFactor", 0.03f);
+			m_LitShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)));
+			m_LitShader->SetUniformFloat("uTilingFactor", 2.0f);
+			m_LitShader->SetUniformFloat("uDisplacementFactor", 0.03f);
 
 			glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_VM_Albedo);
 			glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, *m_VM_AO);
@@ -250,8 +276,9 @@ namespace OpenGL
 			glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, *m_VM_Metallic);
 			glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, *m_VM_Normal);
 			glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_VM_Roughness);
+			glActiveTexture(GL_TEXTURE6); glBindTexture(GL_TEXTURE_2D, *m_DepthTexture);
 
-			m_SphereVM->Draw(*m_ShadowShader);
+			m_SphereVM->Draw(*m_LitShader);
 		}
 		break;
 		}

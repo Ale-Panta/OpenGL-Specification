@@ -17,6 +17,7 @@ layout (binding = 2) uniform sampler2D uHeightMap;
 layout (binding = 3) uniform sampler2D uMetallicMap;
 layout (binding = 4) uniform sampler2D uNormalMap;
 layout (binding = 5) uniform sampler2D uRoughnessMap;
+layout (binding = 6) uniform sampler2DShadow uDepthTexture;
 
 // --- End layout uniform textures ------------------------------------------------------------------------------------
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -45,6 +46,7 @@ layout (std140, binding = 25) uniform LightProperties
 // --- Begin local program uniforms -----------------------------------------------------------------------------------
 
 uniform mat4 uModel;
+uniform mat4 uShadowMat;
 uniform float uTilingFactor;
 uniform float uDisplacementFactor;
 
@@ -83,12 +85,12 @@ void main()
 	UV = aUV * uTilingFactor;
 
 	// Shadow mapping
-	vec4 eyePos		= CamViewMat * Position;
+	vec4 eyePos		= CamViewMat * vec4(Position, 1.0);
 	vec4 clipPos	= CamProjMat * eyePos;
 
 	WorldCoord = Position;
 	EyeCoord = eyePos.xyz;
-	ShadowCoord = uShadowMat * LightProjMat * LightViewMat * Position;
+	ShadowCoord = uShadowMat * LightProjMat * LightViewMat * vec4(Position, 1.0);
 	Normal = mat3(CamViewMat * uModel) * aNormal;
 
 	// Output the vertex position in clip space

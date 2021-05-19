@@ -94,6 +94,20 @@ void main()
 	vec3 l = normalize(LightPos.xyz - Position);
 	vec3 h = normalize(v + l);
 	
+	// Shadow mapping
+	float shadowCoeff = 0;
+	float x, y;
+	float countOfSample = 0;
+
+	for (y = -1.5; y <= 1.5; y += 1.0)
+	{
+	  for (x = -1.5; x <= 1.5; x += 1.0)
+	  {
+		shadowCoeff += OffsetLookup(uDepthTexture, ShadowCoord, vec2(x, y));
+		countOfSample++;
+	  }
+	}
+
 	float distance = length(LightPos.xyz - Position);
 	float attenuation = 1.0 / pow(distance, 2);
 	vec3 radiance = LightColor.rgb * attenuation;
@@ -114,24 +128,10 @@ void main()
 	// Add to outgoing radiance Lo
 	float nDotL = max(dot(n, l), 0.0);
 	vec3 lo = (kD * albedo / PI + specular) * radiance * nDotL;
-	
-	// Shadow mapping
-	float shadowCoeff = 0;
-	float x, y;
-	float countOfSample = 0;
-
-	for (y = -1.5; y <= 1.5; y += 1.0)
-	{
-	  for (x = -1.5; x <= 1.5; x += 1.0)
-	  {
-		shadowCoeff += offset_lookup(uDepthTexture, ShadowCoord, vec2(x, y));
-		countOfSample++;
-	  }
-	}
 
 	vec3 ambientColor = vec3(0.03, 0.0295, 0.02903);
-	vec3 ambient = ambientColor + shadowCoeff * albedo * ambientOcclusion;
-	vec3 outColor = ambient + lo;
+	vec3 ambient = ambientColor * albedo * ambientOcclusion;
+	vec3 outColor = ambient + lo * shadowCoeff;
 
 	outColor = outColor / (outColor + vec3(1.0));
 	outColor = pow(outColor, vec3(1.0 / 2.2));	// Gamma correction
