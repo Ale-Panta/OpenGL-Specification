@@ -18,6 +18,15 @@ namespace OpenGL
 	 */
 	struct LightProperties
 	{
+		/** Light model matrix */
+		glm::mat4 Model = glm::mat4(1.0f);
+
+		/** Light view matrix */
+		glm::mat4 View = glm::mat4(1.0f);
+
+		/** Light projection matrix */
+		glm::mat4 Projection = glm::mat4(1.0f);
+
 		/** Light source world position */
 		glm::vec4 Position	= glm::vec4(0.0f);
 

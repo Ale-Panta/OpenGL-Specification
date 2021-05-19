@@ -86,10 +86,9 @@ namespace OpenGL
 
 		/**
 		 * TextureShadow constructor.
-		 * @param frameBufferObject - FBO.
 		 * @param width - texture width.
 		 * @param height - texture height.
 		 */
-		TextureShadow(GLuint& frameBufferObject, int width, int height);
+		TextureShadow(int width, int height);
 	};
 }

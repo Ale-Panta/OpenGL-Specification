@@ -11,8 +11,8 @@ namespace OpenGL
 	Camera::Camera(vec4 initialPosition, float fovy, float aspectRatio, float near, float far)
 		: m_WorldPos(vec4(initialPosition))
 	{
-		m_ViewMat = translate(mat4(1.0f), vec3(-m_WorldPos));
-		m_ProjMat = perspective(fovy, aspectRatio, near, far);
+		m_ViewMat = lookAt(vec3(m_WorldPos), vec3(0.0f), vec3(0.0f, 1.0f, 0.0f));
+		m_ProjMat = frustum(-1.0f, 1.0f, -aspectRatio, aspectRatio, 1.0f, 800.0f);
 	}
 
 	void Camera::UpdateUniformBlock(GLuint ubo)

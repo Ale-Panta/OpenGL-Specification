@@ -34,7 +34,8 @@ namespace OpenGL
 		Camera* m_Camera		= NULL;
 		Light*	m_LightSource	= NULL;
 		
-		Shader* m_LitShader		= NULL;
+		Shader* m_ShadowShader		= NULL;
+		Shader* m_SceneShader		= NULL;
 
 		/** Cavern deposit mesh */
 		Mesh* m_SphereCD	= NULL;
@@ -88,5 +89,9 @@ namespace OpenGL
 
 		/** Camera properties uniform object buffer  */
 		GLuint m_UBOCamPrties = 0;
+
+		// FBO to render depth with
+		GLuint m_DepthFBO = 0;
+		TextureShadow* m_DepthTexture = NULL;
 	};
 }
