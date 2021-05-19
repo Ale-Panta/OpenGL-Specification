@@ -44,8 +44,8 @@ out vec3 Normal;
 void main()
 {
 	vec4 worldPos = uModel * vec4(aPosition, 1.0);
-	vec4 eyePos = CamViewMat * worldPos;
-	vec4 clipPos = CamProjMat * eyePos;
+	vec4 eyePos		= CamViewMat * worldPos;
+	vec4 clipPos	= CamProjMat * eyePos;
 
 	WorldCoord = worldPos.xyz;
 	EyeCoord = eyePos.xyz;

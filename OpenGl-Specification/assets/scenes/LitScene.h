@@ -36,6 +36,7 @@ namespace OpenGL
 		
 		Shader* m_ShadowShader		= NULL;
 		Shader* m_SceneShader		= NULL;
+		Shader* m_ShadowResult		= NULL;
 
 		/** Cavern deposit mesh */
 		Mesh* m_SphereCD	= NULL;
@@ -45,6 +46,9 @@ namespace OpenGL
 		Mesh* m_SphereSS	= NULL;
 		/** Vented metal mesh */
 		Mesh* m_SphereVM	= NULL;
+
+		Mesh* m_Plane		= NULL;
+		Mesh* m_Terrain		= NULL;
 
 		// --- Textures ---
  

@@ -32,6 +32,9 @@ layout (std140, binding = 24) uniform CameraProperties
 
 layout (std140, binding = 25) uniform LightProperties
 {
+	mat4 LightModelMat;
+	mat4 LightViewMat;
+	mat4 LightProjMat;
 	vec4 LightPos;
 	vec4 LightColor;
 	vec4 LightAmbient;
@@ -49,6 +52,10 @@ uniform float uDisplacementFactor;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // --- Begin out values -----------------------------------------------------------------------------------------------
 
+out vec4 ShadowCoord;
+out vec3 WorldCoord;
+out vec3 EyeCoord;
+out vec3 Normal;
 out vec3 Position;
 out vec2 UV;
 out mat3 TBN;
@@ -75,7 +82,15 @@ void main()
 
 	UV = aUV * uTilingFactor;
 
-	// Output the vertex position in clip space
+	// Shadow mapping
+	vec4 eyePos		= CamViewMat * Position;
+	vec4 clipPos	= CamProjMat * eyePos;
 
+	WorldCoord = Position;
+	EyeCoord = eyePos.xyz;
+	ShadowCoord = uShadowMat * LightProjMat * LightViewMat * Position;
+	Normal = mat3(CamViewMat * uModel) * aNormal;
+
+	// Output the vertex position in clip space
 	gl_Position = CamProjMat * CamViewMat * uModel * vec4(fixedPosition, 1.0);
 }

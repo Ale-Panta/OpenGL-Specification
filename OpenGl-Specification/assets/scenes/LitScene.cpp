@@ -13,17 +13,20 @@ namespace OpenGL
 
 	LitScene::LitScene(float fovy, float aspectRatio, float near, float far)
 	{
-		m_Camera = new Camera(vec4(0.0f, 3.0f, 4.0f, 0.0f), fovy, aspectRatio, near, far);
-		m_LightSource = new Light(vec4(0.1f, 0.0f, 1.0f, 0.0f), vec4(0.0f), vec4(50.0f, 45.0f, 43.0f, 1.0f), vec4(1.0f));
+		m_Camera = new Camera(vec4(0.0f, 0.0f, -3.0f, 0.0f), fovy, aspectRatio, near, far);
+		m_LightSource = new Light(vec4(0.1f, 0.0f, 0.0f, 0.0f), vec4(0.0f), vec4(50.0f, 45.0f, 43.0f, 1.0f), vec4(1.0f));
 	}
 
 	void LitScene::BeginScene(GLFWwindow* context)
 	{
-		m_SphereCD = new Sphere(256);
-		m_SpherePG = new Sphere(256);
-		m_SphereSS = new Sphere(256);
-		m_SphereVM = new Sphere(256);
+		m_SphereCD = new Sphere(512);
+		m_SpherePG = new Sphere(512);
+		m_SphereSS = new Sphere(512);
+		m_SphereVM = new Sphere(512);
+		m_Plane = new Plane();
+		m_Terrain = new Plane();
 
+		m_ShadowResult = new Shader("assets/shaders/Shadowmap/vertShadowResult.glsl", "assets/shaders/Shadowmap/fragShadowResult.glsl");
 		m_ShadowShader = new Shader("assets/shaders/Shadowmap/vertShadowmapShadowShader.glsl", "assets/shaders/Shadowmap/fragShadowmapShadowShader.glsl");
 		m_SceneShader = new Shader("assets/shaders/Shadowmap/vertShadowmapSceneShader.glsl", "assets/shaders/Shadowmap/fragShadowmapSceneShader.glsl");
 
@@ -61,8 +64,9 @@ namespace OpenGL
 		// Create FBO to render depth into
 		glGenFramebuffers(1, &m_DepthFBO);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_DepthFBO);
-		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, *m_DepthTexture, 0);
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, *m_DepthTexture, 0);
 		glDrawBuffer(GL_NONE);
+
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);	// Restore frame buffer.
 
 		// Retrieve uniform block location
@@ -96,6 +100,7 @@ namespace OpenGL
 	void LitScene::RenderScene(GLFWwindow* context, double currentTime)
 	{
 		glClearColor(.09f, .088f, .092f, 1.0f);
+		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
 		RenderSkyBox(context, currentTime);
 		RenderShadow(context, currentTime);
@@ -108,6 +113,10 @@ namespace OpenGL
 
 	void LitScene::RenderShadow(GLFWwindow* context, double currentTime)
 	{
+		static float lightDistance = 5.0f;
+		m_LightSource->SetWorldPos(vec4(sinf((float)currentTime / 6.0f * 3.141592f) * 3.0f, 3.0f, cosf((float)currentTime / 4.0f * 3.141592f) * 1.0f + 2.5f, 1.0f));
+		m_LightSource->UpdateUniformBlock(m_UBOLightPrties);
+
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
@@ -135,17 +144,24 @@ namespace OpenGL
 		glPolygonOffset(2.0f, 4.0f);
 
 		// Draw from the light's point of view
-		m_SceneShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)));
+		m_ShadowShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, cosf((float)currentTime / 10.0f), 0.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)));
 		m_SphereCD->Draw(*m_ShadowShader);
 
-		m_SceneShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(1.0f, 0.0f, -1.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)));
+		m_ShadowShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(1.0f, 1.0f, -1.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)));
 		m_SphereSS->Draw(*m_ShadowShader);
+
+		m_ShadowShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, -1.5f, 0.0f)) * rotate(mat4(1.0f), (float)radians(-90.0f), vec3(1.0f, 0.0f, 0.0f)) * scale(mat4(1.0f), vec3(10.0f, 10.0f, 10.0f)));
+		m_Terrain->Draw(*m_ShadowShader);
 
 		glDisable(GL_POLYGON_OFFSET_FILL);
 
 		// Restore the default framebuffer and field of view
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glViewport(0, 0, 1080, 1080);
+
+		// glUseProgram(*m_ShadowResult);
+		// glBindTexture(GL_TEXTURE_2D, *m_DepthTexture);
+		// m_Plane->Draw(*m_ShadowResult);
 
 		// Now render from the viewer's position
 		glUseProgram(*m_SceneShader);
@@ -163,14 +179,13 @@ namespace OpenGL
 
 		m_SceneShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, 0.0f, -5.0f)) * rotate(mat4(1.0f), (float)radians(currentTime * 0.0f), vec3(0.0f, 1.0f, 0.0f)));
 		m_SphereSS->Draw(*m_SceneShader);
+
+		m_SceneShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, -1.5f, 0.0f)) * rotate(mat4(1.0f), (float)radians(-90.0f), vec3(1.0f, 0.0f, 0.0f)) * scale(mat4(1.0f), vec3(10.0f, 1.0f, 10.0f)));
+		m_Terrain->Draw(*m_SceneShader);
 	}
 
 	void LitScene::RenderGeometry(GLFWwindow* context, double currentTime)
 	{
-		static float lightDistance = 5.0f;
-		m_LightSource->SetWorldPos(vec4(sin(currentTime / 5.0f) * lightDistance, 0.0f, cos(currentTime / 5.0f) * lightDistance, 0.0f));
-		m_LightSource->UpdateUniformBlock(m_UBOLightPrties);
-
 		uint8 cycleCount = (uint8)((float)currentTime / 10.0f) % 4;
 
 		switch (cycleCount)

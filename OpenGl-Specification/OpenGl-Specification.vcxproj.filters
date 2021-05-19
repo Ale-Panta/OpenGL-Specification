@@ -89,6 +89,8 @@
     <None Include="assets\shaders\Shadowmap\fragShadowmapShadowShader.glsl" />
     <None Include="assets\shaders\Shadowmap\vertShadowmapSceneShader.glsl" />
     <None Include="assets\shaders\Shadowmap\fragShadowmapSceneShader.glsl" />
+    <None Include="assets\shaders\Shadowmap\vertShadowResult.glsl" />
+    <None Include="assets\shaders\Shadowmap\fragShadowResult.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\OrderIndipendentTrasparency.txt" />

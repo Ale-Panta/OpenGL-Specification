@@ -31,6 +31,12 @@ in vec3 Normal;
 
 layout (location = 0) out vec4 color;
 
+// PCF from GPU Gems NVIDIA
+float offset_lookup(sampler2DShadow map, vec4 loc, vec2 offset)
+{
+	return textureProj(map, vec4(loc.xy + offset * vec2(0.0009765, 0.0009765) * loc.w, loc.z, loc.w));
+}
+
 void main()
 {
 	vec3 N = normalize(Normal);
@@ -41,7 +47,21 @@ void main()
 	float diffuse = max(LdotN, 0.0);
 	float specular = max(pow(dot(normalize(-EyeCoord), R), 25.0), 0.0);
 
-	float f = textureProj(uDepthTexture, ShadowCoord);
+	float shadowCoeff = 0;
+	float x, y;
+	float countOfSample = 0;
 
-	color = vec4(vec3(0.1) + f * (vec3(0.3, 0.6, 0.8) * vec3(0.3) + vec3(1.0) * vec3(0.8)), 1.0);
+	for (y = -1.5; y <= 1.5; y += 1.0)
+	{
+	  for (x = -1.5; x <= 1.5; x += 1.0)
+	  {
+		shadowCoeff += offset_lookup(uDepthTexture, ShadowCoord, vec2(x, y));
+		countOfSample++;
+	  }
+	}
+
+	shadowCoeff /= countOfSample;
+
+	color = vec4(vec3(0.1) + shadowCoeff * (vec3(0.3, 0.6, 0.8) * vec3(0.3) + vec3(1.0) * vec3(0.8)), 1.0);
+	//color = vec4(mix(vec3(0.0), vec3(0.3, 0.6, 0.8) * vec3(0.3) + vec3(1.0) * vec3(0.8), shadowCoeff), 1.0);
 }

@@ -179,8 +179,10 @@
     <None Include="assets\shaders\fragLitShader.glsl" />
     <None Include="assets\shaders\Shadowmap\fragShadowmapSceneShader.glsl" />
     <None Include="assets\shaders\Shadowmap\fragShadowmapShadowShader.glsl" />
+    <None Include="assets\shaders\Shadowmap\fragShadowResult.glsl" />
     <None Include="assets\shaders\Shadowmap\vertShadowmapSceneShader.glsl" />
     <None Include="assets\shaders\Shadowmap\vertShadowmapShadowShader.glsl" />
+    <None Include="assets\shaders\Shadowmap\vertShadowResult.glsl" />
     <None Include="assets\shaders\Unlit\fragUnlitShader.glsl" />
     <None Include="assets\shaders\PBRCookTorrance\fragCookTorranceShader.glsl" />
     <None Include="assets\shaders\PBRCookTorrance\vertCookTorranceShader.glsl" />

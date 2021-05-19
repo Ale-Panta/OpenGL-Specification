@@ -10,7 +10,8 @@ namespace OpenGL
 		: m_WorldPos(worldPos), m_AmbientCol(ambientCol), m_DiffuseCol(diffuseCol), m_SpecularCol(specularCol)
 	{
 		m_ViewMat = lookAt(vec3(m_WorldPos), vec3(0.0f), vec3(0.0f, 1.0f, 0.0f));
-		m_ProjMat = frustum(-1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 800.0f);
+		m_ProjMat = frustum(-1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 100.0f);
+		//m_ProjMat = perspective(1.0f, 1.0f, 1.f, 10.0f);
 	}
 
 

@@ -8,6 +8,7 @@ layout (binding = 2) uniform sampler2D uHeightMap;
 layout (binding = 3) uniform sampler2D uMetallicMap;
 layout (binding = 4) uniform sampler2D uNormalMap;
 layout (binding = 5) uniform sampler2D uRoughnessMap;
+layout (binding = 6) uniform sampler2DShadow uDepthTexture;
 
 // --- End layout uniform textures ------------------------------------------------------------------------------------
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -23,6 +24,9 @@ layout (std140, binding = 24) uniform CameraProperties
 
 layout (std140, binding = 25) uniform LightProperties
 {
+	mat4 LightModelMat;
+	mat4 LightViewMat;
+	mat4 LightProjMat;
 	vec4 LightPos;
 	vec4 LightColor;
 	vec4 LightAmbient;
@@ -40,6 +44,10 @@ uniform float uDisplacementFactor;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // --- Begin in values ------------------------------------------------------------------------------------------------
 
+in vec4 ShadowCoord;
+in vec3 WorldCoord;
+in vec3 EyeCoord;
+in vec3 Normal;
 in vec3 Position;
 in vec2 UV;
 in mat3 TBN;
@@ -56,6 +64,7 @@ out vec4 Color;
 
 const float PI = 3.14159265359;
 
+float OffsetLookup(sampler2DShadow map, vec4 loc, vec2 offset);
 float DistributionGGX(vec3 N, vec3 H, float roughness);
 float GeometrySchlickGGX(float NdotV, float roughness);
 float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness);
@@ -105,15 +114,35 @@ void main()
 	// Add to outgoing radiance Lo
 	float nDotL = max(dot(n, l), 0.0);
 	vec3 lo = (kD * albedo / PI + specular) * radiance * nDotL;
+	
+	// Shadow mapping
+	float shadowCoeff = 0;
+	float x, y;
+	float countOfSample = 0;
+
+	for (y = -1.5; y <= 1.5; y += 1.0)
+	{
+	  for (x = -1.5; x <= 1.5; x += 1.0)
+	  {
+		shadowCoeff += offset_lookup(uDepthTexture, ShadowCoord, vec2(x, y));
+		countOfSample++;
+	  }
+	}
 
 	vec3 ambientColor = vec3(0.03, 0.0295, 0.02903);
-	vec3 ambient = ambientColor * albedo * ambientOcclusion;
+	vec3 ambient = ambientColor + shadowCoeff * albedo * ambientOcclusion;
 	vec3 outColor = ambient + lo;
 
 	outColor = outColor / (outColor + vec3(1.0));
 	outColor = pow(outColor, vec3(1.0 / 2.2));	// Gamma correction
 
 	Color = vec4(outColor, 1.0);
+}
+
+// PCF from GPU Gems NVIDIA
+float OffsetLookup(sampler2DShadow map, vec4 loc, vec2 offset)
+{
+	return textureProj(map, vec4(loc.xy + offset * vec2(0.0009765, 0.0009765) * loc.w, loc.z, loc.w));
 }
 
 /**
