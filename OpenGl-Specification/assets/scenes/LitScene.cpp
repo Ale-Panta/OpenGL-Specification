@@ -197,7 +197,7 @@ namespace OpenGL
 		glUseProgram(*m_LitShader);
 		m_LitShader->SetUniformMatrix4("uShadowMat", scaleBiasMatrix);
 		m_LitShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, -1.5f, 0.0f)) * rotate(mat4(1.0f), (float)radians(-90.0f), vec3(1.0f, 0.0f, 0.0f)) * scale(mat4(1.0f), vec3(10.0f, 10.0f, 10.0f)));
-		m_LitShader->SetUniformFloat("uTilingFactor", 3.0f);
+		m_LitShader->SetUniformFloat("uTilingFactor", 12.0f);
 		m_LitShader->SetUniformFloat("uDisplacementFactor", 0.0333f);
 
 		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_PG_Albedo);
