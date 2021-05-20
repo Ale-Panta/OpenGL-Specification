@@ -33,8 +33,8 @@ namespace OpenGL
 
 	protected:
 		GLuint m_ID		= 0;
-		int m_Width		= 0;
-		int m_Height	= 0;
+		int m_ClientWidth		= 0;
+		int m_ClientHeight	= 0;
 		TextureType m_TexType = TextureType::Diffuse;
 	};
 

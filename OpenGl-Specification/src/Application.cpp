@@ -1,12 +1,10 @@
 #include "OpenGLApp.h"
-#include "../assets/scenes/OITScene.h"
+#include "ThesisApp.h"
 
 int main(void)
 { 
-	OpenGL::OpenGLApp app("OpenGL Demo", 1080, 1080, new OpenGL::OITScene(1.0472f, 800 / 800, 0.1f, 100.0f));
-
-	app.InitWindow();
-	app.IntiOpenGL();
+	OpenGL::ThesisApp app("OpenGL Demo", 1280, 720, 4);
+	app.Initialize();
 	app.Run();
 
 	return 0;

@@ -13,7 +13,7 @@ namespace OpenGL
 	{
 		m_TexType = TextureType::Diffuse;
 
-		unsigned char* data = SOIL_load_image(filePath, &m_Width, &m_Height, nullptr, SOIL_LOAD_RGBA);
+		unsigned char* m_data = SOIL_load_image(filePath, &m_ClientWidth, &m_ClientHeight, nullptr, SOIL_LOAD_RGBA);
 
 		glGenTextures(1, &m_ID);
 		glBindTexture(GL_TEXTURE_2D, m_ID);
@@ -23,15 +23,15 @@ namespace OpenGL
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-		if (data)
+		if (m_data)
 		{
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_ClientWidth, m_ClientHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_data);
 			glGenerateTextureMipmap(m_ID);
 		}
 
 		glActiveTexture(0);
 		glBindTexture(GL_TEXTURE_2D, 0);
-		SOIL_free_image_data(data);
+		SOIL_free_image_data(m_data);
 	}
 
 	TextureShadow::TextureShadow(GLuint& frameBufferObject, int width, int height)

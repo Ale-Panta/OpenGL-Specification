@@ -9,19 +9,27 @@ using namespace glm;
 namespace OpenGL
 {
 	Camera::Camera(vec4 initialPosition, float fovy, float aspectRatio, float near, float far)
-		: m_WorldPos(vec4(initialPosition))
+		: WorldPos(vec4(initialPosition))
 	{
-		m_ViewMat = lookAt(vec3(m_WorldPos), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
-		m_ProjMat = perspective(fovy, aspectRatio, near, far);
+		ViewMat = lookAt(vec3(WorldPos), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+		ProjMat = perspective(fovy, aspectRatio, near, far);
 	}
 
 	void Camera::UpdateUniformBlock(GLuint ubo)
 	{
 		glBindBuffer(GL_UNIFORM_BUFFER, ubo);
-		glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CameraProperties, CameraProperties::M),			sizeof(mat4), value_ptr(GetModelMat()));
-		glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CameraProperties, CameraProperties::V),			sizeof(mat4), value_ptr(m_ViewMat));
-		glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CameraProperties, CameraProperties::P),			sizeof(mat4), value_ptr(m_ProjMat));
-		glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CameraProperties, CameraProperties::Position),	sizeof(vec4), value_ptr(m_WorldPos));
+		glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CameraProperties, CameraProperties::Model),			sizeof(mat4), value_ptr(GetModelMat()));
+		glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CameraProperties, CameraProperties::View),			sizeof(mat4), value_ptr(ViewMat));
+		glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CameraProperties, CameraProperties::Projection),	sizeof(mat4), value_ptr(ProjMat));
+		glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CameraProperties, CameraProperties::Position),		sizeof(vec4), value_ptr(WorldPos));
+		glBufferSubData(GL_UNIFORM_BUFFER, offsetof(CameraProperties, CameraProperties::Direction),		sizeof(vec4), value_ptr(GetForward()));
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
+
+	void Camera::SetWorldPos(glm::vec4 worldPos)
+	{
+		WorldPos = worldPos;
+		ViewMat = lookAt(vec3(WorldPos), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+	}
+
 }

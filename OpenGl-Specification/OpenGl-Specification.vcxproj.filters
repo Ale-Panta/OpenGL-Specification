@@ -39,10 +39,10 @@
     <ClCompile Include="src\Light.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
-    <ClCompile Include="assets\scenes\OITScene.cpp">
+    <ClCompile Include="assets\meshes\Plane.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
-    <ClCompile Include="assets\meshes\Plane.cpp">
+    <ClCompile Include="src\ThesisApp.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
   </ItemGroup>
@@ -68,29 +68,23 @@
     <ClInclude Include="src\Light.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scene.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="assets\scenes\OITScene.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
     <ClInclude Include="assets\meshes\Plane.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ThesisApp.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\vertLitShader.glsl" />
     <None Include="assets\shaders\fragLitShader.glsl" />
-    <None Include="assets\shaders\PBRCookTorrance\fragCookTorranceShader.glsl" />
-    <None Include="assets\shaders\PBRCookTorrance\vertCookTorranceShader.glsl" />
+    <None Include="assets\shaders\PBR\fragCookTorranceShader.glsl" />
+    <None Include="assets\shaders\PBR\vertCookTorranceShader.glsl" />
     <None Include="assets\shaders\Unlit\vertUnlitShader.glsl" />
     <None Include="assets\shaders\Unlit\fragUnlitShader.glsl" />
     <None Include="assets\shaders\OIT\fragBuildListShader.glsl" />
     <None Include="assets\shaders\OIT\vertBuildListShader.glsl" />
     <None Include="assets\shaders\OIT\vertResolveListShader.glsl" />
     <None Include="assets\shaders\OIT\fragResolveListShader.glsl" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="src\OrderIndipendentTrasparency.txt" />
   </ItemGroup>
 </Project>

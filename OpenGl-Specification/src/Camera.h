@@ -18,16 +18,19 @@ namespace OpenGL
 	struct CameraProperties
 	{
 		/** Camera model matrix. */
-		glm::mat4 M = glm::mat4(1.0f);
+		glm::mat4 Model = glm::mat4(1.0f);
 
 		/** Camera view matrix. */
-		glm::mat4 V = glm::mat4(1.0f);
+		glm::mat4 View = glm::mat4(1.0f);
 
 		/** Camera projection matrix. */
-		glm::mat4 P = glm::mat4(1.0f);
+		glm::mat4 Projection = glm::mat4(1.0f);
 
 		/** Camera world position. */
 		glm::vec4 Position = glm::vec4(0.0f);
+
+		/** Camera forward. */
+		glm::vec4 Direction = glm::vec4(0.0f);
 	};
 
 	/**
@@ -56,37 +59,49 @@ namespace OpenGL
 		void UpdateUniformBlock(GLuint ubo);
 
 		/**
-		 * Return the camera model matrix 4x4.
+		 * Return the camera model matrix.
 		 * @return the copy-value to the translation matrix of camera position. 
 		 */
-		const glm::mat4 GetModelMat()	const { return glm::translate(glm::mat4(1.0f), glm::vec3(m_WorldPos)); }
+		const glm::mat4 GetModelMat()	const { return glm::translate(glm::mat4(1.0f), glm::vec3(WorldPos)); }
 
 		/**
-		 * Return the camera view matrix 4x4.
+		 * Return the camera view matrix.
 		 * @return the reference to the camera view matrix.
 		 */
-		const glm::mat4& GetViewMat()	const { return m_ViewMat; }
+		const glm::mat4& GetViewMat()	const { return ViewMat; }
 
 		/**
-		 * Return the camera projection matrix 4x4.
+		 * Return the camera projection matrix.
 		 * @return the reference to the camera projection matrix.
 		 */
-		const glm::mat4& GetProjMat()	const { return m_ProjMat; }
+		const glm::mat4& GetProjMat()	const { return ProjMat; }
 
 		/**
-		 * Return the camera world position vector3.
+		 * Return the camera world position.
 		 * @return the reference to the camera position vector3.
 		 */
-		const glm::vec3& GetWorldPos() const { return m_WorldPos; }
+		const glm::vec3& GetWorldPos() const { return WorldPos; }
 
-	private:
+		/**
+		 * Return the camera forward.
+		 * @return the reference to the camera position vector3.
+		 */
+		const glm::vec3& GetForward() const { return glm::transpose(ViewMat)[2]; }
+
+		/**
+		 * Set the light world position.
+		 * @param worldPos	world position vec3.
+		 */
+		void SetWorldPos(glm::vec4 worldPos);
+
+	public:
 		/** Camera view matrix. By default lookat() at origin (0,0,0) */
-		glm::mat4 m_ViewMat		= glm::mat4(1.0f);
+		glm::mat4 ViewMat		= glm::mat4(1.0f);
 
 		/** Camera projection matrix. */
-		glm::mat4 m_ProjMat		= glm::mat4(1.0f);
+		glm::mat4 ProjMat		= glm::mat4(1.0f);
 
 		/** Camera world position vec3. */
-		glm::vec4 m_WorldPos	= glm::vec4(0.0f, 0.0f, 4.0f, 0.0f);
+		glm::vec4 WorldPos	= glm::vec4(0.0f, 0.0f, 4.0f, 0.0f);
 	};
 }

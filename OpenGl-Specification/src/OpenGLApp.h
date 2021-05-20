@@ -3,79 +3,153 @@
 #include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
 
-#include <stack>
 #include <string>
-#include <memory>
-
-#include "Scene.h"
-
 
 namespace OpenGL
 {
 	class OpenGLApp
 	{
 	public:
-		OpenGLApp() = default;
-
 		/**
 		 * OpenGLApp constructor.
-		 * @param name - the name of the application.
-		 * @param scene - the scene asset to render.
+		 * @param name		Application name.
+		 * @param width		Client window width.
+		 * @param height	Client window height.
+		 * @param samples	Is recommended to use 4, 8 or 16, more than that can cause performance issue.
 		 */
-		OpenGLApp(const char* name, IScene* scene);
+		OpenGLApp(const char* name, int width, int height, int samples);
 
 		/**
-		 * OpenGLApp constructor.
-		 * @param name, the name of the application.
-		 * @param width, the size width of the window.
-		 * @param height, the size height of the window.
-		 * @param scene, the scene asset to render.
+		 * OpenGLApp copy constructor.
+		 * Deleted.
 		 */
-		OpenGLApp(const char* name, int width, int height, IScene* scene);
+		OpenGLApp(const OpenGLApp& rhs) = delete;
+
+		/**
+		 * OpenGLApp assign operator.
+		 * Deleted.
+		 */
+		OpenGLApp operator = (const OpenGLApp& rhs) = delete;
 
 		/**
 		 * OpenGLApp destructor.
+		 * Delete manually all resources allocated in the heap.
 		 */
-		~OpenGLApp();
+		virtual ~OpenGLApp();
 
 	public:
+		/**
+		 * Get the current application.
+		 * @return OpenGLApp ptr.
+		 */
+		static OpenGLApp* GetApp();
+
+		/**
+		 * Get the current app's aspect ratio.
+		 * @return the width / height.
+		 */
+		float GetAspectRatio();
+
+		/**
+		 * Intialize window, opengl, resources in this order.
+		 * Call the base before initialize resources.
+		 * @return true if no stage fails else false.
+		 */
+		virtual bool Initialize();
+
+		/**
+		 * Run the application loop.
+		 * Calculate the application time and frame, 
+		 * process events and call Update and Draw.
+		 * @see Update, Draw.
+		 */
+		void Run();
+
+	protected:
+		/**
+		 * Resize window event.
+		 */
+		virtual void OnResize();
+		
+		/**
+		 * Update generic application stuff.
+		 * Reset buffers or update position based on time for examples.
+		 * @param gt	Application time elapsed since start.
+		 */
+		virtual void Update(double gt) = 0;
+
+		/**
+		 * Draw the scene.
+		 * It is divided into multiple stages that are the follow:
+		 * render sky box, shadow, opaque, transparent.
+		 * This order must not be broke.
+		 * @param gt	Application time elapsed since start.
+		 */
+		virtual void Draw(double gt) = 0;
+
 		/** 
 		 * Initialize the context window.
 		 */
-		void InitWindow();
+		bool InitMainWindow();
 
 		/**
 		 * Initialize glew. It retrieve the function to communicate with GPU.
 		 * Must be called after InitWindow().
 		 */
-		void IntiOpenGL();
+		bool InitiOpenGL();
 
 		/**
-		 * Generic OpenGL's running loop.
-		 * Here are processed Display, glfwSwapBuffers and glfwPollEvents
+		 * Create depth buffer object and texture attach to it.
 		 */
-		void Run();
+		void CreateDepthBuffer();
+
+		/**
+		 * Create all OIT stuff.
+		 */
+		void CreateOITBuffers();
+
+		/**
+		 * Refresh OIT stuff.
+		 * @warning	make sure to have initialize m_data first.
+		 * @throw null reference exception if m_data is not initialized first.
+		 */
+		void RefresOITBuffers();
+
+	protected:
+		// OIT Stuff...
+		GLuint m_HeadPtrTexture			= 0;
+		GLuint m_HeadPtrClearBuffer		= 0;
+		GLuint m_AtomicCounterBuffer	= 0;
+		GLuint m_LinkedListBuffer		= 0;
+		GLuint m_LinkedListTexture		= 0;
+		GLuint* m_data = nullptr;
+
+		// Shadow mapping stuff...
+		GLuint m_ShadowFBO = 0;
+		GLuint m_ShadowTexture = 0;
+		const int m_ShadowTexWidth = 2048;
+		const int m_ShadowTexHeight = 2048;
+
+		/** Client window width. */
+		int m_ClientWidth = 600;
+
+		/** Client window height. */
+		int m_ClientHeight = 600;
 
 	private:
-		/** Track the initialization status between stages. */
-		bool m_IsInitializedProperly = false;
+		/** Current running application ptr */
+		static OpenGLApp* m_App;
 
 		/** Window ptr of the application. */
 		GLFWwindow* m_Context = nullptr;
 
-		/** Name of the window. */
-		std::string m_Name = "OpenGL Default Demo Window";
+		/** Window's name. */
+		std::string m_WindowName = "OpenGL Default Demo Window";
 
-		/** Window width. */
-		int m_Width = 600;
-
-		/** Window height. */
-		int m_Height = 600;
-
-		/** Window aspect ratio. */
-		float m_AspectRatio = 1.0f;
-
-		/** Scene ptr asset to render. */
-		IScene* m_ActiveScene = NULL;
+		/** Number of samples taken for pixels. 
+		 * Usually you want 4 or 8 samples but you can have more like 16.
+		 * More than 16 is not recommended.
+		 */
+		int m_NumOfSamples = 4;
 	};
 }
