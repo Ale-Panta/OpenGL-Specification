@@ -58,10 +58,8 @@ void main()
     float NdotL = dot(N, L);
     float NdotH = dot(N, H);
 
-	//vec4 modulator = vec4(Fragment.SurfaceColor.rgb, Fragment.SurfaceColor.a);
-    vec4 modulator = vec4(Fragment.SurfaceColor.rgb * max(abs(NdotL), 0.37888), Fragment.SurfaceColor.a);
-	vec4 additive_component = mix(Fragment.SurfaceColor, vec4(1.0), 0.6) * vec4(pow(clamp(NdotH, 0.0, 1.0), 26.0)) * 0.7;
-	modulator += additive_component;
+	vec4 modulator = vec4(Fragment.SurfaceColor.rgb, Fragment.SurfaceColor.a);
+    //vec4 modulator = vec4(Fragment.SurfaceColor.rgb * max(abs(NdotL), 0.37888), Fragment.SurfaceColor.a);
 
 	// Now assamble the fragment into the buffer. This will be the item...
 	uvec4 item = uvec4(0);

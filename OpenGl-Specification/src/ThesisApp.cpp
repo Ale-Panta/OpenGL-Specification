@@ -1,6 +1,7 @@
 #include "ThesisApp.h"
 #include "../assets/meshes/Plane.h"
 #include "../assets/meshes/Sphere.h"
+#include <iostream>
 
 using namespace std;
 using namespace glm;
@@ -58,17 +59,23 @@ namespace OpenGL
 
 		// Initialize resources...
 
-		m_LightSrc = new Light(vec4(0.0f, 4.0f, 0.2f, 0.0f), vec4(0.0f), vec4(5.0f, 4.5f, 4.3f, 0.8f), vec4(1.0f));
-		m_Camera = new Camera(vec4(-2.0f, 0.0f, 5.0f, 0.0f), 1.0472f, GetAspectRatio(), 0.1f, 100.0f);
+		m_LightSrc = new Light(vec4(0.0f, 10.0f, 0.2f, 0.0f), vec4(0.0f), vec4(5.0f, 4.5f, 4.3f, 0.8f), vec4(1.0f));
+		m_Camera = new Camera(vec4(4.0f, 10.0f, 5.0f, 0.0f), 1.0472f, GetAspectRatio(), 0.1f, 100.0f);
 
 		m_GroundPlane = new Plane();
 
 		m_SmallOpaqueSphere		= new Sphere(256);
+		m_SmallOpaqueSphereTwo	= new Sphere(256);
 		m_MediumOpaqueSphere	= new Sphere(256);
+		m_MediumOpaqueSphereTwo = new Sphere(256);
 		m_LargeOpaqueSphere		= new Sphere(256);
-		m_SmallTransparentSphere	= new Sphere(64);
-		m_MediumTransparentSphere	= new Sphere(64);
-		m_LargeTransparentSphere	= new Sphere(64);
+		m_LargeOpaqueSphereTwo	= new Sphere(256);
+		m_SmallTransparentSphere		= new Sphere(64);
+		m_SmallTransparentSphereTwo		= new Sphere(64);
+		m_MediumTransparentSphere		= new Sphere(64);
+		m_MediumTransparentSphereTwo	= new Sphere(64);
+		m_LargeTransparentSphere		= new Sphere(64);
+		m_LargeTransparentSphereTwo		= new Sphere(64);
 		m_ViewportPlane = new Plane();
 
 		m_UBOSettingShader			= new Shader("assets/shaders/vertUniformBlockSettingsShader.glsl", "assets/shaders/fragUniformBlockSettingShader.glsl");
@@ -136,6 +143,8 @@ namespace OpenGL
 		RefresOITBuffers();
 
 		// Animate here camera and light...
+		m_Camera->SetWorldPos(vec4(sinf((float)gt / 7.0f) * 5.0f, sinf((float)gt / 2.0f) * 2.0f + 10.0f, cosf((float)gt / 10.0f) * 5.0f, 0.0f));
+		m_LightSrc->SetWorldPos(vec4(cosf((float)gt / 7.0f) * 5.0f, sinf((float)gt / 2.0f) * 2.0f + 10.0f, sinf((float)gt / 10.0f) * 5.0f, 0.0f));
 
 		// Update light and camera position.
 		m_Camera->UpdateUniformBlock(m_UBOCameraPrties);	// Fill camera uniform block buffer
@@ -144,9 +153,11 @@ namespace OpenGL
 
 	void ThesisApp::Draw(double gt)
 	{
-		glClearColor(0.001f, 0.001f, 0.001f, 0.0f);
+		glClearColor(0.001f, 0.001f, 0.001f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glDisable(GL_BLEND);
+
+		time = gt;
 
 		DrawShadow();
 		DrawOpaque();
@@ -176,18 +187,23 @@ namespace OpenGL
 		glPolygonOffset(2.0f, 4.0f);
 
 		// Draw geometries...
-		m_CommitShadowShader->SetUniformMatrix4("uModel", 
-			translate(mat4(1.0f), vec3(0.0f))
-		);
+		m_CommitShadowShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(sin(0.5f * pi<float>()) * 3.0f, 0.0f, cos(0.5f * pi<float>()) * 3.0f)));
 		m_SmallOpaqueSphere->Draw();
 
-		m_CommitShadowShader->SetUniformMatrix4("uModel",
-			translate(mat4(1.0f), vec3(1.0f))
-		);
+		m_CommitShadowShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(sin(1.0f * pi<float>()) * 3.0f, 0.0f, cos(1.0f * pi<float>()) * 3.0f)));
 		m_MediumOpaqueSphere->Draw();
 
+		m_CommitShadowShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(sin(1.5f * pi<float>()) * 3.0f, 0.0f, cos(1.5f * pi<float>()) * 3.0f)));
+		m_LargeOpaqueSphere->Draw();
+
+		m_CommitShadowShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(sin(2.0f * pi<float>()) * 3.0f, 0.0f, cos(2.0f * pi<float>()) * 3.0f)));
+		m_SmallOpaqueSphereTwo->Draw();
+
+		m_CommitShadowShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, 2.0f, 0.0f)));
+		m_MediumOpaqueSphereTwo->Draw();
+
 		m_CommitShadowShader->SetUniformMatrix4("uModel", 
-			translate(mat4(1.0f), vec3(0.0f, -1.5f, 0.0f)) * 
+			translate(mat4(1.0f), vec3(0.0f, -2.0f, 0.0f)) * 
 			rotate(mat4(1.0f), radians(90.0f), vec3(-1.0f, 0.0f, 0.0f)) *
 			scale(mat4(1.0f), vec3(3.0f, 3.0f, 1.0f))
 		);
@@ -208,7 +224,6 @@ namespace OpenGL
 	{
 		// Now render from the viewer's position
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glDepthMask(GL_TRUE);
 
 		const mat4 scaleBiasMatrix = mat4(
 			vec4(0.5f, 0.0f, 0.0f, 0.0f),
@@ -227,22 +242,28 @@ namespace OpenGL
 		glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, *m_CD_Metallic);
 		glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, *m_CD_Normal);
 		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_CD_Roughness);
+
 		m_PBRShader->SetUniformMatrix4("uShadowMat", scaleBiasMatrix);
 		m_PBRShader->SetUniformFloat("uTilingFactor", 1.0f);
 		m_PBRShader->SetUniformFloat("uDisplacementFactor", 0.3f);
 		 
-		// Draw geometries...
-		m_PBRShader->SetUniformMatrix4("uModel",
-			translate(mat4(1.0f), vec3(0.0f))
-		);
+		m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(sin(0.5f * pi<float>()) * 3.0f, 0.0f, cos(0.5f * pi<float>()) * 3.0f)));
 		m_SmallOpaqueSphere->Draw();
 
-		m_PBRShader->SetUniformMatrix4("uModel",
-			translate(mat4(1.0f), vec3(1.0f))
-		);
+		m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(sin(1.0f * pi<float>()) * 3.0f, 0.0f, cos(1.0f * pi<float>()) * 3.0f)));
 		m_MediumOpaqueSphere->Draw();
 
+		m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(sin(1.5f * pi<float>()) * 3.0f, 0.0f, cos(1.5f * pi<float>()) * 3.0f)));
+		m_LargeOpaqueSphere->Draw();
+
+		m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(sin(2.0f * pi<float>()) * 3.0f, 0.0f, cos(2.0f * pi<float>()) * 3.0f)));
+		m_SmallOpaqueSphereTwo->Draw();
+
+		m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, 2.0f, 0.0f)));
+		m_MediumOpaqueSphereTwo->Draw();
+
 		m_PBRShader->SetUniformFloat("uTilingFactor", 6.0f);
+		m_PBRShader->SetUniformFloat("uDisplacementFactor", 0.5f);
 		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_PG_Albedo);
 		glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, *m_PG_AO);
 		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, *m_PG_Height);
@@ -250,16 +271,15 @@ namespace OpenGL
 		glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, *m_PG_Normal);
 		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_PG_Roughness);
 		m_PBRShader->SetUniformMatrix4("uModel",
-			translate(mat4(1.0f), vec3(0.0f, -1.5f, 0.0f)) *
+			translate(mat4(1.0f), vec3(0.0f, -2.0f, 0.0f)) *
 			rotate(mat4(1.0f), radians(90.0f), vec3(-1.0f, 0.0f, 0.0f)) *
-			scale(mat4(1.0f), vec3(3.0f, 3.0f, 1.0f))
+			scale(mat4(1.0f), vec3(5.0f, 5.0f, 1.0f))
 		);
 		m_GroundPlane->Draw();
 	}
 
 	void ThesisApp::DrawTransparents()
 	{
-		glDepthMask(GL_FALSE);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -267,9 +287,25 @@ namespace OpenGL
 		glUseProgram(*m_CommitTransparentShader);
 
 		// Draw geometries...
-		m_CommitTransparentShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, 0.0f, 2.0f)));
-		m_CommitTransparentShader->SetUniformVec4("uColor", vec4(0.5f, 0.8f, 0.3f, 0.8f));
+		m_CommitTransparentShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(sin(0.25f * pi<float>()) * 3.0f, 0.0f, cos(0.25f * pi<float>()) * 3.0f)));
+		m_CommitTransparentShader->SetUniformVec4("uColor", vec4(sin(0.25f * pi<float>()) * 3.0f, 0.0f, cos(0.25f * pi<float>()) * 3.0f, 0.766f));
 		m_SmallTransparentSphere->Draw();
+
+		m_CommitTransparentShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(sin(0.75f * pi<float>()) * 3.0f, 0.0f, cos(0.75f * pi<float>()) * 3.0f)));
+		m_CommitTransparentShader->SetUniformVec4("uColor", vec4(sin(0.75f * pi<float>()) * 3.0f, 0.0f, cos(0.75f * pi<float>()) * 3.0f, 0.5f));
+		m_MediumTransparentSphere->Draw();
+
+		m_CommitTransparentShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(sin(1.25f * pi<float>()) * 3.0f, 0.0f, cos(1.25f * pi<float>()) * 3.0f)));
+		m_CommitTransparentShader->SetUniformVec4("uColor", vec4(sin(1.25f * pi<float>()) * 3.0f, 0.0f, cos(1.25f * pi<float>()) * 3.0f, 0.8f));
+		m_LargeTransparentSphere->Draw();
+
+		m_CommitTransparentShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(sin(1.75f * pi<float>()) * 3.0f, 0.0f, cos(1.75f * pi<float>()) * 3.0f)));
+		m_CommitTransparentShader->SetUniformVec4("uColor", vec4(sin(1.75f * pi<float>()) * 3.0f, 0.0f, cos(1.75f * pi<float>()) * 3.0f, 0.6f));
+		m_SmallTransparentSphereTwo->Draw();
+
+		m_CommitTransparentShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, 2.0f, 0.0f)) * scale(mat4(1.0f), vec3(1.5f, 1.5f, 1.5f)));
+		m_CommitTransparentShader->SetUniformVec4("uColor", vec4(0.8f, 0.7f, 0.8f, sin(time / 4.0f) * 0.5f + 0.5f));
+		m_MediumTransparentSphereTwo->Draw();
 
 		// use proper program
 		glUseProgram(*m_ResolveTransparentShader);
@@ -277,5 +313,4 @@ namespace OpenGL
 		// Render it to a plane.
 		m_ViewportPlane->Draw();
 	}
-
 }

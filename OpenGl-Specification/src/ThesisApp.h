@@ -34,13 +34,19 @@ namespace OpenGL
 
 		// Opaque
 		Mesh* m_SmallOpaqueSphere = nullptr;
+		Mesh* m_SmallOpaqueSphereTwo = nullptr;
 		Mesh* m_MediumOpaqueSphere = nullptr;
+		Mesh* m_MediumOpaqueSphereTwo = nullptr;
 		Mesh* m_LargeOpaqueSphere = nullptr;
+		Mesh* m_LargeOpaqueSphereTwo = nullptr;
 
 		// Transparent
 		Mesh* m_SmallTransparentSphere = nullptr;
+		Mesh* m_SmallTransparentSphereTwo = nullptr;
 		Mesh* m_MediumTransparentSphere = nullptr;
+		Mesh* m_MediumTransparentSphereTwo = nullptr;
 		Mesh* m_LargeTransparentSphere = nullptr;
+		Mesh* m_LargeTransparentSphereTwo = nullptr;
 		Mesh* m_ViewportPlane = nullptr;
 
 		// Shaders
@@ -72,6 +78,7 @@ namespace OpenGL
 		Texture* m_CD_Metallic	= nullptr;
 		Texture* m_CD_Normal	= nullptr;
 		Texture* m_CD_Roughness = nullptr;
-	};
 
+		double time = 0.0;
+	};
 }
