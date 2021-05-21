@@ -37,6 +37,19 @@ namespace OpenGL
 
 		delete m_CommitTransparentShader;
 		delete m_ResolveTransparentShader;
+
+		delete m_PG_Albedo;
+		delete m_PG_AO;
+		delete m_PG_Height;
+		delete m_PG_Metallic;
+		delete m_PG_Normal;
+		delete m_PG_Roughness;
+		delete m_CD_Albedo;
+		delete m_CD_AO;
+		delete m_CD_Height;
+		delete m_CD_Metallic;
+		delete m_CD_Normal;
+		delete m_CD_Roughness;
 	}
 
 	bool ThesisApp::Initialize()
@@ -45,7 +58,7 @@ namespace OpenGL
 
 		// Initialize resources...
 
-		m_LightSrc = new Light(vec4(0.0f, 5.0f, 0.2f, 0.0f), vec4(0.0f), vec4(50.0f, 45.0f, 43.0f, 1.0f), vec4(1.0f));
+		m_LightSrc = new Light(vec4(0.0f, 4.0f, 0.2f, 0.0f), vec4(0.0f), vec4(5.0f, 4.5f, 4.3f, 0.8f), vec4(1.0f));
 		m_Camera = new Camera(vec4(-2.0f, 0.0f, 5.0f, 0.0f), 1.0472f, GetAspectRatio(), 0.1f, 100.0f);
 
 		m_GroundPlane = new Plane();
@@ -53,22 +66,32 @@ namespace OpenGL
 		m_SmallOpaqueSphere		= new Sphere(256);
 		m_MediumOpaqueSphere	= new Sphere(256);
 		m_LargeOpaqueSphere		= new Sphere(256);
-
-		m_SmallTransparentSphere = new Sphere(64);
-		m_MediumTransparentSphere = new Sphere(64);
-		m_LargeTransparentSphere = new Sphere(64);
+		m_SmallTransparentSphere	= new Sphere(64);
+		m_MediumTransparentSphere	= new Sphere(64);
+		m_LargeTransparentSphere	= new Sphere(64);
 		m_ViewportPlane = new Plane();
 
-		m_UBOSettingShader = new Shader("assets/shaders/vertUniformBlockSettingsShader.glsl", "assets/shaders/fragUniformBlockSettingShader.glsl");
+		m_UBOSettingShader			= new Shader("assets/shaders/vertUniformBlockSettingsShader.glsl", "assets/shaders/fragUniformBlockSettingShader.glsl");
+		m_CommitShadowShader		= new Shader("assets/shaders/Shadow/vertCommitShadowShader.glsl",	"assets/shaders/Shadow/fragCommitShadowShader.glsl");
+		m_ViewShadowShader			= new Shader("assets/shaders/Shadow/vertViewShadowShader.glsl",		"assets/shaders/Shadow/fragViewShadowShader.glsl");
+		m_DrawShadowShader			= new Shader("assets/shaders/Shadow/vertShadowSceneShader.glsl",	"assets/shaders/Shadow/fragShadowSceneShader.glsl");
+		m_PBRShader					= new Shader("assets/shaders/PBR/vertCookTorranceShader.glsl",		"assets/shaders/PBR/fragCookTorranceShader.glsl");
+		m_CommitTransparentShader	= new Shader("assets/shaders/OIT/vertBuildListShader.glsl",			"assets/shaders/OIT/fragBuildListShader.glsl");
+		m_ResolveTransparentShader	= new Shader("assets/shaders/OIT/vertResolveListShader.glsl",		"assets/shaders/OIT/fragResolveListShader.glsl");
 
-		m_CommitShadowShader = new Shader("assets/shaders/Shadow/vertCommitShadowShader.glsl", "assets/shaders/Shadow/fragCommitShadowShader.glsl");
-		m_ViewShadowShader = new Shader("assets/shaders/Shadow/vertViewShadowShader.glsl", "assets/shaders/Shadow/fragViewShadowShader.glsl");
-		m_DrawShadowShader = new Shader("assets/shaders/Shadow/vertShadowSceneShader.glsl", "assets/shaders/Shadow/fragShadowSceneShader.glsl");
-		
-		m_PBRShader = new Shader("assets/shaders/PBR/vertCookTorranceShader.glsl", "assets/shaders/PBR/fragCookTorranceShader.glsl");
-		
-		m_CommitTransparentShader = new Shader("assets/shaders/OIT/vertBuildListShader.glsl", "assets/shaders/OIT/fragBuildListShader.glsl");
-		m_ResolveTransparentShader = new Shader("assets/shaders/OIT/vertResolveListShader.glsl", "assets/shaders/OIT/fragResolveListShader.glsl");
+		m_PG_Albedo		= new Texture2D("assets/textures/pirate-gold/pirate-gold_albedo.png");
+		m_PG_AO			= new Texture2D("assets/textures/pirate-gold/pirate-gold_ao.png");
+		m_PG_Height		= new Texture2D("assets/textures/pirate-gold/pirate-gold_height.png");
+		m_PG_Metallic	= new Texture2D("assets/textures/pirate-gold/pirate-gold_metallic.png");
+		m_PG_Normal		= new Texture2D("assets/textures/pirate-gold/pirate-gold_normal-dx.png");
+		m_PG_Roughness	= new Texture2D("assets/textures/pirate-gold/pirate-gold_roughness.png");
+
+		m_CD_Albedo		= new Texture2D("assets/textures/cavern-deposits/cavern-deposits_albedo.png");
+		m_CD_AO			= new Texture2D("assets/textures/cavern-deposits/cavern-deposits_ao.png");
+		m_CD_Height		= new Texture2D("assets/textures/cavern-deposits/cavern-deposits_height.png");
+		m_CD_Metallic	= new Texture2D("assets/textures/cavern-deposits/cavern-deposits_metallic.png");
+		m_CD_Normal		= new Texture2D("assets/textures/cavern-deposits/cavern-deposits_normal-dx.png");
+		m_CD_Roughness	= new Texture2D("assets/textures/cavern-deposits/cavern-deposits_roughness.png");
 
 		// Retrieve uniform block location
 		GLint camPrtiesLocation = glGetUniformBlockIndex(*m_UBOSettingShader, "CameraProperties");
@@ -121,13 +144,13 @@ namespace OpenGL
 
 	void ThesisApp::Draw(double gt)
 	{
-		glClearColor(0.001f, 0.001f, 0.001f, 1.0f);
+		glClearColor(0.001f, 0.001f, 0.001f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glDisable(GL_BLEND);
 
 		DrawShadow();
 		DrawOpaque();
-		// DrawTransparents();
+		DrawTransparents();
 	}
 
 	void ThesisApp::DrawShadow()
@@ -177,10 +200,8 @@ namespace OpenGL
 		glViewport(0, 0, m_ClientWidth, m_ClientHeight);
 
 		glUseProgram(*m_ViewShadowShader);
-		glActiveTexture(GL_TEXTURE0);  
-		glBindTexture(GL_TEXTURE_2D, m_ShadowTexture);
+		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, m_ShadowTexture);
 		m_ViewportPlane->Draw();
-		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	void ThesisApp::DrawOpaque()
@@ -197,10 +218,18 @@ namespace OpenGL
 		);
 
 		// use proper program
-		glUseProgram(*m_DrawShadowShader);
-		glActiveTexture(GL_TEXTURE6);
-		glBindTexture(GL_TEXTURE_2D, m_ShadowTexture);
+		glUseProgram(*m_PBRShader);
+		glActiveTexture(GL_TEXTURE6); glBindTexture(GL_TEXTURE_2D, m_ShadowTexture);
+
+		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_CD_Albedo);
+		glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, *m_CD_AO);
+		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, *m_CD_Height);
+		glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, *m_CD_Metallic);
+		glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, *m_CD_Normal);
+		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_CD_Roughness);
 		m_PBRShader->SetUniformMatrix4("uShadowMat", scaleBiasMatrix);
+		m_PBRShader->SetUniformFloat("uTilingFactor", 1.0f);
+		m_PBRShader->SetUniformFloat("uDisplacementFactor", 0.3f);
 		 
 		// Draw geometries...
 		m_PBRShader->SetUniformMatrix4("uModel",
@@ -213,6 +242,13 @@ namespace OpenGL
 		);
 		m_MediumOpaqueSphere->Draw();
 
+		m_PBRShader->SetUniformFloat("uTilingFactor", 6.0f);
+		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_PG_Albedo);
+		glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, *m_PG_AO);
+		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, *m_PG_Height);
+		glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, *m_PG_Metallic);
+		glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, *m_PG_Normal);
+		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_PG_Roughness);
 		m_PBRShader->SetUniformMatrix4("uModel",
 			translate(mat4(1.0f), vec3(0.0f, -1.5f, 0.0f)) *
 			rotate(mat4(1.0f), radians(90.0f), vec3(-1.0f, 0.0f, 0.0f)) *
@@ -223,16 +259,23 @@ namespace OpenGL
 
 	void ThesisApp::DrawTransparents()
 	{
-		glDisable(GL_BLEND);
 		glDepthMask(GL_FALSE);
 		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC0_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		// use proper program
+		glUseProgram(*m_CommitTransparentShader);
+
 		// Draw geometries...
+		m_CommitTransparentShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, 0.0f, 2.0f)));
+		m_CommitTransparentShader->SetUniformVec4("uColor", vec4(0.5f, 0.8f, 0.3f, 0.8f));
+		m_SmallTransparentSphere->Draw();
 
 		// use proper program
+		glUseProgram(*m_ResolveTransparentShader);
+
 		// Render it to a plane.
+		m_ViewportPlane->Draw();
 	}
 
 }

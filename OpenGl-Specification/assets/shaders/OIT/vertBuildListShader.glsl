@@ -18,10 +18,16 @@ uniform vec4 uColor;
 out VS_FS_INTERFACE
 {
 	vec4 SurfaceColor;
+	vec3 FragPosition;
+	vec3 FragNormal;
 } Vertex;
 
 void main()
 {
 	Vertex.SurfaceColor = uColor;
+
+    Vertex.FragPosition = (uModel * vec4(aPosition, 1.0)).xyz;
+    Vertex.FragNormal = mat3(uModel * CamViewMat) * aNormal;
+
 	gl_Position = CamProjMat * CamViewMat * uModel * vec4(aPosition, 1.0);
 }

@@ -27,6 +27,8 @@ layout (std140, binding = 25) uniform LightProperties
 in VS_FS_INTERFACE
 {
 	vec4 SurfaceColor;
+	vec3 FragPosition;
+	vec3 FragNormal;
 } Fragment;
 
 in int gl_SampleMaskIn[];
@@ -48,7 +50,18 @@ void main()
 	// current content of the head pointer image. This function writes our new value to memory and returns the _old_ value.
 	oldHead = imageAtomicExchange(aHeadPointerImage, ivec2(gl_FragCoord.xy), index);
 
-	vec4 modulator = vec4(Fragment.SurfaceColor.rgb, Fragment.SurfaceColor.a);
+	vec3 L = normalize(LightDir.xyz);
+    vec3 V = normalize(-Fragment.FragPosition);
+    vec3 N = normalize(Fragment.FragNormal);
+    vec3 H = normalize(L + V);
+
+    float NdotL = dot(N, L);
+    float NdotH = dot(N, H);
+
+	//vec4 modulator = vec4(Fragment.SurfaceColor.rgb, Fragment.SurfaceColor.a);
+    vec4 modulator = vec4(Fragment.SurfaceColor.rgb * max(abs(NdotL), 0.37888), Fragment.SurfaceColor.a);
+	vec4 additive_component = mix(Fragment.SurfaceColor, vec4(1.0), 0.6) * vec4(pow(clamp(NdotH, 0.0, 1.0), 26.0)) * 0.7;
+	modulator += additive_component;
 
 	// Now assamble the fragment into the buffer. This will be the item...
 	uvec4 item = uvec4(0);

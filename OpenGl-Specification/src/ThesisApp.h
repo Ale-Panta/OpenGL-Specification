@@ -59,6 +59,19 @@ namespace OpenGL
 		GLuint m_UBOLightPrties = 0;
 
 		// Textures
+		Texture* m_PG_Albedo	= nullptr;
+		Texture* m_PG_AO		= nullptr;
+		Texture* m_PG_Height	= nullptr;
+		Texture* m_PG_Metallic	= nullptr;
+		Texture* m_PG_Normal	= nullptr;
+		Texture* m_PG_Roughness = nullptr;
+
+		Texture* m_CD_Albedo	= nullptr;
+		Texture* m_CD_AO		= nullptr;
+		Texture* m_CD_Height	= nullptr;
+		Texture* m_CD_Metallic	= nullptr;
+		Texture* m_CD_Normal	= nullptr;
+		Texture* m_CD_Roughness = nullptr;
 	};
 
 }

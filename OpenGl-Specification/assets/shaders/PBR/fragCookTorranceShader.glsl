@@ -79,7 +79,7 @@ void main()
 	fo = mix(fo, albedo, metallic);
 
 	// Reflectance equation
-	vec3 l = normalize(-LightDir.xyz);
+	vec3 l = normalize(LightDir.xyz);
 	vec3 h = normalize(v + l);
 	
 	float shadowCoeff = 0;
