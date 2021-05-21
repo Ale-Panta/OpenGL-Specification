@@ -122,7 +122,7 @@ namespace OpenGL
 		 * Return the light model matrix 4x4.
 		 * @return the reference to the translation matrix of light position.
 		 */
-		const glm::mat4& GetModelMat()	const { return glm::translate(glm::mat4(1.0f), glm::vec3(WorldPos)); }
+		const glm::mat4 GetModelMat()	const { return glm::translate(glm::mat4(1.0f), glm::vec3(WorldPos)); }
 
 		/**
 		 * Return the light view matrix 4x4.
@@ -140,7 +140,7 @@ namespace OpenGL
 		 * Return the light forward.
 		 * @return the second raw of the view matrix transpose.
 		 */
-		const glm::vec4& GetForward() const { return glm::transpose(ViewMat)[2]; }
+		const glm::vec4 GetForward() const { return glm::transpose(ViewMat)[2]; }
 
 		/**
 		 * Set the light world position.

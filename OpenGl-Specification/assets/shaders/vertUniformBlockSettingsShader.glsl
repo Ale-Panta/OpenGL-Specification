@@ -1,7 +1,5 @@
 #version 440 core
 
-layout (location = 0) in vec3 aPosition;
-
 layout (std140, binding = 24) uniform CameraProperties
 {
 	mat4 CamModelMat;
@@ -22,9 +20,7 @@ layout (std140, binding = 25) uniform LightProperties
 	vec4 LightAmbient;
 };
 
-uniform mat4 uModel;
-
 void main()
 {
-	gl_Position = LightProjMat * LightViewMat * uModel * vec4(aPosition, 1.0);
+	gl_Position = vec4(0.0);
 }

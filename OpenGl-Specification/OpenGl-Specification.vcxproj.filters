@@ -92,5 +92,8 @@
     <None Include="assets\shaders\Shadow\vertCommitShadowShader.glsl" />
     <None Include="assets\shaders\Shadow\vertViewShadowShader.glsl" />
     <None Include="assets\shaders\Shadow\fragViewShadowShader.glsl" />
+    <None Include="assets\shaders\Shadow\ShaderFormat.glsl" />
+    <None Include="assets\shaders\vertUniformBlockSettingsShader.glsl" />
+    <None Include="assets\shaders\fragUniformBlockSettingShader.glsl" />
   </ItemGroup>
 </Project>

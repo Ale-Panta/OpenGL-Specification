@@ -44,6 +44,8 @@ namespace OpenGL
 		Mesh* m_ViewportPlane = nullptr;
 
 		// Shaders
+		Shader* m_UBOSettingShader = nullptr;
+
 		Shader* m_CommitShadowShader = nullptr;
 		Shader* m_ViewShadowShader = nullptr;
 		Shader* m_DrawShadowShader = nullptr;
@@ -52,6 +54,9 @@ namespace OpenGL
 
 		Shader* m_CommitTransparentShader = nullptr;
 		Shader* m_ResolveTransparentShader = nullptr;
+
+		GLuint m_UBOCameraPrties = 0;
+		GLuint m_UBOLightPrties = 0;
 
 		// Textures
 	};

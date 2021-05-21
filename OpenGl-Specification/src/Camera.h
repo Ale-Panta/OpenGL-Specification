@@ -86,7 +86,7 @@ namespace OpenGL
 		 * Return the camera forward.
 		 * @return the reference to the camera position vector3.
 		 */
-		const glm::vec3& GetForward() const { return glm::transpose(ViewMat)[2]; }
+		const glm::vec4 GetForward() const { return glm::transpose(ViewMat)[2]; }
 
 		/**
 		 * Set the light world position.

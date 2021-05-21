@@ -1,17 +1,17 @@
 #version 430
 
-// --- Begin layout uniform textures ----------------------------------------------------------------------------------
+layout (location = 0) in vec3 aPosition;
+layout (location = 1) in vec2 aUV;
+layout (location = 2) in vec3 aNormal;
+layout (location = 3) in vec3 aTangent;
 
-layout (binding = 0) uniform sampler2D uAlbedoMap;
-layout (binding = 1) uniform sampler2D uAOMap;
-layout (binding = 2) uniform sampler2D uHeightMap;
-layout (binding = 3) uniform sampler2D uMetallicMap;
-layout (binding = 4) uniform sampler2D uNormalMap;
-layout (binding = 5) uniform sampler2D uRoughnessMap;
-
-// --- End layout uniform textures ------------------------------------------------------------------------------------
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// --- Begin layout uniform blocks ------------------------------------------------------------------------------------
+layout (binding = 0) uniform sampler2D aAlbedoMap;
+layout (binding = 1) uniform sampler2D aAOMap;
+layout (binding = 2) uniform sampler2D aHeightMap;
+layout (binding = 3) uniform sampler2D aMetallicMap;
+layout (binding = 4) uniform sampler2D aNormalMap;
+layout (binding = 5) uniform sampler2D aRoughnessMap;
+layout (binding = 6) uniform sampler2DShadow aDepthMap;
 
 layout (std140, binding = 24) uniform CameraProperties
 {
@@ -19,40 +19,33 @@ layout (std140, binding = 24) uniform CameraProperties
 	mat4 CamViewMat;
 	mat4 CamProjMat;
 	vec4 CamPos;
+	vec4 CamDir;
 };
 
 layout (std140, binding = 25) uniform LightProperties
 {
+	mat4 LightModelMat;
+	mat4 LightViewMat;
+	mat4 LightProjMat;
 	vec4 LightPos;
+	vec4 LightDir;
 	vec4 LightColor;
 	vec4 LightAmbient;
 };
-
-// --- End layout uniform blocks --------------------------------------------------------------------------------------
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// --- Begin local program uniforms -----------------------------------------------------------------------------------
 
 uniform mat4 uModel;
 uniform float uTilingFactor;
 uniform float uDisplacementFactor;
 
-// --- End local program uniforms -------------------------------------------------------------------------------------
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// --- Begin in values ------------------------------------------------------------------------------------------------
-
-in vec3 Position;
-in vec2 UV;
-in mat3 TBN;
-
-// --- End in values --------------------------------------------------------------------------------------------------
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// --- Begin out values -----------------------------------------------------------------------------------------------
+in VS_FS_INTERFACE
+{
+	vec4 ShadowCoord;
+	vec3 Position;
+	vec2 UV;
+	mat3 TBN;
+} Fragment;
 
 out vec4 Color;
-
-// --- End out values -------------------------------------------------------------------------------------------------
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// --- Begin others values --------------------------------------------------------------------------------------------
 
 const float PI = 3.14159265359;
 
@@ -62,32 +55,51 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness);
 vec3 FresnelSchlick(float cosTheta, vec3 F0);
 vec3 CalcNewNormal();
 
-// --- End others values ----------------------------------------------------------------------------------------------
+// PCF from GPU Gems NVIDIA
+float offset_lookup(sampler2DShadow map, vec4 loc, vec2 offset)
+{
+	return textureProj(map, vec4(loc.xy + offset * vec2(0.0009765, 0.0009765) * loc.w, loc.z, loc.w));
+}
 
 void main()
 {
-	vec3 albedo = texture(uAlbedoMap, UV).rgb;
+	vec3 albedo = texture(aAlbedoMap, Fragment.UV).rgb;
 	albedo.r = pow(albedo.r, 2.2);
 	albedo.g = pow(albedo.g, 2.2);
 	albedo.b = pow(albedo.b, 2.2);
-	float metallic = texture(uMetallicMap, UV).r;
-	float roughness = texture(uRoughnessMap, UV).r;
-	float ambientOcclusion = texture(uAOMap, UV).r;
+	float metallic = texture(aMetallicMap, Fragment.UV).r;
+	float roughness = texture(aRoughnessMap, Fragment.UV).r;
+	float ambientOcclusion = texture(aAOMap, Fragment.UV).r;
 	vec3 normal = CalcNewNormal();
 	
 	vec3 n = normalize(normal);
-	vec3 v = normalize(CamPos.xyz - Position);
+	vec3 v = normalize(CamPos.xyz - Fragment.Position);
 
 	vec3 fo = vec3(0.04);
 	fo = mix(fo, albedo, metallic);
 
 	// Reflectance equation
-	vec3 l = normalize(LightPos.xyz - Position);
+	vec3 l = normalize(-LightDir.xyz);
 	vec3 h = normalize(v + l);
 	
-	float distance = length(LightPos.xyz - Position);
-	float attenuation = 1.0 / pow(distance, 2);
-	vec3 radiance = LightColor.rgb * attenuation;
+	float shadowCoeff = 0;
+	float x, y;
+	float countOfSample = 0;
+
+	for (y = -1.5; y <= 1.5; y += 1.0)
+	{
+	  for (x = -1.5; x <= 1.5; x += 1.0)
+	  {
+		shadowCoeff += offset_lookup(aDepthMap, Fragment.ShadowCoord, vec2(x, y));
+		countOfSample++;
+	  }
+	}
+
+	shadowCoeff /= countOfSample;
+
+	// float distance = length(LightPos.xyz - Position);
+	// float attenuation = 1.0 / pow(distance, 2);
+	vec3 radiance = LightColor.rgb * LightColor.a * shadowCoeff;
 
 	// Cook-Torrance BDRDF
 	float ndf = DistributionGGX(n, h, roughness);
@@ -116,12 +128,11 @@ void main()
 	Color = vec4(outColor, 1.0);
 }
 
-/**
- * For the normal distribution function (NDF), we found Disney's choice of GGX/Trowbridge-Retiz to
- * be well worth the cost. The additional expense over using Blinn-Phong is fairly small, and the distinct,
- * natural apperance produced by the longer "tail" appealed to our artist. We also adopted Disney's reparameterization
- * of a = pow(Roughness, 2).
- */
+
+// For the normal distribution function (NDF), we found Disney's choice of GGX/Trowbridge-Retiz to
+// be well worth the cost. The additional expense over using Blinn-Phong is fairly small, and the distinct,
+// natural apperance produced by the longer "tail" appealed to our artist. We also adopted Disney's reparameterization
+// of a = pow(Roughness, 2).
 float DistributionGGX(vec3 N, vec3 H, float roughness)
 {
     float a      = pow(roughness, 2);
@@ -137,12 +148,11 @@ float DistributionGGX(vec3 N, vec3 H, float roughness)
 
 float GeometrySchlickGGX(float NdotV, float roughness)
 {
-	/*
-	* r can be calculated also like this to reduce the "hotness" ny remapping roughness.
-	* This adjustement is only used for analytic light source; if applied to image-based lighting,
-	* the result at glatcing angles will be much too dark
-	* float r = pow((roughness + 1.0) / 2, 2);
-	*/
+	
+	// r can be calculated also like this to reduce the "hotness" ny remapping roughness.
+	// This adjustement is only used for analytic light source; if applied to image-based lighting,
+	// the result at glatcing angles will be much too dark
+	// float r = pow((roughness + 1.0) / 2, 2);
     float r = pow(roughness + 1.0, 2);
     float k = r / 8.0;
 
@@ -159,11 +169,10 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
     return ggx1 * ggx2;
 }
 
-/**
- * For Fresnel, we using Schlick's approximation, but with a minor modification
- * we use a Spherical Gaussian approximation to replace the power. It is slightly
- * more efficient to calculate and the difference is impredictable.
- */
+
+// For Fresnel, we using Schlick's approximation, but with a minor modification
+// we use a Spherical Gaussian approximation to replace the power. It is slightly
+// more efficient to calculate and the difference is impredictable.
 vec3 FresnelSchlick(float cosTheta, vec3 F0)
 {
     return F0 + (1.0 - F0) * pow(max(1.0 - cosTheta, 0.0), 5.0);
@@ -172,10 +181,10 @@ vec3 FresnelSchlick(float cosTheta, vec3 F0)
 vec3 CalcNewNormal()
 {
 	// TBN matrix to convert to camera space
-	vec3 retrievedNormal = texture(uNormalMap, UV).xyz;
+	vec3 retrievedNormal = texture(aNormalMap, Fragment.UV).xyz;
 	retrievedNormal = normalize(retrievedNormal * 2.0 - 1.0);
 
-	vec3 newNormal = normalize(TBN * retrievedNormal);
+	vec3 newNormal = normalize(Fragment.TBN * retrievedNormal);
 	
 	return newNormal;
 }

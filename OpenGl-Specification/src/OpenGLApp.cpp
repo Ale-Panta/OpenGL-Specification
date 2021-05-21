@@ -119,7 +119,6 @@ namespace OpenGL
 		// Create FBO to render depth into
 		glGenFramebuffers(1, &m_ShadowFBO);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_ShadowFBO);
-		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, m_ShadowTexture, 0);
 		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_ShadowTexture, 0);
 		glDrawBuffer(GL_NONE);
 

@@ -8,8 +8,5 @@ namespace OpenGL
 	{
 	public:
 		Plane();
-
-		void Draw(Shader& shader) override;
-
 	};
 }

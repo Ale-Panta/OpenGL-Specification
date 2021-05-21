@@ -43,10 +43,9 @@ namespace OpenGL
 		 * Draw the geometry with the program passed as parameter.
 		 * Enable depth test and cull face. Check if this settings fit for you.
 		 * Bind the proper VAO and call glDrawElements.
-		 * @param shader - shader program.
 		 * @see Shader.
 		 */
-		virtual void Draw(Shader& shader);
+		virtual void Draw();
 
 	protected:
 		/** Setup vertex and indices buffers, attributes. */
