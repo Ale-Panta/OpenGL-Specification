@@ -51,6 +51,17 @@ namespace OpenGL
 		delete m_CD_Metallic;
 		delete m_CD_Normal;
 		delete m_CD_Roughness;
+		delete m_SBW_Albedo;
+		delete m_SBW_AO;
+		delete m_SBW_Height;
+		delete m_SBW_Metallic;
+		delete m_SBW_Normal;
+		delete m_SBW_Roughness;
+		delete m_GG_Albedo;
+		delete m_GG_AO;
+		delete m_GG_Metallic;
+		delete m_GG_Normal;
+		delete m_GG_Roughness;
 	}
 
 	bool ThesisApp::Initialize()
@@ -100,6 +111,19 @@ namespace OpenGL
 		m_CD_Normal		= new Texture2D("assets/textures/cavern-deposits/cavern-deposits_normal-dx.png");
 		m_CD_Roughness	= new Texture2D("assets/textures/cavern-deposits/cavern-deposits_roughness.png");
 
+		m_SBW_Albedo	= new Texture2D("assets/textures/stone-block-wall/sbw_albedo.png");
+		m_SBW_AO		= new Texture2D("assets/textures/stone-block-wall/sbw_ao.png");
+		m_SBW_Height	= new Texture2D("assets/textures/stone-block-wall/sbw_height.png");
+		m_SBW_Metallic	= new Texture2D("assets/textures/stone-block-wall/sbw_metallic.png");
+		m_SBW_Normal	= new Texture2D("assets/textures/stone-block-wall/sbw_normal-dx.png");
+		m_SBW_Roughness		= new Texture2D("assets/textures/stone-block-wall/sbw_roughness.png");
+
+		m_GG_Albedo		= new Texture2D("assets/textures/grey-granite/ggf-albedo.png");
+		m_GG_AO			= new Texture2D("assets/textures/grey-granite/ggf-ao.png");
+		m_GG_Metallic	= new Texture2D("assets/textures/grey-granite/ggf-Metallic.png");
+		m_GG_Normal		= new Texture2D("assets/textures/grey-granite/ggf-Normal-dx.png");
+		m_GG_Roughness	= new Texture2D("assets/textures/grey-granite/ggf-Roughness.png");
+
 		// Retrieve uniform block location
 		GLint camPrtiesLocation = glGetUniformBlockIndex(*m_UBOSettingShader, "CameraProperties");
 		glUniformBlockBinding(*m_CommitShadowShader, camPrtiesLocation, 24);
@@ -143,7 +167,7 @@ namespace OpenGL
 		RefresOITBuffers();
 
 		// Animate here camera and light...
-		m_Camera->SetWorldPos(vec4(sinf((float)gt / 7.0f) * 5.0f, sinf((float)gt / 2.0f) * 2.0f + 10.0f, cosf((float)gt / 10.0f) * 5.0f, 0.0f));
+		m_Camera->SetWorldPos(vec4(sinf((float)gt / 7.0f) * 5.0f, sinf((float)gt / 2.0f) * 2.0f + 6.0f, cosf((float)gt / 10.0f) * 5.0f, 0.0f));
 		m_LightSrc->SetWorldPos(vec4(cosf((float)gt / 7.0f) * 5.0f, sinf((float)gt / 2.0f) * 2.0f + 10.0f, sinf((float)gt / 10.0f) * 5.0f, 0.0f));
 
 		// Update light and camera position.
@@ -158,14 +182,12 @@ namespace OpenGL
 		glDepthMask(GL_TRUE);
 		glDisable(GL_BLEND);
 
-		time = gt;
-
-		DrawShadow();
-		DrawOpaque();
-		DrawTransparents();
+		DrawShadow(gt);
+		DrawOpaque(gt);
+		DrawTransparents(gt);
 	}
 
-	void ThesisApp::DrawShadow()
+	void ThesisApp::DrawShadow(double gt)
 	{
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
@@ -221,7 +243,7 @@ namespace OpenGL
 		m_ViewportPlane->Draw();
 	}
 
-	void ThesisApp::DrawOpaque()
+	void ThesisApp::DrawOpaque(double gt)
 	{
 		// Now render from the viewer's position
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -237,40 +259,71 @@ namespace OpenGL
 		glUseProgram(*m_PBRShader);
 		glActiveTexture(GL_TEXTURE6); glBindTexture(GL_TEXTURE_2D, m_ShadowTexture);
 
-		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_CD_Albedo);
-		glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, *m_CD_AO);
-		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, *m_CD_Height);
-		glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, *m_CD_Metallic);
-		glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, *m_CD_Normal);
-		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_CD_Roughness);
-
 		m_PBRShader->SetUniformMatrix4("uShadowMat", scaleBiasMatrix);
-		m_PBRShader->SetUniformFloat("uTilingFactor", 1.0f);
-		m_PBRShader->SetUniformFloat("uDisplacementFactor", 0.3f);
 		 
+		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_GG_Albedo);
+		glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, *m_GG_AO);
+		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, 0);
+		glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, *m_GG_Metallic);
+		glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, *m_GG_Normal);
+		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_GG_Roughness);
+		m_PBRShader->SetUniformFloat("uTilingFactor", 1.0f);
+		m_PBRShader->SetUniformFloat("uDisplacementFactor", 0.0f);
 		m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(sin(0.5f * pi<float>()) * 3.0f, 0.0f, cos(0.5f * pi<float>()) * 3.0f)));
 		m_SmallOpaqueSphere->Draw();
 
+		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_SBW_Albedo);
+		glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, *m_SBW_AO);
+		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, *m_SBW_Height);
+		glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, *m_SBW_Metallic);
+		glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, *m_SBW_Normal);
+		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_SBW_Roughness);
+		m_PBRShader->SetUniformFloat("uTilingFactor", 3.0f);
+		m_PBRShader->SetUniformFloat("uDisplacementFactor", 0.233f);
 		m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(sin(1.0f * pi<float>()) * 3.0f, 0.0f, cos(1.0f * pi<float>()) * 3.0f)));
 		m_MediumOpaqueSphere->Draw();
 
+		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_GG_Albedo);
+		glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, *m_GG_AO);
+		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, 0);
+		glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, *m_GG_Metallic);
+		glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, *m_GG_Normal);
+		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_GG_Roughness);
+		m_PBRShader->SetUniformFloat("uTilingFactor", 3.0f);
+		m_PBRShader->SetUniformFloat("uDisplacementFactor", 0.0f);
 		m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(sin(1.5f * pi<float>()) * 3.0f, 0.0f, cos(1.5f * pi<float>()) * 3.0f)));
 		m_LargeOpaqueSphere->Draw();
 
+		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_SBW_Albedo);
+		glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, *m_SBW_AO);
+		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, *m_SBW_Height);
+		glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, *m_SBW_Metallic);
+		glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, *m_SBW_Normal);
+		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_SBW_Roughness);
+		m_PBRShader->SetUniformFloat("uTilingFactor", 5.0f);
+		m_PBRShader->SetUniformFloat("uDisplacementFactor", 0.3f);
 		m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(sin(2.0f * pi<float>()) * 3.0f, 0.0f, cos(2.0f * pi<float>()) * 3.0f)));
 		m_SmallOpaqueSphereTwo->Draw();
 
-		m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, 2.0f, 0.0f)));
-		m_MediumOpaqueSphereTwo->Draw();
-
-		m_PBRShader->SetUniformFloat("uTilingFactor", 6.0f);
-		m_PBRShader->SetUniformFloat("uDisplacementFactor", 0.5f);
 		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_PG_Albedo);
 		glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, *m_PG_AO);
 		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, *m_PG_Height);
 		glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, *m_PG_Metallic);
 		glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, *m_PG_Normal);
 		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_PG_Roughness);
+		m_PBRShader->SetUniformFloat("uTilingFactor", 3.0f);
+		m_PBRShader->SetUniformFloat("uDisplacementFactor", 0.02888f);
+		m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, 2.0f, 0.0f)));
+		m_MediumOpaqueSphereTwo->Draw();
+
+		m_PBRShader->SetUniformFloat("uTilingFactor", 1.0f);
+		m_PBRShader->SetUniformFloat("uDisplacementFactor", 0.23312f);
+		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_CD_Albedo);
+		glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, *m_CD_AO);
+		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, *m_CD_Height);
+		glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, *m_CD_Metallic);
+		glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, *m_CD_Normal);
+		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_CD_Roughness);
 		m_PBRShader->SetUniformMatrix4("uModel",
 			translate(mat4(1.0f), vec3(0.0f, -2.0f, 0.0f)) *
 			rotate(mat4(1.0f), radians(90.0f), vec3(-1.0f, 0.0f, 0.0f)) *
@@ -279,7 +332,7 @@ namespace OpenGL
 		m_GroundPlane->Draw();
 	}
 
-	void ThesisApp::DrawTransparents()
+	void ThesisApp::DrawTransparents(double gt)
 	{
 		glDisable(GL_CULL_FACE);
 		glDepthMask(GL_FALSE);
@@ -290,10 +343,6 @@ namespace OpenGL
 		glUseProgram(*m_CommitTransparentShader);
 
 		// Draw geometries...
-		m_CommitTransparentShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, 2.0f, 0.0f)) * scale(mat4(1.0f), vec3(1.5f, 1.5f, 1.5f)));
-		m_CommitTransparentShader->SetUniformVec4("uColor", vec4(0.5f, 0.6f, 0.8f, sin(time / 4.0f) * 0.5f + 0.5f));
-		m_MediumTransparentSphereTwo->Draw();
-
 		m_CommitTransparentShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(sin(0.25f * pi<float>()) * 3.0f, 0.0f, cos(0.25f * pi<float>()) * 3.0f)));
 		m_CommitTransparentShader->SetUniformVec4("uColor", vec4(sin(0.25f * pi<float>()) * 3.0f, 0.0f, cos(0.25f * pi<float>()) * 3.0f, 0.9f));
 		m_SmallTransparentSphere->Draw();
@@ -309,6 +358,10 @@ namespace OpenGL
 		m_CommitTransparentShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(sin(1.75f * pi<float>()) * 3.0f, 0.0f, cos(1.75f * pi<float>()) * 3.0f)));
 		m_CommitTransparentShader->SetUniformVec4("uColor", vec4(sin(1.75f * pi<float>()) * 3.0f, 0.0f, cos(1.75f * pi<float>()) * 3.0f, 0.98f));
 		m_SmallTransparentSphereTwo->Draw();
+
+		m_CommitTransparentShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, 2.0f, 0.0f)) * scale(mat4(1.0f), vec3(1.5f, 1.5f, 1.5f)));
+		m_CommitTransparentShader->SetUniformVec4("uColor", vec4(0.5f, 0.6f, 0.8f, sin(gt / 4.0f) * 0.5f + 0.5f));
+		m_MediumTransparentSphereTwo->Draw();
 
 		// use proper program
 		glUseProgram(*m_ResolveTransparentShader);

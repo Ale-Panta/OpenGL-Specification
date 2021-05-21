@@ -20,9 +20,9 @@ namespace OpenGL
 	protected:
 		void Update(double gt) override;
 		void Draw(double gt) override;
-		void DrawShadow();
-		void DrawOpaque();
-		void DrawTransparents();
+		void DrawShadow(double gt);
+		void DrawOpaque(double gt);
+		void DrawTransparents(double gt);
 
 	private:
 		// Scene stuff
@@ -79,6 +79,17 @@ namespace OpenGL
 		Texture* m_CD_Normal	= nullptr;
 		Texture* m_CD_Roughness = nullptr;
 
-		double time = 0.0;
+		Texture* m_SBW_Albedo	= nullptr;
+		Texture* m_SBW_AO		= nullptr;
+		Texture* m_SBW_Height	= nullptr;
+		Texture* m_SBW_Metallic	= nullptr;
+		Texture* m_SBW_Normal	= nullptr;
+		Texture* m_SBW_Roughness= nullptr;
+
+		Texture* m_GG_Albedo	= nullptr;
+		Texture* m_GG_AO		= nullptr;
+		Texture* m_GG_Metallic	= nullptr;
+		Texture* m_GG_Normal	= nullptr;
+		Texture* m_GG_Roughness = nullptr;
 	};
 }

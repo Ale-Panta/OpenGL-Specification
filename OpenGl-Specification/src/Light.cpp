@@ -11,7 +11,7 @@ namespace OpenGL
 		: WorldPos(worldPos), AmbientCol(ambientCol), DiffuseCol(diffuseCol), SpecularCol(specularCol)
 	{
 		ViewMat = glm::lookAt(vec3(WorldPos), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
-		ProjMat = glm::frustum(-OpenGLApp::GetApp()->GetAspectRatio(), OpenGLApp::GetApp()->GetAspectRatio(), -1.0f, 1.0f, 0.5f, 800.0f);
+		ProjMat = glm::frustum(-OpenGLApp::GetApp()->GetAspectRatio(), OpenGLApp::GetApp()->GetAspectRatio(), -1.0f, 1.0f, 1.0f, 800.0f);
 	}
 
 	void Light::UpdateUniformBlock(GLuint ubo)
