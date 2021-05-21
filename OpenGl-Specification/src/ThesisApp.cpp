@@ -155,6 +155,7 @@ namespace OpenGL
 	{
 		glClearColor(0.001f, 0.001f, 0.001f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glDepthMask(GL_TRUE);
 		glDisable(GL_BLEND);
 
 		time = gt;
@@ -280,6 +281,8 @@ namespace OpenGL
 
 	void ThesisApp::DrawTransparents()
 	{
+		glDisable(GL_CULL_FACE);
+		glDepthMask(GL_FALSE);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -287,25 +290,25 @@ namespace OpenGL
 		glUseProgram(*m_CommitTransparentShader);
 
 		// Draw geometries...
+		m_CommitTransparentShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, 2.0f, 0.0f)) * scale(mat4(1.0f), vec3(1.5f, 1.5f, 1.5f)));
+		m_CommitTransparentShader->SetUniformVec4("uColor", vec4(0.5f, 0.6f, 0.8f, sin(time / 4.0f) * 0.5f + 0.5f));
+		m_MediumTransparentSphereTwo->Draw();
+
 		m_CommitTransparentShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(sin(0.25f * pi<float>()) * 3.0f, 0.0f, cos(0.25f * pi<float>()) * 3.0f)));
-		m_CommitTransparentShader->SetUniformVec4("uColor", vec4(sin(0.25f * pi<float>()) * 3.0f, 0.0f, cos(0.25f * pi<float>()) * 3.0f, 0.766f));
+		m_CommitTransparentShader->SetUniformVec4("uColor", vec4(sin(0.25f * pi<float>()) * 3.0f, 0.0f, cos(0.25f * pi<float>()) * 3.0f, 0.9f));
 		m_SmallTransparentSphere->Draw();
 
 		m_CommitTransparentShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(sin(0.75f * pi<float>()) * 3.0f, 0.0f, cos(0.75f * pi<float>()) * 3.0f)));
-		m_CommitTransparentShader->SetUniformVec4("uColor", vec4(sin(0.75f * pi<float>()) * 3.0f, 0.0f, cos(0.75f * pi<float>()) * 3.0f, 0.5f));
+		m_CommitTransparentShader->SetUniformVec4("uColor", vec4(sin(0.75f * pi<float>()) * 3.0f, 0.0f, cos(0.75f * pi<float>()) * 3.0f, 0.7f));
 		m_MediumTransparentSphere->Draw();
 
 		m_CommitTransparentShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(sin(1.25f * pi<float>()) * 3.0f, 0.0f, cos(1.25f * pi<float>()) * 3.0f)));
-		m_CommitTransparentShader->SetUniformVec4("uColor", vec4(sin(1.25f * pi<float>()) * 3.0f, 0.0f, cos(1.25f * pi<float>()) * 3.0f, 0.8f));
+		m_CommitTransparentShader->SetUniformVec4("uColor", vec4(sin(1.25f * pi<float>()) * 3.0f, 0.0f, cos(1.25f * pi<float>()) * 3.0f, 0.5f));
 		m_LargeTransparentSphere->Draw();
 
 		m_CommitTransparentShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(sin(1.75f * pi<float>()) * 3.0f, 0.0f, cos(1.75f * pi<float>()) * 3.0f)));
-		m_CommitTransparentShader->SetUniformVec4("uColor", vec4(sin(1.75f * pi<float>()) * 3.0f, 0.0f, cos(1.75f * pi<float>()) * 3.0f, 0.6f));
+		m_CommitTransparentShader->SetUniformVec4("uColor", vec4(sin(1.75f * pi<float>()) * 3.0f, 0.0f, cos(1.75f * pi<float>()) * 3.0f, 0.98f));
 		m_SmallTransparentSphereTwo->Draw();
-
-		m_CommitTransparentShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, 2.0f, 0.0f)) * scale(mat4(1.0f), vec3(1.5f, 1.5f, 1.5f)));
-		m_CommitTransparentShader->SetUniformVec4("uColor", vec4(0.8f, 0.7f, 0.8f, sin(time / 4.0f) * 0.5f + 0.5f));
-		m_MediumTransparentSphereTwo->Draw();
 
 		// use proper program
 		glUseProgram(*m_ResolveTransparentShader);
