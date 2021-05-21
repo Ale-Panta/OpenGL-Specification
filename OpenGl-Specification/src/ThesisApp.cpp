@@ -1,4 +1,6 @@
 #include "ThesisApp.h"
+#include "../assets/meshes/Plane.h"
+#include "../assets/meshes/Sphere.h"
 
 namespace OpenGL
 {
@@ -39,14 +41,32 @@ namespace OpenGL
 		OpenGLApp::Initialize();
 
 		// Initialize resources...
+		CreateOITBuffers();
+		CreateDepthBuffer();
+
+		m_LightSrc = new Light();
+		m_Camera = new Camera();
+
+		m_GroundPlane = new Plane();
+
+		m_SmallOpaqueSphere = new Sphere(64);
+		m_MediumOpaqueSphere = new Sphere(64);
+		m_LargeOpaqueSphere = new Sphere(64);
+
+		m_SmallTransparentSphere = new Sphere(64);
+		m_MediumTransparentSphere = new Sphere(64);
+		m_LargeTransparentSphere = new Sphere(64);
+		m_ViewportPlane = new Plane();
+
+		m_CommitShadowShader = new Shader();
+		m_ViewShadowShader = new Shader();
+		m_DrawShadowShader = new Shader();
 
 		m_PBRShader = new Shader("assets/shaders/PBR/vertCookTorranceShader.glsl", "assets/shaders/PBR/fragCookTorranceShader.glsl");
 
 		m_CommitTransparentShader = new Shader("assets/shaders/OIT/vertBuildListShader.glsl", "assets/shaders/OIT/fragBuildListShader.glsl");
 		m_ResolveTransparentShader = new Shader("assets/shaders/OIT/vertResolveListShader.glsl", "assets/shaders/OIT/fragResolveListShader.glsl");
 
-		CreateOITBuffers();
-		CreateDepthBuffer();
 
 		return true;
 	}

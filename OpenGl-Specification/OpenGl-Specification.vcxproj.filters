@@ -86,5 +86,11 @@
     <None Include="assets\shaders\OIT\vertBuildListShader.glsl" />
     <None Include="assets\shaders\OIT\vertResolveListShader.glsl" />
     <None Include="assets\shaders\OIT\fragResolveListShader.glsl" />
+    <None Include="assets\shaders\Shadow\fragShadowSceneShader.glsl" />
+    <None Include="assets\shaders\Shadow\fragCommitShadowShader.glsl" />
+    <None Include="assets\shaders\Shadow\vertShadowSceneShader.glsl" />
+    <None Include="assets\shaders\Shadow\vertCommitShadowShader.glsl" />
+    <None Include="assets\shaders\Shadow\vertViewShadowShader.glsl" />
+    <None Include="assets\shaders\Shadow\fragViewShadowShader.glsl" />
   </ItemGroup>
 </Project>
