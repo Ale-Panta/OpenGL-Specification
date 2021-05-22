@@ -13,7 +13,8 @@ namespace OpenGL
 	 * Update this struct if you need more camera's data.
 	 * @warning Make sure to update the UpdateUniformBlock function.
 	 * @warning Make sure to update the shader program. The uniform buffer layout must match this struct order.
-	 * @see UpdateUniformBlock.
+	 * @see Camera.
+	 * @see Camera::UpdateUniformBlock.
 	 */
 	struct CameraProperties
 	{
@@ -44,11 +45,11 @@ namespace OpenGL
 	public:
 		/**
 		 * Camera constructor.
-		 * @param initialPosition - camera's start world position.
-		 * @param fovy - camera's start vertical field of view.
-		 * @param aspectRatio - camera's start aspect ratio.
-		 * @param near - camera's start near plane.
-		 * @param far - camera's start far plane.
+		 * @param initialPosition	camera's start world position.
+		 * @param fovy	camera's start vertical field of view.
+		 * @param aspectRatio	camera's start aspect ratio.
+		 * @param near	camera's start near plane.
+		 * @param far	camera's start far plane.
 		 */
 		Camera(glm::vec4 initialPosition, float fovy, float aspectRatio, float near, float far);
 

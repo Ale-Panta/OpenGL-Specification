@@ -176,7 +176,7 @@ namespace OpenGL
 
 	void ThesisApp::Draw(double gt)
 	{
-		glClearColor(0.001f, 0.001f, 0.001f, 1.0f);
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glDepthMask(GL_TRUE);
 		glDisable(GL_BLEND);
@@ -268,7 +268,7 @@ namespace OpenGL
 		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_GG_Roughness);
 		m_PBRShader->SetUniformFloat("uTilingFactor", 1.0f);
 		m_PBRShader->SetUniformFloat("uDisplacementFactor", 0.0f);
-		m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(sin(0.5f * pi<float>()) * 3.0f, 0.0f, cos(0.5f * pi<float>()) * 3.0f)));
+		m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3((float)sin(0.5f * pi<float>()) * 3.0f, 0.0f, (float)cos(0.5f * pi<float>()) * 3.0f)));
 		m_SmallOpaqueSphere->Draw();
 
 		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_SBW_Albedo);
@@ -278,8 +278,8 @@ namespace OpenGL
 		glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, *m_SBW_Normal);
 		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_SBW_Roughness);
 		m_PBRShader->SetUniformFloat("uTilingFactor", 3.0f);
-		m_PBRShader->SetUniformFloat("uDisplacementFactor", 0.233f);
-		m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(sin(1.0f * pi<float>()) * 3.0f, 0.0f, cos(1.0f * pi<float>()) * 3.0f)));
+		m_PBRShader->SetUniformFloat("uDisplacementFactor", (float)(sin(gt / pi<float>()) * 0.5f + 0.5f) * 0.233f);
+		m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3((float)sin(1.0f * pi<float>()) * 3.0f, 0.0f, (float)cos(1.0f * pi<float>()) * 3.0f)));
 		m_MediumOpaqueSphere->Draw();
 
 		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_GG_Albedo);
@@ -290,7 +290,7 @@ namespace OpenGL
 		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_GG_Roughness);
 		m_PBRShader->SetUniformFloat("uTilingFactor", 3.0f);
 		m_PBRShader->SetUniformFloat("uDisplacementFactor", 0.0f);
-		m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(sin(1.5f * pi<float>()) * 3.0f, 0.0f, cos(1.5f * pi<float>()) * 3.0f)));
+		m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3((float)sin(1.5f * pi<float>()) * 3.0f, 0.0f, (float)cos(1.5f * pi<float>()) * 3.0f)));
 		m_LargeOpaqueSphere->Draw();
 
 		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_SBW_Albedo);
@@ -300,8 +300,8 @@ namespace OpenGL
 		glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, *m_SBW_Normal);
 		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, *m_SBW_Roughness);
 		m_PBRShader->SetUniformFloat("uTilingFactor", 5.0f);
-		m_PBRShader->SetUniformFloat("uDisplacementFactor", 0.3f);
-		m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(sin(2.0f * pi<float>()) * 3.0f, 0.0f, cos(2.0f * pi<float>()) * 3.0f)));
+		m_PBRShader->SetUniformFloat("uDisplacementFactor", (float)(sin(gt / pi<float>()) * 0.5f + 0.5f) * 0.3f);
+		m_PBRShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3((float)sin(2.0f * pi<float>()) * 3.0f, 0.0f, (float)cos(2.0f * pi<float>()) * 3.0f)));
 		m_SmallOpaqueSphereTwo->Draw();
 
 		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, *m_PG_Albedo);
@@ -343,23 +343,23 @@ namespace OpenGL
 
 		// Draw geometries...
 		m_CommitTransparentShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(sin(0.25f * pi<float>()) * 3.0f, 0.0f, cos(0.25f * pi<float>()) * 3.0f)));
-		m_CommitTransparentShader->SetUniformVec4("uColor", vec4(sin(0.25f * pi<float>()) * 3.0f, 0.0f, cos(0.25f * pi<float>()) * 3.0f, 0.9f));
+		m_CommitTransparentShader->SetUniformVec4("uColor", vec4(sin(0.25f * pi<float>()) * 3.0f, gt, (float)cos(0.25f * pi<float>()) * 3.0f, (sin(gt / pi<float>()) * 0.5f + 0.5f) * 0.9f));
 		m_SmallTransparentSphere->Draw();
 
 		m_CommitTransparentShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(sin(0.75f * pi<float>()) * 3.0f, 0.0f, cos(0.75f * pi<float>()) * 3.0f)));
-		m_CommitTransparentShader->SetUniformVec4("uColor", vec4(sin(0.75f * pi<float>()) * 3.0f, 0.0f, cos(0.75f * pi<float>()) * 3.0f, 0.7f));
+		m_CommitTransparentShader->SetUniformVec4("uColor", vec4(sin(0.75f * pi<float>()) * 3.0f, gt, (float)cos(0.75f * pi<float>()) * 3.0f, (cos(gt / pi<float>()) * 0.5f + 0.5f) * 0.7f));
 		m_MediumTransparentSphere->Draw();
 
 		m_CommitTransparentShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(sin(1.25f * pi<float>()) * 3.0f, 0.0f, cos(1.25f * pi<float>()) * 3.0f)));
-		m_CommitTransparentShader->SetUniformVec4("uColor", vec4(sin(1.25f * pi<float>()) * 3.0f, 0.0f, cos(1.25f * pi<float>()) * 3.0f, 0.5f));
+		m_CommitTransparentShader->SetUniformVec4("uColor", vec4(sin(1.25f * pi<float>()) * 3.0f, gt, (float)cos(1.25f * pi<float>()) * 3.0f, (sin(gt / pi<float>()) * 0.5f + 0.5f) * 0.5f));
 		m_LargeTransparentSphere->Draw();
 
 		m_CommitTransparentShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(sin(1.75f * pi<float>()) * 3.0f, 0.0f, cos(1.75f * pi<float>()) * 3.0f)));
-		m_CommitTransparentShader->SetUniformVec4("uColor", vec4(sin(1.75f * pi<float>()) * 3.0f, 0.0f, cos(1.75f * pi<float>()) * 3.0f, 0.98f));
+		m_CommitTransparentShader->SetUniformVec4("uColor", vec4(sin(1.75f * pi<float>()) * 3.0f, gt, (float)cos(1.75f * pi<float>()) * 3.0f, (cos(gt / pi<float>()) * 0.5f + 0.5f) * 0.98f));
 		m_SmallTransparentSphereTwo->Draw();
 
 		m_CommitTransparentShader->SetUniformMatrix4("uModel", translate(mat4(1.0f), vec3(0.0f, 2.0f, 0.0f)) * scale(mat4(1.0f), vec3(1.5f, 1.5f, 1.5f)));
-		m_CommitTransparentShader->SetUniformVec4("uColor", vec4(0.5f, 0.6f, 0.8f, sin(gt / 4.0f) * 0.5f + 0.5f));
+		m_CommitTransparentShader->SetUniformVec4("uColor", vec4(0.5f, 0.6f, 0.8f, (float)sin(gt / 4.0f) * 0.5f + 0.5f));
 		m_MediumTransparentSphereTwo->Draw();
 
 		// use proper program
