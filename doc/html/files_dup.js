@@ -1,4 +1,4 @@
 var files_dup =
 [
-    [ "src", "dir_68267d1309a1af8e8297ef4c3efbcdba.html", "dir_68267d1309a1af8e8297ef4c3efbcdba" ]
+    [ "OpenGl-Specification", "dir_bc813473af96cbe914cecb4658986e4f.html", "dir_bc813473af96cbe914cecb4658986e4f" ]
 ];
