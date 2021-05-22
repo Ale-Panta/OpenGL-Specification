@@ -105,16 +105,16 @@ namespace OpenGL
 		/**
 		 * Light constructor.
 		 * 
-		 * @param worldPos - light's start world position.
-		 * @param ambientCol - light's start ambient color.
-		 * @param diffuseCol - light's start diffuse color.
-		 * @param specularCol - light's start specular color.
+		 * @param worldPos	light's start world position.
+		 * @param ambientCol	light's start ambient color.
+		 * @param diffuseCol	light's start diffuse color.
+		 * @param specularCol	light's start specular color.
 		 */
 		Light(glm::vec4 worldPos, glm::vec4 ambientCol, glm::vec4 diffuseCol, glm::vec4 specularCol);
 
 		/**
 		 * Update the uniform block properties.
-		 * @param ubo - ID of the uniform buffer generated.
+		 * @param ubo	ID of the uniform buffer generated.
 		 */
 		void UpdateUniformBlock(GLuint ubo);
 

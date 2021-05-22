@@ -54,7 +54,7 @@ namespace OpenGL
 
 		/**
 		 * Update the uniform block properties.
-		 * @param ubo - ID of the uniform buffer generated.
+		 * @param ubo ID of the uniform buffer generated.
 		 */
 		void UpdateUniformBlock(GLuint ubo);
 

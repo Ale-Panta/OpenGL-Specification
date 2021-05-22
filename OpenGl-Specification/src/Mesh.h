@@ -32,8 +32,8 @@ namespace OpenGL
 
 		/**
 		 * Mesh constructor.
-		 * @param vertices - list / vector of Vertex.
-		 * @param indices - list / vector of GLuint.
+		 * @param vertices	list / vector of Vertex.
+		 * @param indices	list / vector of GLuint.
 		 * @see Vertex.
 		 */
 		Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices);

@@ -21,6 +21,7 @@ namespace OpenGL
 		/**
 		 * Application update loop.
 		 * Refresh all buffers related to OIT and update camera and light uniform object buffer.
+		 * @param gt	Application time since start.
 		 * @see RefreshOITBuffers.
 		 */
 		void Update(double gt) override;
@@ -30,6 +31,7 @@ namespace OpenGL
 		 * Clear color and depth buffer bit.
 		 * Activate the depth mask and disable blending.
 		 * Now they are called the draw stages in order.
+		 * @param gt	Application time since start.
 		 * @see DrawShadow.
 		 * @see	DrawOpaque.
 		 * @see DrawTransparents.
@@ -46,6 +48,7 @@ namespace OpenGL
 		 * Commit shadow to texture using the proper shader program.
 		 * Reset values disabling polygon offset, restore the frame buffer object and viewport size.
 		 * Now you can render the shadow texture to the plane in viewport.
+		 * @param gt	Application time since start.
 		 * @see m_ShadowTexture.
 		 */
 		void DrawShadow(double gt);
@@ -54,6 +57,7 @@ namespace OpenGL
 		 * Draw opaque stage.
 		 * Clear color and depth buffer bit.
 		 * Draw geometries with the proper shader program.
+		 * @param gt	Application time since start.
 		 */
 		void DrawOpaque(double gt);
 
@@ -63,6 +67,7 @@ namespace OpenGL
 		 * Enable blending.
 		 * Draw transparent geometries with the proper shader program.
 		 * Now draw the resolved alpha values to plane mesh in viewport space.
+		 * @param gt	Application time since start.
 		 */
 		void DrawTransparents(double gt);
 

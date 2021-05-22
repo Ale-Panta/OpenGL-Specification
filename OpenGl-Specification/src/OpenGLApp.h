@@ -146,7 +146,8 @@ namespace OpenGL
 		/** Window's name. */
 		std::string m_WindowName = "OpenGL Default Demo Window";
 
-		/** Number of samples taken for pixels. 
+		/** 
+		 * Number of samples taken for pixels. 
 		 * Usually you want 4 or 8 samples but you can have more like 16.
 		 * More than 16 is not recommended.
 		 */

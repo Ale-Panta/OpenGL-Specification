@@ -1,0 +1,2 @@
+In order to open documentation, open the html folder and search for index.html file.
+Open it to read the code documentation.

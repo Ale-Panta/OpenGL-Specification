@@ -63,12 +63,12 @@ namespace OpenGL
 
 		/**
 		 * TextureCubeMap constructor.
-		 * @param right - right texture file path.
-		 * @param left - right texture file path.
-		 * @param top - right texture file path.
-		 * @param bottom - right texture file path.
-		 * @param front - right texture file path.
-		 * @param back - right texture file path.
+		 * @param right	right texture file path.
+		 * @param left	right texture file path.
+		 * @param top	right texture file path.
+		 * @param bottom	right texture file path.
+		 * @param front	right texture file path.
+		 * @param back	right texture file path.
 		 */
 		TextureCubeMap(const char* right, const char* left, const char* top, const char* bottom, const char* front, const char* back);
 	};
@@ -87,8 +87,8 @@ namespace OpenGL
 		/**
 		 * TextureShadow constructor.
 		 * @param frameBufferObject - FBO.
-		 * @param width - texture width.
-		 * @param height - texture height.
+		 * @param width	texture width.
+		 * @param height	texture height.
 		 */
 		TextureShadow(GLuint& frameBufferObject, int width, int height);
 	};
