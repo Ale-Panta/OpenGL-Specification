@@ -12,7 +12,8 @@ namespace OpenGL
 		: WorldPos(vec4(initialPosition))
 	{
 		ViewMat = lookAt(vec3(WorldPos), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
-		ProjMat = perspective(fovy, aspectRatio, near, far);
+		// ProjMat = perspective(fovy, aspectRatio, near, far);
+		ProjMat = frustum(-aspectRatio, aspectRatio, -1.0f, 1.0f, 1.0f, 800.0f);
 	}
 
 	void Camera::UpdateUniformBlock(GLuint ubo)

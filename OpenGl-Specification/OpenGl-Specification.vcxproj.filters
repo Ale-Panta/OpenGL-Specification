@@ -80,19 +80,14 @@
     <None Include="assets\shaders\fragLitShader.glsl" />
     <None Include="assets\shaders\PBR\fragCookTorranceShader.glsl" />
     <None Include="assets\shaders\PBR\vertCookTorranceShader.glsl" />
-    <None Include="assets\shaders\Unlit\vertUnlitShader.glsl" />
-    <None Include="assets\shaders\Unlit\fragUnlitShader.glsl" />
     <None Include="assets\shaders\OIT\fragBuildListShader.glsl" />
     <None Include="assets\shaders\OIT\vertBuildListShader.glsl" />
     <None Include="assets\shaders\OIT\vertResolveListShader.glsl" />
     <None Include="assets\shaders\OIT\fragResolveListShader.glsl" />
-    <None Include="assets\shaders\Shadow\fragShadowSceneShader.glsl" />
     <None Include="assets\shaders\Shadow\fragCommitShadowShader.glsl" />
-    <None Include="assets\shaders\Shadow\vertShadowSceneShader.glsl" />
     <None Include="assets\shaders\Shadow\vertCommitShadowShader.glsl" />
     <None Include="assets\shaders\Shadow\vertViewShadowShader.glsl" />
     <None Include="assets\shaders\Shadow\fragViewShadowShader.glsl" />
-    <None Include="assets\shaders\Shadow\ShaderFormat.glsl" />
     <None Include="assets\shaders\vertUniformBlockSettingsShader.glsl" />
     <None Include="assets\shaders\fragUniformBlockSettingShader.glsl" />
   </ItemGroup>

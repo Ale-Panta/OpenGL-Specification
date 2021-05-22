@@ -10,8 +10,8 @@ namespace OpenGL
 	Light::Light(vec4 worldPos, vec4 ambientCol, vec4 diffuseCol, vec4 specularCol)
 		: WorldPos(worldPos), AmbientCol(ambientCol), DiffuseCol(diffuseCol), SpecularCol(specularCol)
 	{
-		ViewMat = glm::lookAt(vec3(WorldPos), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
-		ProjMat = glm::frustum(-OpenGLApp::GetApp()->GetAspectRatio(), OpenGLApp::GetApp()->GetAspectRatio(), -1.0f, 1.0f, 1.0f, 800.0f);
+		ViewMat = lookAt(vec3(WorldPos), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+		ProjMat = frustum(-OpenGLApp::GetApp()->GetAspectRatio(), OpenGLApp::GetApp()->GetAspectRatio(), -1.0f, 1.0f, 1.0f, 800.0f);
 	}
 
 	void Light::UpdateUniformBlock(GLuint ubo)
@@ -30,6 +30,6 @@ namespace OpenGL
 	void Light::SetWorldPos(glm::vec4 worldPos)
 	{
 		WorldPos = worldPos;
-		ViewMat = glm::lookAt(vec3(WorldPos), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+		ViewMat = lookAt(vec3(WorldPos), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
 	}
 }

@@ -19,20 +19,24 @@ namespace OpenGL
 		delete m_LightSrc;
 		delete m_Camera;
 
+		delete m_ViewportPlane;
+
 		delete m_GroundPlane;
 
 		delete m_SmallOpaqueSphere;
 		delete m_MediumOpaqueSphere;
 		delete m_LargeOpaqueSphere;
+		delete m_SmallOpaqueSphereTwo;
+		delete m_MediumOpaqueSphereTwo;
 
 		delete m_SmallTransparentSphere;
 		delete m_MediumTransparentSphere;
 		delete m_LargeTransparentSphere;
-		delete m_ViewportPlane;
+		delete m_SmallTransparentSphereTwo;
+		delete m_MediumTransparentSphereTwo;
 
 		delete m_CommitShadowShader;
 		delete m_ViewShadowShader;
-		delete m_DrawShadowShader;
 
 		delete m_PBRShader;
 
@@ -80,19 +84,16 @@ namespace OpenGL
 		m_MediumOpaqueSphere	= new Sphere(256);
 		m_MediumOpaqueSphereTwo = new Sphere(256);
 		m_LargeOpaqueSphere		= new Sphere(256);
-		m_LargeOpaqueSphereTwo	= new Sphere(256);
 		m_SmallTransparentSphere		= new Sphere(64);
 		m_SmallTransparentSphereTwo		= new Sphere(64);
 		m_MediumTransparentSphere		= new Sphere(64);
 		m_MediumTransparentSphereTwo	= new Sphere(64);
 		m_LargeTransparentSphere		= new Sphere(64);
-		m_LargeTransparentSphereTwo		= new Sphere(64);
 		m_ViewportPlane = new Plane();
 
 		m_UBOSettingShader			= new Shader("assets/shaders/vertUniformBlockSettingsShader.glsl", "assets/shaders/fragUniformBlockSettingShader.glsl");
 		m_CommitShadowShader		= new Shader("assets/shaders/Shadow/vertCommitShadowShader.glsl",	"assets/shaders/Shadow/fragCommitShadowShader.glsl");
 		m_ViewShadowShader			= new Shader("assets/shaders/Shadow/vertViewShadowShader.glsl",		"assets/shaders/Shadow/fragViewShadowShader.glsl");
-		m_DrawShadowShader			= new Shader("assets/shaders/Shadow/vertShadowSceneShader.glsl",	"assets/shaders/Shadow/fragShadowSceneShader.glsl");
 		m_PBRShader					= new Shader("assets/shaders/PBR/vertCookTorranceShader.glsl",		"assets/shaders/PBR/fragCookTorranceShader.glsl");
 		m_CommitTransparentShader	= new Shader("assets/shaders/OIT/vertBuildListShader.glsl",			"assets/shaders/OIT/fragBuildListShader.glsl");
 		m_ResolveTransparentShader	= new Shader("assets/shaders/OIT/vertResolveListShader.glsl",		"assets/shaders/OIT/fragResolveListShader.glsl");
@@ -128,7 +129,6 @@ namespace OpenGL
 		GLint camPrtiesLocation = glGetUniformBlockIndex(*m_UBOSettingShader, "CameraProperties");
 		glUniformBlockBinding(*m_CommitShadowShader, camPrtiesLocation, 24);
 		glUniformBlockBinding(*m_ViewShadowShader, camPrtiesLocation, 24);
-		glUniformBlockBinding(*m_DrawShadowShader, camPrtiesLocation, 24);
 		glUniformBlockBinding(*m_PBRShader, camPrtiesLocation, 24);
 		glUniformBlockBinding(*m_CommitTransparentShader, camPrtiesLocation, 24);
 		glUniformBlockBinding(*m_ResolveTransparentShader, camPrtiesLocation, 24);
@@ -144,7 +144,6 @@ namespace OpenGL
 		GLint lightPrtiesLocation = glGetUniformBlockIndex(*m_UBOSettingShader, "LightProperties");
 		glUniformBlockBinding(*m_CommitShadowShader, lightPrtiesLocation, 25);
 		glUniformBlockBinding(*m_ViewShadowShader, lightPrtiesLocation, 25);
-		glUniformBlockBinding(*m_DrawShadowShader, lightPrtiesLocation, 25);
 		glUniformBlockBinding(*m_PBRShader, lightPrtiesLocation, 25);
 		glUniformBlockBinding(*m_CommitTransparentShader, lightPrtiesLocation, 25);
 		glUniformBlockBinding(*m_ResolveTransparentShader, lightPrtiesLocation, 25);
@@ -182,7 +181,7 @@ namespace OpenGL
 		glDepthMask(GL_TRUE);
 		glDisable(GL_BLEND);
 
-		DrawShadow(gt);
+		DrawShadow(gt);	// Comments the two lines below to see shadow map result.
 		DrawOpaque(gt);
 		DrawTransparents(gt);
 	}

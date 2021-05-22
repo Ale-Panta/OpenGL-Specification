@@ -12,6 +12,17 @@ layout (std140, binding = 24) uniform CameraProperties
 	vec4 CamDir;
 };
 
+layout (std140, binding = 25) uniform LightProperties
+{
+	mat4 LightModelMat;
+	mat4 LightViewMat;
+	mat4 LightProjMat;
+	vec4 LightPos;
+	vec4 LightDir;
+	vec4 LightColor;
+	vec4 LightAmbient;
+};
+
 uniform mat4 uModel;
 uniform vec4 uColor;
 

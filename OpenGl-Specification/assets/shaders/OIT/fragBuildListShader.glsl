@@ -13,6 +13,15 @@ layout (binding = 1, rgba32ui) uniform writeonly uimageBuffer aListBuffer;
 // This is the atomic counter used to allocate items in the linked list.
 layout (binding = 0, offset = 0) uniform atomic_uint aListCounter;
 
+layout (std140, binding = 24) uniform CameraProperties
+{
+	mat4 CamModelMat;
+	mat4 CamViewMat;
+	mat4 CamProjMat;
+	vec4 CamPos;
+	vec4 CamDir;
+};
+
 layout (std140, binding = 25) uniform LightProperties
 {
 	mat4 LightModelMat;
