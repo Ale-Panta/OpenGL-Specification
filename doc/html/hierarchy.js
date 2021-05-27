@@ -11,8 +11,7 @@ var hierarchy =
     [ "OpenGL::Shader", "class_open_g_l_1_1_shader.html", null ],
     [ "OpenGL::Texture", "class_open_g_l_1_1_texture.html", [
       [ "OpenGL::Texture2D", "class_open_g_l_1_1_texture2_d.html", null ],
-      [ "OpenGL::TextureCubeMap", "class_open_g_l_1_1_texture_cube_map.html", null ],
-      [ "OpenGL::TextureShadow", "class_open_g_l_1_1_texture_shadow.html", null ]
+      [ "OpenGL::TextureCubeMap", "class_open_g_l_1_1_texture_cube_map.html", null ]
     ] ],
     [ "OpenGL::Vertex", "struct_open_g_l_1_1_vertex.html", null ]
 ];

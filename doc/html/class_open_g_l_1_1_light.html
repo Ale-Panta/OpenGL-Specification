@@ -26,7 +26,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">OpenGL
-   &#160;<span id="projectnumber">2.0</span>
+   &#160;<span id="projectnumber">2.0.1</span>
    </div>
    <div id="projectbrief">OpenGL</div>
   </td>
@@ -127,9 +127,11 @@ Public Attributes</h2></td></tr>
 <tr class="separator:af108bdeb34b88fc106aea80a5774d536"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p><a class="el" href="class_open_g_l_1_1_light.html">Light</a> class is similar to camera class. It offer MVP matrices that can be used for shadow mapping. It usually includes other properties such as ambient, diffuse and specular colors. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="class_open_g_l_1_1_camera.html">Camera</a>. </dd></dl>
+<div class="textblock"><p><a class="el" href="class_open_g_l_1_1_light.html">Light</a> class is similar to camera class. It offer MVP matrices that can be used for shadow mapping. It usually includes other properties such as ambient, diffuse and specular colors.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_open_g_l_1_1_camera.html">Camera</a> </dd></dl>
+<dl class="section author"><dt>Author</dt><dd>Alessandro Pantano </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00102">102</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00054">54</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a3cdb471f21594f3646db0caf4d03c779"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3cdb471f21594f3646db0caf4d03c779">&#9670;&nbsp;</a></span>Light()</h2>
@@ -206,9 +208,10 @@ Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Return the light forward. </p><dl class="section return"><dt>Returns</dt><dd>the second raw of the view matrix transpose. </dd></dl>
+<p>Return the light forward.</p>
+<dl class="section return"><dt>Returns</dt><dd>A copy to the second raw of the view matrix transpose </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00143">143</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00100">100</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
 
 </div>
 </div>
@@ -234,9 +237,10 @@ Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Return the light model matrix 4x4. </p><dl class="section return"><dt>Returns</dt><dd>the reference to the translation matrix of light position. </dd></dl>
+<p>Return the light model matrix 4x4.</p>
+<dl class="section return"><dt>Returns</dt><dd>A copy to the translation matrix of light position </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00125">125</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00079">79</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
 
 </div>
 </div>
@@ -262,9 +266,10 @@ Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Return the light projection matrix 4x4. </p><dl class="section return"><dt>Returns</dt><dd>the reference to the light projection matrix. </dd></dl>
+<p>Return the light projection matrix 4x4.</p>
+<dl class="section return"><dt>Returns</dt><dd>The reference to the light projection matrix </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00137">137</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00093">93</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
 
 </div>
 </div>
@@ -290,9 +295,10 @@ Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Return the light view matrix 4x4. </p><dl class="section return"><dt>Returns</dt><dd>the reference to the light view matrix. </dd></dl>
+<p>Return the light view matrix 4x4.</p>
+<dl class="section return"><dt>Returns</dt><dd>The reference to the light view matrix </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00131">131</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00086">86</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
 
 </div>
 </div>
@@ -311,9 +317,10 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Set the light world position. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Set the light world position.</p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">worldPos</td><td>world position vec3. </td></tr>
+    <tr><td class="paramname">worldPos</td><td>world position vec3 </td></tr>
   </table>
   </dd>
 </dl>
@@ -337,9 +344,10 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Update the uniform block properties. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Update the uniform block properties.</p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">ubo</td><td>ID of the uniform buffer generated. </td></tr>
+    <tr><td class="paramname">ubo</td><td>ID of the uniform buffer generated </td></tr>
   </table>
   </dd>
 </dl>
@@ -362,7 +370,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p><a class="el" href="class_open_g_l_1_1_light.html">Light</a> ambient color. This influence the the model's color of the zone that is not facing the light source. </p>
 
-<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00156">156</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00114">114</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
 
 </div>
 </div>
@@ -379,7 +387,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p><a class="el" href="class_open_g_l_1_1_light.html">Light</a> diffuse color. It is the color that the model revels under pure white light. </p>
 
-<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00159">159</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00117">117</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
 
 </div>
 </div>
@@ -396,7 +404,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p><a class="el" href="class_open_g_l_1_1_light.html">Light</a> projection matrix. </p>
 
-<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00168">168</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00126">126</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
 
 </div>
 </div>
@@ -413,7 +421,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p><a class="el" href="class_open_g_l_1_1_light.html">Light</a> specular color. Color of the light of a specular reflection. </p>
 
-<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00162">162</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00120">120</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
 
 </div>
 </div>
@@ -430,7 +438,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p><a class="el" href="class_open_g_l_1_1_light.html">Light</a> view matrix. </p>
 
-<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00165">165</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00123">123</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
 
 </div>
 </div>
@@ -447,7 +455,7 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p><a class="el" href="class_open_g_l_1_1_light.html">Light</a> world position. By default is positioned in vec3(4.0f), top right corner. </p>
 
-<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00153">153</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00111">111</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
 
 </div>
 </div>

@@ -26,7 +26,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">OpenGL
-   &#160;<span id="projectnumber">2.0</span>
+   &#160;<span id="projectnumber">2.0.1</span>
    </div>
    <div id="projectbrief">OpenGL</div>
   </td>
@@ -95,44 +95,45 @@ $(document).ready(function(){initNavTree('_shader_8h_source.html',''); initResiz
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespace_open_g_l.html">OpenGL</a></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;{</div>
-<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="class_open_g_l_1_1_shader.html">   14</a></span>&#160;    <span class="keyword">class </span><a class="code" href="class_open_g_l_1_1_shader.html">Shader</a></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    {</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="class_open_g_l_1_1_shader.html#a2ecf547f9368afe523424335f3fac4ad">   17</a></span>&#160;        <a class="code" href="class_open_g_l_1_1_shader.html#a2ecf547f9368afe523424335f3fac4ad">Shader</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        <a class="code" href="class_open_g_l_1_1_shader.html#a2ecf547f9368afe523424335f3fac4ad">Shader</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* vertShaderSrc, <span class="keyword">const</span> <span class="keywordtype">char</span>* fragShaderSrc);</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        <a class="code" href="class_open_g_l_1_1_shader.html#abd55acbdbb95b529043605b861ceb186">~Shader</a>();</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_open_g_l_1_1_shader.html#a1e44e27d3431de26fbc9f13b25990568">SetUniformBool</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* uniformName, <span class="keywordtype">bool</span> value);</div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="class_open_g_l_1_1_shader.html">   15</a></span>&#160;    <span class="keyword">class </span><a class="code" href="class_open_g_l_1_1_shader.html">Shader</a></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    {</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="class_open_g_l_1_1_shader.html#a2ecf547f9368afe523424335f3fac4ad">   18</a></span>&#160;        <a class="code" href="class_open_g_l_1_1_shader.html#a2ecf547f9368afe523424335f3fac4ad">Shader</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <a class="code" href="class_open_g_l_1_1_shader.html#a2ecf547f9368afe523424335f3fac4ad">Shader</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* vertShaderSrc, <span class="keyword">const</span> <span class="keywordtype">char</span>* fragShaderSrc);</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <a class="code" href="class_open_g_l_1_1_shader.html#abd55acbdbb95b529043605b861ceb186">~Shader</a>();</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_open_g_l_1_1_shader.html#a000c3a96ba6dc639eead8cbbdaff9be5">SetUniformInt</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* uniformName, <span class="keywordtype">int</span> value);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_open_g_l_1_1_shader.html#a30876ad2e5310834cc4e33e81ece18df">SetUniformUInt</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* uniformName, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> value);</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_open_g_l_1_1_shader.html#a0fbfaa020eec51798013afe58c4126d5">SetUniformFloat</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* uniformName, <span class="keywordtype">float</span> value);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_open_g_l_1_1_shader.html#a92f15bb9c93c242543b015e006903830">SetUniformVec3</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* uniformName, <span class="keyword">const</span> glm::vec3&amp; value);</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_open_g_l_1_1_shader.html#abd851e2f8f4b6c155b3878508ea2b649">SetUniformVec4</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* uniformName, <span class="keyword">const</span> glm::vec4&amp; value);</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_open_g_l_1_1_shader.html#a640e88a2d2578cd1141b58b96c1f1a5c">SetUniformMatrix4</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* uniformName, <span class="keyword">const</span> glm::mat4&amp; matrix, GLboolean transpose = GL_FALSE);</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno"><a class="line" href="class_open_g_l_1_1_shader.html#a94459507ca3ca5a80708faf7c87b9287">   78</a></span>&#160;        <span class="keyword">operator</span> GLuint()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_ShaderProgram; }</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        std::string ReadShaderSrc(<span class="keyword">const</span> <span class="keywordtype">char</span>* filePath);</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <span class="keywordtype">void</span> PrintShaderLog(GLuint shader);</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <span class="keywordtype">void</span> PrintProgramLog(GLuint program);</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <span class="keywordtype">bool</span> CheckOpenGLError();</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        GLuint m_ShaderProgram = 0;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    };</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;}</div>
-<div class="ttc" id="aclass_open_g_l_1_1_shader_html"><div class="ttname"><a href="class_open_g_l_1_1_shader.html">OpenGL::Shader</a></div><div class="ttdef"><b>Definition:</b> <a href="_shader_8h_source.html#l00014">Shader.h:15</a></div></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_open_g_l_1_1_shader.html#a1e44e27d3431de26fbc9f13b25990568">SetUniformBool</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* uniformName, <span class="keywordtype">bool</span> value);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_open_g_l_1_1_shader.html#a000c3a96ba6dc639eead8cbbdaff9be5">SetUniformInt</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* uniformName, <span class="keywordtype">int</span> value);</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_open_g_l_1_1_shader.html#a30876ad2e5310834cc4e33e81ece18df">SetUniformUInt</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* uniformName, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> value);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_open_g_l_1_1_shader.html#a0fbfaa020eec51798013afe58c4126d5">SetUniformFloat</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* uniformName, <span class="keywordtype">float</span> value);</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_open_g_l_1_1_shader.html#a92f15bb9c93c242543b015e006903830">SetUniformVec3</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* uniformName, <span class="keyword">const</span> glm::vec3&amp; value);</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_open_g_l_1_1_shader.html#abd851e2f8f4b6c155b3878508ea2b649">SetUniformVec4</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* uniformName, <span class="keyword">const</span> glm::vec4&amp; value);</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_open_g_l_1_1_shader.html#a640e88a2d2578cd1141b58b96c1f1a5c">SetUniformMatrix4</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* uniformName, <span class="keyword">const</span> glm::mat4&amp; matrix, GLboolean transpose = GL_FALSE);</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
+<div class="line"><a name="l00090"></a><span class="lineno"><a class="line" href="class_open_g_l_1_1_shader.html#a94459507ca3ca5a80708faf7c87b9287">   90</a></span>&#160;        <span class="keyword">operator</span> GLuint()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_ShaderProgram; }</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        std::string ReadShaderSrc(<span class="keyword">const</span> <span class="keywordtype">char</span>* filePath);</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        <span class="keywordtype">void</span> PrintShaderLog(GLuint shader);</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        <span class="keywordtype">void</span> PrintProgramLog(GLuint program);</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        <span class="keywordtype">bool</span> CheckOpenGLError();</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        GLuint m_ShaderProgram = 0;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    };</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;}</div>
+<div class="ttc" id="aclass_open_g_l_1_1_shader_html"><div class="ttname"><a href="class_open_g_l_1_1_shader.html">OpenGL::Shader</a></div><div class="ttdef"><b>Definition:</b> <a href="_shader_8h_source.html#l00015">Shader.h:16</a></div></div>
 <div class="ttc" id="aclass_open_g_l_1_1_shader_html_a000c3a96ba6dc639eead8cbbdaff9be5"><div class="ttname"><a href="class_open_g_l_1_1_shader.html#a000c3a96ba6dc639eead8cbbdaff9be5">OpenGL::Shader::SetUniformInt</a></div><div class="ttdeci">void SetUniformInt(const char *uniformName, int value)</div><div class="ttdef"><b>Definition:</b> <a href="_shader_8cpp_source.html#l00100">Shader.cpp:100</a></div></div>
 <div class="ttc" id="aclass_open_g_l_1_1_shader_html_a0fbfaa020eec51798013afe58c4126d5"><div class="ttname"><a href="class_open_g_l_1_1_shader.html#a0fbfaa020eec51798013afe58c4126d5">OpenGL::Shader::SetUniformFloat</a></div><div class="ttdeci">void SetUniformFloat(const char *uniformName, float value)</div><div class="ttdef"><b>Definition:</b> <a href="_shader_8cpp_source.html#l00113">Shader.cpp:113</a></div></div>
 <div class="ttc" id="aclass_open_g_l_1_1_shader_html_a1e44e27d3431de26fbc9f13b25990568"><div class="ttname"><a href="class_open_g_l_1_1_shader.html#a1e44e27d3431de26fbc9f13b25990568">OpenGL::Shader::SetUniformBool</a></div><div class="ttdeci">void SetUniformBool(const char *uniformName, bool value)</div><div class="ttdef"><b>Definition:</b> <a href="_shader_8cpp_source.html#l00094">Shader.cpp:94</a></div></div>

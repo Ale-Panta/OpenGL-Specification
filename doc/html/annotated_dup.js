@@ -12,7 +12,6 @@ var annotated_dup =
       [ "Texture", "class_open_g_l_1_1_texture.html", "class_open_g_l_1_1_texture" ],
       [ "Texture2D", "class_open_g_l_1_1_texture2_d.html", "class_open_g_l_1_1_texture2_d" ],
       [ "TextureCubeMap", "class_open_g_l_1_1_texture_cube_map.html", "class_open_g_l_1_1_texture_cube_map" ],
-      [ "TextureShadow", "class_open_g_l_1_1_texture_shadow.html", "class_open_g_l_1_1_texture_shadow" ],
       [ "ThesisApp", "class_open_g_l_1_1_thesis_app.html", "class_open_g_l_1_1_thesis_app" ]
     ] ]
 ];

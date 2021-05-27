@@ -26,7 +26,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">OpenGL
-   &#160;<span id="projectnumber">2.0</span>
+   &#160;<span id="projectnumber">2.0.1</span>
    </div>
    <div id="projectbrief">OpenGL</div>
   </td>
@@ -92,15 +92,8 @@ $(document).ready(function(){initNavTree('class_open_g_l_1_1_texture_cube_map.ht
 <div class="contents">
 
 <p><code>#include &lt;<a class="el" href="_texture_8h_source.html">Texture.h</a>&gt;</code></p>
-<div class="dynheader">
-Inheritance diagram for OpenGL::TextureCubeMap:</div>
-<div class="dyncontent">
- <div class="center">
-  <img src="class_open_g_l_1_1_texture_cube_map.png" usemap="#OpenGL::TextureCubeMap_map" alt=""/>
-  <map id="OpenGL::TextureCubeMap_map" name="OpenGL::TextureCubeMap_map">
-<area href="class_open_g_l_1_1_texture.html" alt="OpenGL::Texture" shape="rect" coords="0,0,162,24"/>
-  </map>
-</div></div>
+
+<p>Inherits <a class="el" href="class_open_g_l_1_1_texture.html">OpenGL::Texture</a>.</p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -131,9 +124,10 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:a1e864acaf59e486e2e06d9265654f91f inherit pro_attribs_class_open_g_l_1_1_texture"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Cube map read six different texture path and wrap all the six texture around the cube. </p>
+<div class="textblock"><p>Cube map read six different texture path and wrap all the six texture around the cube.</p>
+<dl class="section author"><dt>Author</dt><dd>Alessandro Pantano </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_texture_8h_source.html#l00059">59</a> of file <a class="el" href="_texture_8h_source.html">Texture.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_texture_8h_source.html#l00067">67</a> of file <a class="el" href="_texture_8h_source.html">Texture.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a8ae8a83eef8ddbc0b0347ccf2c254fa3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8ae8a83eef8ddbc0b0347ccf2c254fa3">&#9670;&nbsp;</a></span>TextureCubeMap() <span class="overload">[1/2]</span></h2>
@@ -209,14 +203,15 @@ Additional Inherited Members</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p><a class="el" href="class_open_g_l_1_1_texture_cube_map.html">TextureCubeMap</a> constructor. </p><dl class="params"><dt>Parameters</dt><dd>
+<p><a class="el" href="class_open_g_l_1_1_texture_cube_map.html">TextureCubeMap</a> constructor.</p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">right</td><td>right texture file path. </td></tr>
-    <tr><td class="paramname">left</td><td>right texture file path. </td></tr>
-    <tr><td class="paramname">top</td><td>right texture file path. </td></tr>
-    <tr><td class="paramname">bottom</td><td>right texture file path. </td></tr>
-    <tr><td class="paramname">front</td><td>right texture file path. </td></tr>
-    <tr><td class="paramname">back</td><td>right texture file path. </td></tr>
+    <tr><td class="paramname">right</td><td>right texture file path </td></tr>
+    <tr><td class="paramname">left</td><td>left texture file path </td></tr>
+    <tr><td class="paramname">top</td><td>top texture file path </td></tr>
+    <tr><td class="paramname">bottom</td><td>bottom texture file path </td></tr>
+    <tr><td class="paramname">front</td><td>front texture file path </td></tr>
+    <tr><td class="paramname">back</td><td>back texture file path </td></tr>
   </table>
   </dd>
 </dl>

@@ -23,7 +23,9 @@ namespace OpenGL
 
 	/**
 	 * Mesh contains data to vertex position. This allow us to store in one point the geometry we want to draw.
-	 * @see Vertex.
+	 * 
+	 * @see		Vertex
+	 * @author	Alessandro Pantano
 	 */
 	class Mesh
 	{
@@ -32,9 +34,10 @@ namespace OpenGL
 
 		/**
 		 * Mesh constructor.
-		 * @param vertices	list / vector of Vertex.
-		 * @param indices	list / vector of GLuint.
-		 * @see Vertex.
+		 * 
+		 * @param vertices	list / vector of Vertex
+		 * @param indices	list / vector of GLuint
+		 * @see Vertex
 		 */
 		Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices);
 
@@ -43,7 +46,8 @@ namespace OpenGL
 		 * Draw the geometry with the program passed as parameter.
 		 * Enable depth test and cull face. Check if this settings fit for you.
 		 * Bind the proper VAO and call glDrawElements.
-		 * @see Shader.
+		 * 
+		 * @see Shader
 		 */
 		virtual void Draw();
 

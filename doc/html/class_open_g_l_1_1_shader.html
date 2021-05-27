@@ -26,7 +26,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">OpenGL
-   &#160;<span id="projectnumber">2.0</span>
+   &#160;<span id="projectnumber">2.0.1</span>
    </div>
    <div id="projectbrief">OpenGL</div>
   </td>
@@ -119,9 +119,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a94459507ca3ca5a80708faf7c87b9287"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>To use the shader program call glUseProgram(), whitch loads the program containing the two compiled shaders into the <a class="el" href="namespace_open_g_l.html">OpenGL</a> pipeline stages (onto the GPU!). #NOTE: glUseProgram doesn't run the shaders. It just loads them onto the hardware. </p>
+<div class="textblock"><p>To use the shader program call glUseProgram(), whitch loads the program containing the two compiled shaders into the <a class="el" href="namespace_open_g_l.html">OpenGL</a> pipeline stages (onto the GPU!).</p>
+<dl class="section author"><dt>Author</dt><dd>Alessandro Pantano </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_shader_8h_source.html#l00014">14</a> of file <a class="el" href="_shader_8h_source.html">Shader.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_shader_8h_source.html#l00015">15</a> of file <a class="el" href="_shader_8h_source.html">Shader.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a2ecf547f9368afe523424335f3fac4ad"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2ecf547f9368afe523424335f3fac4ad">&#9670;&nbsp;</a></span>Shader() <span class="overload">[1/2]</span></h2>
@@ -173,10 +174,11 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p><a class="el" href="class_open_g_l_1_1_shader.html">Shader</a> constructor. </p><dl class="params"><dt>Parameters</dt><dd>
+<p><a class="el" href="class_open_g_l_1_1_shader.html">Shader</a> constructor.</p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">vertShaderSrc</td><td>vertex shader file path. </td></tr>
-    <tr><td class="paramname">fragShaderSrc</td><td>fragment shader file path. </td></tr>
+    <tr><td class="paramname">vertShaderSrc</td><td>vertex shader file path </td></tr>
+    <tr><td class="paramname">fragShaderSrc</td><td>fragment shader file path </td></tr>
   </table>
   </dd>
 </dl>
@@ -199,6 +201,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p><a class="el" href="class_open_g_l_1_1_shader.html">Shader</a> destructor. Delete the program. </p>
 
 <p class="definition">Definition at line <a class="el" href="_shader_8cpp_source.html#l00088">88</a> of file <a class="el" href="_shader_8cpp_source.html">Shader.cpp</a>.</p>
 
@@ -228,7 +231,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="_shader_8h_source.html#l00078">78</a> of file <a class="el" href="_shader_8h_source.html">Shader.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_shader_8h_source.html#l00090">90</a> of file <a class="el" href="_shader_8h_source.html">Shader.h</a>.</p>
 
 </div>
 </div>
@@ -257,10 +260,11 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Set uniform bool value in shader program. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Set uniform bool value in shader program.</p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">uniformName</td><td>name of the uniform inside the shader program. </td></tr>
-    <tr><td class="paramname">value</td><td>bool value to assign to shader program. </td></tr>
+    <tr><td class="paramname">uniformName</td><td>name of the uniform inside the shader program </td></tr>
+    <tr><td class="paramname">value</td><td><code>bool</code> value to assign to shader program </td></tr>
   </table>
   </dd>
 </dl>
@@ -294,10 +298,11 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Set uniform float value in shader program. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Set uniform float value in shader program.</p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">uniformName</td><td>name of the uniform inside the shader program. </td></tr>
-    <tr><td class="paramname">value</td><td>float value to assign to shader program. </td></tr>
+    <tr><td class="paramname">uniformName</td><td>name of the uniform inside the shader program </td></tr>
+    <tr><td class="paramname">value</td><td><code>float</code> value to assign to shader program </td></tr>
   </table>
   </dd>
 </dl>
@@ -331,10 +336,11 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Set uniform int value in shader program. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Set uniform int value in shader program.</p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">uniformName</td><td>name of the uniform inside the shader program. </td></tr>
-    <tr><td class="paramname">value</td><td>int value to assign to shader program. </td></tr>
+    <tr><td class="paramname">uniformName</td><td>name of the uniform inside the shader program </td></tr>
+    <tr><td class="paramname">value</td><td><code>int</code> value to assign to shader program </td></tr>
   </table>
   </dd>
 </dl>
@@ -377,9 +383,9 @@ Public Member Functions</h2></td></tr>
 <p>Set uniform mat4 value in shader program.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">uniformName</td><td>name of the uniform inside the shader program. </td></tr>
-    <tr><td class="paramname">matrix</td><td>mat4 value to assign to shader program. </td></tr>
-    <tr><td class="paramname">transpose</td><td>pass Glboolean = true to assign the transpose. </td></tr>
+    <tr><td class="paramname">uniformName</td><td>name of the uniform inside the shader program </td></tr>
+    <tr><td class="paramname">matrix</td><td>mat4 value to assign to shader program </td></tr>
+    <tr><td class="paramname">transpose</td><td>pass <code>Glboolean = true</code> to assign the transpose </td></tr>
   </table>
   </dd>
 </dl>
@@ -413,10 +419,11 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Set uniform uint value in shader program. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Set uniform uint value in shader program.</p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">uniformName</td><td>name of the uniform inside the shader program. </td></tr>
-    <tr><td class="paramname">value</td><td>int value to assign to shader program. </td></tr>
+    <tr><td class="paramname">uniformName</td><td>name of the uniform inside the shader program </td></tr>
+    <tr><td class="paramname">value</td><td><code>int</code> value to assign to shader program </td></tr>
   </table>
   </dd>
 </dl>
@@ -452,8 +459,8 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Set uniform vec3 value in shader program. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">uniformName</td><td>name of the uniform inside the shader program. </td></tr>
-    <tr><td class="paramname">value</td><td>vec3 value to assign to shader program. </td></tr>
+    <tr><td class="paramname">uniformName</td><td>name of the uniform inside the shader program </td></tr>
+    <tr><td class="paramname">value</td><td><code>vec3</code> value to assign to shader program </td></tr>
   </table>
   </dd>
 </dl>
@@ -487,10 +494,11 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Set uniform vec4 value in shader program. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Set uniform vec4 value in shader program.</p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">uniformName</td><td>name of the uniform inside the shader program. </td></tr>
-    <tr><td class="paramname">value</td><td>vec4 value to assign to shader program. </td></tr>
+    <tr><td class="paramname">uniformName</td><td>name of the uniform inside the shader program </td></tr>
+    <tr><td class="paramname">value</td><td><code>vec4</code> value to assign to shader program </td></tr>
   </table>
   </dd>
 </dl>

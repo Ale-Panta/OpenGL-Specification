@@ -26,7 +26,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">OpenGL
-   &#160;<span id="projectnumber">2.0</span>
+   &#160;<span id="projectnumber">2.0.1</span>
    </div>
    <div id="projectbrief">OpenGL</div>
   </td>
@@ -127,9 +127,11 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a680f798341d2dcf19f301037ff1a3598"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p><a class="el" href="class_open_g_l_1_1_mesh.html">Mesh</a> contains data to vertex position. This allow us to store in one point the geometry we want to draw. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="struct_open_g_l_1_1_vertex.html">Vertex</a>. </dd></dl>
+<div class="textblock"><p><a class="el" href="class_open_g_l_1_1_mesh.html">Mesh</a> contains data to vertex position. This allow us to store in one point the geometry we want to draw.</p>
+<dl class="section see"><dt>See also</dt><dd>#Vertex </dd></dl>
+<dl class="section author"><dt>Author</dt><dd>Alessandro Pantano </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_mesh_8h_source.html#l00028">28</a> of file <a class="el" href="_mesh_8h_source.html">Mesh.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_mesh_8h_source.html#l00030">30</a> of file <a class="el" href="_mesh_8h_source.html">Mesh.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a99098015b619dcb3d669955eca907cda"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a99098015b619dcb3d669955eca907cda">&#9670;&nbsp;</a></span>Mesh() <span class="overload">[1/2]</span></h2>
@@ -181,14 +183,15 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p><a class="el" href="class_open_g_l_1_1_mesh.html">Mesh</a> constructor. </p><dl class="params"><dt>Parameters</dt><dd>
+<p><a class="el" href="class_open_g_l_1_1_mesh.html">Mesh</a> constructor.</p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">vertices</td><td>list / vector of <a class="el" href="struct_open_g_l_1_1_vertex.html">Vertex</a>. </td></tr>
-    <tr><td class="paramname">indices</td><td>list / vector of GLuint. </td></tr>
+    <tr><td class="paramname">vertices</td><td>list / vector of <a class="el" href="struct_open_g_l_1_1_vertex.html">Vertex</a> </td></tr>
+    <tr><td class="paramname">indices</td><td>list / vector of GLuint </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="struct_open_g_l_1_1_vertex.html">Vertex</a>. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd>#Vertex </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="_mesh_8cpp_source.html#l00005">5</a> of file <a class="el" href="_mesh_8cpp_source.html">Mesh.cpp</a>.</p>
 
@@ -217,7 +220,8 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Draw the geometry with the program passed as parameter. Enable depth test and cull face. Check if this settings fit for you. Bind the proper VAO and call glDrawElements. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="class_open_g_l_1_1_shader.html">Shader</a>. </dd></dl>
+<p>Draw the geometry with the program passed as parameter. Enable depth test and cull face. Check if this settings fit for you. Bind the proper VAO and call glDrawElements.</p>
+<dl class="section see"><dt>See also</dt><dd>#Shader </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="_mesh_8cpp_source.html#l00011">11</a> of file <a class="el" href="_mesh_8cpp_source.html">Mesh.cpp</a>.</p>
 
@@ -273,7 +277,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Element buffer object. </p>
 
-<p class="definition">Definition at line <a class="el" href="_mesh_8h_source.html#l00075">75</a> of file <a class="el" href="_mesh_8h_source.html">Mesh.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_mesh_8h_source.html#l00079">79</a> of file <a class="el" href="_mesh_8h_source.html">Mesh.h</a>.</p>
 
 </div>
 </div>
@@ -298,7 +302,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p><a class="el" href="struct_open_g_l_1_1_vertex.html">Vertex</a> array object. </p>
 
-<p class="definition">Definition at line <a class="el" href="_mesh_8h_source.html#l00065">65</a> of file <a class="el" href="_mesh_8h_source.html">Mesh.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_mesh_8h_source.html#l00069">69</a> of file <a class="el" href="_mesh_8h_source.html">Mesh.h</a>.</p>
 
 </div>
 </div>
@@ -323,7 +327,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p><a class="el" href="struct_open_g_l_1_1_vertex.html">Vertex</a> buffer object. </p>
 
-<p class="definition">Definition at line <a class="el" href="_mesh_8h_source.html#l00070">70</a> of file <a class="el" href="_mesh_8h_source.html">Mesh.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_mesh_8h_source.html#l00074">74</a> of file <a class="el" href="_mesh_8h_source.html">Mesh.h</a>.</p>
 
 </div>
 </div>
@@ -340,7 +344,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Collection of all vertex indices. </p>
 
-<p class="definition">Definition at line <a class="el" href="_mesh_8h_source.html#l00059">59</a> of file <a class="el" href="_mesh_8h_source.html">Mesh.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_mesh_8h_source.html#l00063">63</a> of file <a class="el" href="_mesh_8h_source.html">Mesh.h</a>.</p>
 
 </div>
 </div>
@@ -357,7 +361,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 <p>Collection of all vertex data. </p>
 
-<p class="definition">Definition at line <a class="el" href="_mesh_8h_source.html#l00056">56</a> of file <a class="el" href="_mesh_8h_source.html">Mesh.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_mesh_8h_source.html#l00060">60</a> of file <a class="el" href="_mesh_8h_source.html">Mesh.h</a>.</p>
 
 </div>
 </div>

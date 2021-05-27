@@ -26,7 +26,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">OpenGL
-   &#160;<span id="projectnumber">2.0</span>
+   &#160;<span id="projectnumber">2.0.1</span>
    </div>
    <div id="projectbrief">OpenGL</div>
   </td>
@@ -111,12 +111,12 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a4f4149d5c65314a251aa3d424dbe5fa8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>There are many type of lights, each with different characteristics and requiring different steps to simulate their effects. Global ambient light is the simplest type of light to model. Global ambient light has no source position-the light is equal everywhere, at each pixel on every object in the scene, regardless of where the objects are. Global ambient lighting simulates the real-world phenomenon of light that has bounced around so many times that its source and direction are indeterminable. Global ambient light has only an ambient component, specified as an RGBA value; it has no diffuse or specular components. RGBA values range from 0 to 1, so global ambient light is usually modeled as dim white light, where each of the RGB values is set to the same fractional value between 0 to 1 and the alpha is set to 1. Directional light also doesn't have a source location, but it does have a direction. It is useful for situations where the source of the light is so far away that the light rays are effectively parallel, such as light coming from the sun. In many such situations we may only be interested in modeling the light and not the object that produces the light. The effect of direction light on an object depends on the light's angle of impact; objects are brighter on the side facing a directional light than on a tangential or opposite side. Modeling directional light requires specifying its direction (as a vector) and its ambient, diffuse, and specular characteristics (RGBA). It might seem redundant to include an ambient contribution for a light when we already have a global ambient light. The separation of the two is intentional and noticeable when the light is on or off. When on the total ambient contribution would be increased. Position light has a specific location in the 3D scene. <a class="el" href="class_open_g_l_1_1_light.html">Light</a> sources that are near the scene, such as lamps, candles, and so forth, are examples. Like directional lights, the effect of a positional light depends on angle of impact; however, its direction is not specified, as it is different for each vertex in our scene. Positional lights may also incorporate attenuation factors in order to model how their intensity diminishes with distance. As with the other types of lights we have seen, positional lights have ambient, diffuse, and specular properties specified as RGBA values. Attenuation factors can be modeled in a variety of ways. One way is to include tunable non-negative parameters for constant, linear, and quadratic attenuation (Kc, Kl and Kq respectively). These parameters are the combined, taking into account the distance (d) from the light source. 1 attenuationFactor = ------------------------&mdash; Kc + (Kl * d) + (Kq * de2) Multiplying this factor by the light intensity causes the intensity to be decreased the greater the distance is to the light source. #NOTE that Kc should always be in the range [0, 1] and approach 0 as the distance d increased. Spotlight have both a position ans a direction. The effect of the spotlight's "cone" can be simulated using a cutoff angle theta between (0, 90) specifying the half-with of the light beam, and a falloff exponent to model the variation of intensity across the angle of the beam. <a class="el" href="class_open_g_l_1_1_light.html">Light</a> Properties. <a class="el" href="struct_open_g_l_1_1_light_properties.html">LightProperties</a> struct allow us to have a reference to memory order in the uniform object buffer. Update this struct if you need more light's data. </p><dl class="section warning"><dt>Warning</dt><dd>Make sure to update the UpdateUniformBlock function. </dd>
-<dd>
-Make sure to update the shader program. The uniform buffer layout must match this struct order. </dd></dl>
-<dl class="section see"><dt>See also</dt><dd>UpdateUniformBlock. </dd></dl>
+<div class="textblock"><p><a class="el" href="class_open_g_l_1_1_light.html">Light</a> Properties. <a class="el" href="struct_open_g_l_1_1_light_properties.html">LightProperties</a> struct allow us to have a reference to memory order in the uniform object buffer. Update this struct if you need more light's data.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_open_g_l_1_1_light.html#a09f9695f9ffb2c59f49cc92ecb831fba">Light::UpdateUniformBlock</a> </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>If you update this struct make sure to update also the <a class="el" href="class_open_g_l_1_1_light.html#a09f9695f9ffb2c59f49cc92ecb831fba">Light::UpdateUniformBlock</a> function. You have to update also the shader program uniform buffer object, the UBO layout must match the order declared in this struct. </dd></dl>
+<dl class="section author"><dt>Author</dt><dd>Alessandro Pantano </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00073">73</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00023">23</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a4f4149d5c65314a251aa3d424dbe5fa8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4f4149d5c65314a251aa3d424dbe5fa8">&#9670;&nbsp;</a></span>Ambient</h2>
@@ -131,7 +131,7 @@ Make sure to update the shader program. The uniform buffer layout must match thi
 </div><div class="memdoc">
 <p>Ambient color </p>
 
-<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00094">94</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00044">44</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
 
 </div>
 </div>
@@ -148,7 +148,7 @@ Make sure to update the shader program. The uniform buffer layout must match thi
 </div><div class="memdoc">
 <p><a class="el" href="class_open_g_l_1_1_light.html">Light</a> source color emitted </p>
 
-<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00091">91</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00041">41</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
 
 </div>
 </div>
@@ -165,7 +165,7 @@ Make sure to update the shader program. The uniform buffer layout must match thi
 </div><div class="memdoc">
 <p><a class="el" href="class_open_g_l_1_1_light.html">Light</a> source world position </p>
 
-<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00088">88</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00038">38</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
 
 </div>
 </div>
@@ -182,7 +182,7 @@ Make sure to update the shader program. The uniform buffer layout must match thi
 </div><div class="memdoc">
 <p><a class="el" href="class_open_g_l_1_1_light.html">Light</a> model matrix </p>
 
-<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00076">76</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00026">26</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
 
 </div>
 </div>
@@ -199,7 +199,7 @@ Make sure to update the shader program. The uniform buffer layout must match thi
 </div><div class="memdoc">
 <p><a class="el" href="class_open_g_l_1_1_light.html">Light</a> source world position </p>
 
-<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00085">85</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00035">35</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
 
 </div>
 </div>
@@ -216,7 +216,7 @@ Make sure to update the shader program. The uniform buffer layout must match thi
 </div><div class="memdoc">
 <p><a class="el" href="class_open_g_l_1_1_light.html">Light</a> model matrix </p>
 
-<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00082">82</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00032">32</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
 
 </div>
 </div>
@@ -233,7 +233,7 @@ Make sure to update the shader program. The uniform buffer layout must match thi
 </div><div class="memdoc">
 <p><a class="el" href="class_open_g_l_1_1_light.html">Light</a> model matrix </p>
 
-<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00079">79</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_light_8h_source.html#l00029">29</a> of file <a class="el" href="_light_8h_source.html">Light.h</a>.</p>
 
 </div>
 </div>

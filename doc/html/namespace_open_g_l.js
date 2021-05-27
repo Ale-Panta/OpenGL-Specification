@@ -11,7 +11,6 @@ var namespace_open_g_l =
     [ "Texture", "class_open_g_l_1_1_texture.html", "class_open_g_l_1_1_texture" ],
     [ "Texture2D", "class_open_g_l_1_1_texture2_d.html", "class_open_g_l_1_1_texture2_d" ],
     [ "TextureCubeMap", "class_open_g_l_1_1_texture_cube_map.html", "class_open_g_l_1_1_texture_cube_map" ],
-    [ "TextureShadow", "class_open_g_l_1_1_texture_shadow.html", "class_open_g_l_1_1_texture_shadow" ],
     [ "ThesisApp", "class_open_g_l_1_1_thesis_app.html", "class_open_g_l_1_1_thesis_app" ],
     [ "TextureType", "namespace_open_g_l.html#a0a55dc89207f242d4d85e6e46a4c36df", [
       [ "Diffuse", "namespace_open_g_l.html#a0a55dc89207f242d4d85e6e46a4c36dfa41178642cae095a6bdb909119b4d16e8", null ],

@@ -16,6 +16,8 @@ namespace OpenGL
 	/**
 	 * Parent class of all type of texture. Here are stored the most common properties shared among most
 	 * of the texture assets.
+	 * 
+	 * @author	Alessandro Pantano
 	 */
 	class Texture
 	{
@@ -24,8 +26,9 @@ namespace OpenGL
 		~Texture();
 
 		/** 
-		 * Return the reference to texture type .
-		 * @see TextureType.
+		 * Return the reference to texture type.
+		 * 
+		 * @see #TextureType
 		 */
 		const TextureType& GetTextureType() const { return m_TexType; }
 
@@ -40,6 +43,8 @@ namespace OpenGL
 
 	/**
 	 * 2D texture asset. Use it to create any texture. Texture can be diffuse, specular and so on.
+	 * 
+	 * @author	Alessandro Pantano
 	 */
 	class Texture2D : public Texture
 	{
@@ -48,13 +53,16 @@ namespace OpenGL
 
 		/**
 		 * Texture2D constructor.
-		 * @param filePath, asset path including extension.
+		 * 
+		 * @param filePath	asset path including extension
 		 */
 		Texture2D(const char* filePath);
 	};
 
 	/**
 	 * Cube map read six different texture path and wrap all the six texture around the cube.
+	 * 
+	 * @author	Alessandro Pantano
 	 */
 	class TextureCubeMap : public Texture
 	{
@@ -63,33 +71,14 @@ namespace OpenGL
 
 		/**
 		 * TextureCubeMap constructor.
-		 * @param right	right texture file path.
-		 * @param left	right texture file path.
-		 * @param top	right texture file path.
-		 * @param bottom	right texture file path.
-		 * @param front	right texture file path.
-		 * @param back	right texture file path.
+		 * 
+		 * @param right		right texture file path
+		 * @param left		left texture file path
+		 * @param top		top texture file path
+		 * @param bottom	bottom texture file path
+		 * @param front		front texture file path
+		 * @param back		back texture file path
 		 */
 		TextureCubeMap(const char* right, const char* left, const char* top, const char* bottom, const char* front, const char* back);
-	};
-
-	/**
-	 * Texture used to draw shadow. Here all geometry is rendered from the point of view of the light source.
-	 * Each pixel that do not pass the depth test is stored in this texture. Note the texture is black and white.
-	 * This texture is attached to a custom frame buffer, we can draw on it with this process.
-	 * Shadows can be rendered sampling this texture.
-	 */
-	class TextureShadow : public Texture
-	{
-	public:
-		TextureShadow() = default;
-
-		/**
-		 * TextureShadow constructor.
-		 * @param frameBufferObject - FBO.
-		 * @param width	texture width.
-		 * @param height	texture height.
-		 */
-		TextureShadow(GLuint& frameBufferObject, int width, int height);
 	};
 }

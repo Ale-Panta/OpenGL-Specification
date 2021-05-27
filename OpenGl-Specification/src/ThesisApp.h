@@ -8,6 +8,11 @@
 
 namespace OpenGL
 {
+	/**
+	 * Specialized application class.
+	 * 
+	 * @author	Alessandro Pantano
+	 */
 	class ThesisApp : public OpenGLApp
 	{
 	public:
@@ -21,8 +26,9 @@ namespace OpenGL
 		/**
 		 * Application update loop.
 		 * Refresh all buffers related to OIT and update camera and light uniform object buffer.
-		 * @param gt	Application time since start.
-		 * @see RefreshOITBuffers.
+		 * 
+		 * @param gt	Application time since start
+		 * @see			#RefreshOITBuffers
 		 */
 		void Update(double gt) override;
 
@@ -31,10 +37,11 @@ namespace OpenGL
 		 * Clear color and depth buffer bit.
 		 * Activate the depth mask and disable blending.
 		 * Now they are called the draw stages in order.
-		 * @param gt	Application time since start.
-		 * @see DrawShadow.
-		 * @see	DrawOpaque.
-		 * @see DrawTransparents.
+		 * 
+		 * @param gt	Application time since start
+		 * @see			#DrawShadow
+		 * @see			#DrawOpaque
+		 * @see			#DrawTransparents
 		 */
 		void Draw(double gt) override;
 
@@ -48,8 +55,9 @@ namespace OpenGL
 		 * Commit shadow to texture using the proper shader program.
 		 * Reset values disabling polygon offset, restore the frame buffer object and viewport size.
 		 * Now you can render the shadow texture to the plane in viewport.
-		 * @param gt	Application time since start.
-		 * @see m_ShadowTexture.
+		 * 
+		 * @param gt	Application time since start
+		 * @see			#m_ShadowTexture
 		 */
 		void DrawShadow(double gt);
 
@@ -57,7 +65,8 @@ namespace OpenGL
 		 * Draw opaque stage.
 		 * Clear color and depth buffer bit.
 		 * Draw geometries with the proper shader program.
-		 * @param gt	Application time since start.
+		 * 
+		 * @param gt	Application time since start
 		 */
 		void DrawOpaque(double gt);
 
@@ -67,7 +76,8 @@ namespace OpenGL
 		 * Enable blending.
 		 * Draw transparent geometries with the proper shader program.
 		 * Now draw the resolved alpha values to plane mesh in viewport space.
-		 * @param gt	Application time since start.
+		 * 
+		 * @param gt	Application time since start
 		 */
 		void DrawTransparents(double gt);
 
@@ -75,13 +85,15 @@ namespace OpenGL
 
 		/**
 		 * Scene light source.
-		 * @see Camera.
+		 * 
+		 * @see #Camera
 		 */
 		Light* m_LightSrc = nullptr;
 
 		/**
 		 * Scene camera.
-		 * @see Camera.
+		 * 
+		 * @see #Camera
 		 */
 		Camera* m_Camera = nullptr;
 
@@ -141,28 +153,31 @@ namespace OpenGL
 		 * Commit the pixel color into image buffer.
 		 * @warning	Use this program only to render geometries that you consider transparent. You can eventually sort
 		 * all geometries and put in the transparent stage the ones with alpha less than one.
-		 * @see DrawTransparents.
+		 * 
+		 * @see	#DrawTransparents
 		 */
 		Shader* m_CommitTransparentShader = nullptr;
 
 		/**
 		 * Shader.
 		 * Used at the end of the transparent stage to sort the alpha values committed at the beginning of the same stage.
-		 * @see DrawTransparents.
-		 */
+		 * 
+		 * @see #DrawTransparents
+		 *
 		Shader* m_ResolveTransparentShader = nullptr;
 
 		/**
 		 * Camera UBO.
 		 * Uniform buffer object where to upload all camera's data.
-		 * @see CameraProperties.
+		 * 
+		 * @see #CameraProperties
 		 */
 		GLuint m_UBOCameraPrties = 0;
 
 		/**
 		 * Light UBO.
 		 * Uniform buffer object where to upload all light's data.
-		 * @see LightProperties.
+		 * @see #LightProperties
 		 */
 		GLuint m_UBOLightPrties = 0;
 

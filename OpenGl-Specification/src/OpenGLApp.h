@@ -7,15 +7,23 @@
 
 namespace OpenGL
 {
+	/**
+	 * Application superclass.
+	 * All specialized applications must inherit from this one.
+	 * 
+	 * @author	Alessandro Pantano
+	 */
 	class OpenGLApp
 	{
 	public:
 		/**
 		 * OpenGLApp constructor.
-		 * @param name		Application name.
-		 * @param width		Client window width.
-		 * @param height	Client window height.
-		 * @param samples	Is recommended to use 4, 8 or 16, more than that can cause performance issue.
+		 * 
+		 * @param name		Application name
+		 * @param width		Client window width
+		 * @param height	Client window height
+		 * @param samples	Is recommended to use 4, 8 or 16, more than that can cause performance issue
+		 * @warning			More the 16 samples can cause performance issue
 		 */
 		OpenGLApp(const char* name, int width, int height, int samples);
 
@@ -40,12 +48,14 @@ namespace OpenGL
 	public:
 		/**
 		 * Get the current application.
-		 * @return OpenGLApp ptr.
+		 * 
+		 * @return The application instance pointer
 		 */
 		static OpenGLApp* GetApp();
 
 		/**
 		 * Get the current app's aspect ratio.
+		 * 
 		 * @return the width / height.
 		 */
 		float GetAspectRatio();
@@ -53,7 +63,8 @@ namespace OpenGL
 		/**
 		 * Intialize window, opengl, resources in this order.
 		 * Call the base before initialize resources.
-		 * @return true if no stage fails else false.
+		 * 
+		 * @return <code>true</code> if no stage fails else <code>false</code>
 		 */
 		virtual bool Initialize();
 
@@ -61,7 +72,9 @@ namespace OpenGL
 		 * Run the application loop.
 		 * Calculate the application time and frame, 
 		 * process events and call Update and Draw.
-		 * @see Update, Draw.
+		 * 
+		 * @see Update
+		 * @see Draw
 		 */
 		void Run();
 
@@ -74,7 +87,8 @@ namespace OpenGL
 		/**
 		 * Update generic application stuff.
 		 * Reset buffers or update position based on time for examples.
-		 * @param gt	Application time elapsed since start.
+		 * 
+		 * @param gt	Application time elapsed since start
 		 */
 		virtual void Update(double gt) = 0;
 
@@ -83,7 +97,8 @@ namespace OpenGL
 		 * It is divided into multiple stages that are the follow:
 		 * render sky box, shadow, opaque, transparent.
 		 * This order must not be broke.
-		 * @param gt	Application time elapsed since start.
+		 * 
+		 * @param gt	Application time elapsed since start
 		 */
 		virtual void Draw(double gt) = 0;
 
@@ -94,7 +109,8 @@ namespace OpenGL
 
 		/**
 		 * Initialize glew. It retrieve the function to communicate with GPU.
-		 * Must be called after InitWindow().
+		 * 
+		 * @warning		Must be called after InitWindow()
 		 */
 		bool InitiOpenGL();
 
@@ -110,13 +126,17 @@ namespace OpenGL
 
 		/**
 		 * Refresh OIT stuff.
-		 * @warning	make sure to have initialize m_data first.
-		 * @throw null reference exception if m_data is not initialized first.
+		 *
+		 * @warning		make sure to have initialize m_data first
+		 * @throw		null reference exception if m_data is not initialized first
 		 */
 		void RefresOITBuffers();
 
 	protected:
-		// OIT Stuff...
+		// --------------------------------------------------------------------------
+		// OIT stuff
+		// --------------------------------------------------------------------------
+
 		GLuint m_HeadPtrTexture			= 0;
 		GLuint m_HeadPtrClearBuffer		= 0;
 		GLuint m_AtomicCounterBuffer	= 0;
@@ -124,11 +144,14 @@ namespace OpenGL
 		GLuint m_LinkedListTexture		= 0;
 		GLuint* m_data = nullptr;
 
-		// Shadow mapping stuff...
-		GLuint m_ShadowFBO = 0;
-		GLuint m_ShadowTexture = 0;
+		// --------------------------------------------------------------------------
+		// Shadow Mapping stuff
+		// --------------------------------------------------------------------------
+
 		const int m_ShadowTexWidth = 2048;
 		const int m_ShadowTexHeight = 2048;
+		GLuint m_ShadowFBO = 0;
+		GLuint m_ShadowTexture = 0;
 
 		/** Client window width. */
 		int m_ClientWidth = 600;

@@ -26,7 +26,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">OpenGL
-   &#160;<span id="projectnumber">2.0</span>
+   &#160;<span id="projectnumber">2.0.1</span>
    </div>
    <div id="projectbrief">OpenGL</div>
   </td>
@@ -107,14 +107,13 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a1f413c856579c422df123d693d799af4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p><a class="el" href="class_open_g_l_1_1_camera.html">Camera</a> Properties. <a class="el" href="struct_open_g_l_1_1_light_properties.html">LightProperties</a> struct allow us to have a reference to memory order in the uniform object buffer. Update this struct if you need more camera's data. </p><dl class="section warning"><dt>Warning</dt><dd>Make sure to update the UpdateUniformBlock function. </dd>
+<div class="textblock"><p><a class="el" href="class_open_g_l_1_1_camera.html">Camera</a> Properties. <a class="el" href="struct_open_g_l_1_1_camera_properties.html">CameraProperties</a> struct allow us to have a reference to memory order in the uniform object buffer. Update this struct if you need more camera's data.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_open_g_l_1_1_camera.html">Camera</a> </dd>
 <dd>
-Make sure to update the shader program. The uniform buffer layout must match this struct order. </dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_open_g_l_1_1_camera.html">Camera</a>. </dd>
-<dd>
-<a class="el" href="class_open_g_l_1_1_camera.html#afda27ab1d9c55e1b9a3b6e298af2e44c">Camera::UpdateUniformBlock</a>. </dd></dl>
+<a class="el" href="class_open_g_l_1_1_camera.html#afda27ab1d9c55e1b9a3b6e298af2e44c">Camera::UpdateUniformBlock</a> </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>If you update this struct make sure to update also the <a class="el" href="class_open_g_l_1_1_camera.html#afda27ab1d9c55e1b9a3b6e298af2e44c">Camera::UpdateUniformBlock</a> function. You have to update also the shader program uniform buffer object, the UBO layout must match the order declared in this struct. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_camera_8h_source.html#l00019">19</a> of file <a class="el" href="_camera_8h_source.html">Camera.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_camera_8h_source.html#l00023">23</a> of file <a class="el" href="_camera_8h_source.html">Camera.h</a>.</p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a1f413c856579c422df123d693d799af4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1f413c856579c422df123d693d799af4">&#9670;&nbsp;</a></span>Direction</h2>
@@ -129,7 +128,7 @@ Make sure to update the shader program. The uniform buffer layout must match thi
 </div><div class="memdoc">
 <p><a class="el" href="class_open_g_l_1_1_camera.html">Camera</a> forward. </p>
 
-<p class="definition">Definition at line <a class="el" href="_camera_8h_source.html#l00034">34</a> of file <a class="el" href="_camera_8h_source.html">Camera.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_camera_8h_source.html#l00038">38</a> of file <a class="el" href="_camera_8h_source.html">Camera.h</a>.</p>
 
 </div>
 </div>
@@ -146,7 +145,7 @@ Make sure to update the shader program. The uniform buffer layout must match thi
 </div><div class="memdoc">
 <p><a class="el" href="class_open_g_l_1_1_camera.html">Camera</a> model matrix. </p>
 
-<p class="definition">Definition at line <a class="el" href="_camera_8h_source.html#l00022">22</a> of file <a class="el" href="_camera_8h_source.html">Camera.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_camera_8h_source.html#l00026">26</a> of file <a class="el" href="_camera_8h_source.html">Camera.h</a>.</p>
 
 </div>
 </div>
@@ -163,7 +162,7 @@ Make sure to update the shader program. The uniform buffer layout must match thi
 </div><div class="memdoc">
 <p><a class="el" href="class_open_g_l_1_1_camera.html">Camera</a> world position. </p>
 
-<p class="definition">Definition at line <a class="el" href="_camera_8h_source.html#l00031">31</a> of file <a class="el" href="_camera_8h_source.html">Camera.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_camera_8h_source.html#l00035">35</a> of file <a class="el" href="_camera_8h_source.html">Camera.h</a>.</p>
 
 </div>
 </div>
@@ -180,7 +179,7 @@ Make sure to update the shader program. The uniform buffer layout must match thi
 </div><div class="memdoc">
 <p><a class="el" href="class_open_g_l_1_1_camera.html">Camera</a> projection matrix. </p>
 
-<p class="definition">Definition at line <a class="el" href="_camera_8h_source.html#l00028">28</a> of file <a class="el" href="_camera_8h_source.html">Camera.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_camera_8h_source.html#l00032">32</a> of file <a class="el" href="_camera_8h_source.html">Camera.h</a>.</p>
 
 </div>
 </div>
@@ -197,7 +196,7 @@ Make sure to update the shader program. The uniform buffer layout must match thi
 </div><div class="memdoc">
 <p><a class="el" href="class_open_g_l_1_1_camera.html">Camera</a> view matrix. </p>
 
-<p class="definition">Definition at line <a class="el" href="_camera_8h_source.html#l00025">25</a> of file <a class="el" href="_camera_8h_source.html">Camera.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_camera_8h_source.html#l00029">29</a> of file <a class="el" href="_camera_8h_source.html">Camera.h</a>.</p>
 
 </div>
 </div>

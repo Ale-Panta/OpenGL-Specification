@@ -1,94 +1,128 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="File di origine">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Source">
+      <UniqueIdentifier>{1ce3e685-a5dd-4c3b-9e48-f0d1ef2a1b8f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="File di intestazione">
+    <Filter Include="Source\OpenGL">
+      <UniqueIdentifier>{b3a3852f-bd2a-4175-a669-c553020034ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\OpenGL\Resources">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source\OpenGL\Public">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="File di risorse">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Source\OpenGL\Private">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp">
-      <Filter>File di origine</Filter>
+      <Filter>Source\OpenGL\Private</Filter>
     </ClCompile>
     <ClCompile Include="assets\meshes\Sphere.cpp">
-      <Filter>File di origine</Filter>
+      <Filter>Source\OpenGL\Private</Filter>
     </ClCompile>
     <ClCompile Include="src\OpenGLApp.cpp">
-      <Filter>File di origine</Filter>
+      <Filter>Source\OpenGL\Private</Filter>
     </ClCompile>
     <ClCompile Include="src\Shader.cpp">
-      <Filter>File di origine</Filter>
+      <Filter>Source\OpenGL\Private</Filter>
     </ClCompile>
     <ClCompile Include="src\Mesh.cpp">
-      <Filter>File di origine</Filter>
+      <Filter>Source\OpenGL\Private</Filter>
     </ClCompile>
     <ClCompile Include="src\Camera.cpp">
-      <Filter>File di origine</Filter>
+      <Filter>Source\OpenGL\Private</Filter>
     </ClCompile>
     <ClCompile Include="src\Texture.cpp">
-      <Filter>File di origine</Filter>
+      <Filter>Source\OpenGL\Private</Filter>
     </ClCompile>
     <ClCompile Include="src\Light.cpp">
-      <Filter>File di origine</Filter>
+      <Filter>Source\OpenGL\Private</Filter>
     </ClCompile>
     <ClCompile Include="assets\meshes\Plane.cpp">
-      <Filter>File di origine</Filter>
+      <Filter>Source\OpenGL\Private</Filter>
     </ClCompile>
     <ClCompile Include="src\ThesisApp.cpp">
-      <Filter>File di origine</Filter>
+      <Filter>Source\OpenGL\Private</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="assets\meshes\Sphere.h">
-      <Filter>File di intestazione</Filter>
+      <Filter>Source\OpenGL\Public</Filter>
     </ClInclude>
     <ClInclude Include="src\OpenGLApp.h">
-      <Filter>File di intestazione</Filter>
+      <Filter>Source\OpenGL\Public</Filter>
     </ClInclude>
     <ClInclude Include="src\Shader.h">
-      <Filter>File di intestazione</Filter>
+      <Filter>Source\OpenGL\Public</Filter>
     </ClInclude>
     <ClInclude Include="src\Mesh.h">
-      <Filter>File di intestazione</Filter>
+      <Filter>Source\OpenGL\Public</Filter>
     </ClInclude>
     <ClInclude Include="src\Camera.h">
-      <Filter>File di intestazione</Filter>
+      <Filter>Source\OpenGL\Public</Filter>
     </ClInclude>
     <ClInclude Include="src\Texture.h">
-      <Filter>File di intestazione</Filter>
+      <Filter>Source\OpenGL\Public</Filter>
     </ClInclude>
     <ClInclude Include="src\Light.h">
-      <Filter>File di intestazione</Filter>
+      <Filter>Source\OpenGL\Public</Filter>
     </ClInclude>
     <ClInclude Include="assets\meshes\Plane.h">
-      <Filter>File di intestazione</Filter>
+      <Filter>Source\OpenGL\Public</Filter>
     </ClInclude>
     <ClInclude Include="src\ThesisApp.h">
-      <Filter>File di intestazione</Filter>
+      <Filter>Source\OpenGL\Public</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\shaders\vertLitShader.glsl" />
-    <None Include="assets\shaders\fragLitShader.glsl" />
-    <None Include="assets\shaders\PBR\fragCookTorranceShader.glsl" />
-    <None Include="assets\shaders\PBR\vertCookTorranceShader.glsl" />
-    <None Include="assets\shaders\OIT\fragBuildListShader.glsl" />
-    <None Include="assets\shaders\OIT\vertBuildListShader.glsl" />
-    <None Include="assets\shaders\OIT\vertResolveListShader.glsl" />
-    <None Include="assets\shaders\OIT\fragResolveListShader.glsl" />
-    <None Include="assets\shaders\Shadow\fragCommitShadowShader.glsl" />
-    <None Include="assets\shaders\Shadow\vertCommitShadowShader.glsl" />
-    <None Include="assets\shaders\Shadow\vertViewShadowShader.glsl" />
-    <None Include="assets\shaders\Shadow\fragViewShadowShader.glsl" />
-    <None Include="assets\shaders\vertUniformBlockSettingsShader.glsl" />
-    <None Include="assets\shaders\fragUniformBlockSettingShader.glsl" />
+    <None Include="assets\shaders\OIT\fragBuildListShader.glsl">
+      <Filter>Source\OpenGL\Resources</Filter>
+    </None>
+    <None Include="assets\shaders\Shadow\fragCommitShadowShader.glsl">
+      <Filter>Source\OpenGL\Resources</Filter>
+    </None>
+    <None Include="assets\shaders\PBR\fragCookTorranceShader.glsl">
+      <Filter>Source\OpenGL\Resources</Filter>
+    </None>
+    <None Include="assets\shaders\fragLitShader.glsl">
+      <Filter>Source\OpenGL\Resources</Filter>
+    </None>
+    <None Include="assets\shaders\OIT\fragResolveListShader.glsl">
+      <Filter>Source\OpenGL\Resources</Filter>
+    </None>
+    <None Include="assets\shaders\fragUniformBlockSettingShader.glsl">
+      <Filter>Source\OpenGL\Resources</Filter>
+    </None>
+    <None Include="assets\shaders\Shadow\fragViewShadowShader.glsl">
+      <Filter>Source\OpenGL\Resources</Filter>
+    </None>
+    <None Include="assets\shaders\OIT\vertBuildListShader.glsl">
+      <Filter>Source\OpenGL\Resources</Filter>
+    </None>
+    <None Include="assets\shaders\Shadow\vertCommitShadowShader.glsl">
+      <Filter>Source\OpenGL\Resources</Filter>
+    </None>
+    <None Include="assets\shaders\PBR\vertCookTorranceShader.glsl">
+      <Filter>Source\OpenGL\Resources</Filter>
+    </None>
+    <None Include="assets\shaders\vertLitShader.glsl">
+      <Filter>Source\OpenGL\Resources</Filter>
+    </None>
+    <None Include="assets\shaders\OIT\vertResolveListShader.glsl">
+      <Filter>Source\OpenGL\Resources</Filter>
+    </None>
+    <None Include="assets\shaders\vertUniformBlockSettingsShader.glsl">
+      <Filter>Source\OpenGL\Resources</Filter>
+    </None>
+    <None Include="assets\shaders\Shadow\vertViewShadowShader.glsl">
+      <Filter>Source\OpenGL\Resources</Filter>
+    </None>
   </ItemGroup>
 </Project>
