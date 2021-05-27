@@ -164,6 +164,7 @@ namespace OpenGL
 		 * 
 		 * @see #DrawTransparents
 		 *
+		 */
 		Shader* m_ResolveTransparentShader = nullptr;
 
 		/**
